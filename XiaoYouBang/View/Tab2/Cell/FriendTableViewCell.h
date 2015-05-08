@@ -7,7 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UserEntity.h"
 
 @interface FriendTableViewCell : UITableViewCell
+{
+    UIImageView * headImageView;
+    UIImageView * sexImageView;
+    UILabel * nameLabel;
+    UILabel * praiseCountLabel;
+    UILabel * pkuLabel;
+    UILabel * jobLabel;
+    UIView * line;
+}
+
+@property( nonatomic, strong ) UserEntity * entity;
+
+- ( void ) updateCell;
 
 @end

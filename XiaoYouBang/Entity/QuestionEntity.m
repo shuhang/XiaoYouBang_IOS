@@ -10,4 +10,22 @@
 
 @implementation QuestionEntity
 
+- ( id ) init
+{
+    if( self = [super init] )
+    {
+        self.changeTime = @"";
+        self.editTime = @"";
+        self.allCommentCount = 0;
+        self.questionCommentCount = 0;
+        self.joinCount = 0;
+        
+        self.commentArray = [NSMutableArray array];
+        self.actArray = [NSMutableArray array];
+        self.imageArray = [NSMutableArray array];
+        self.praiseArray = [NSMutableArray array];
+    }
+    return self;
+}
+
 @end

@@ -9,5 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface QuestionCommentTableHeaderView : UIView
+{
+    UILabel * labelTitle;
+    UILabel * labelCount;
+}
+
+- ( id ) initWithFrame:(CGRect)frame title : ( NSString * ) title value : ( NSString * ) value;
+- ( void ) updateHeader : ( NSString * ) value;
 
 @end

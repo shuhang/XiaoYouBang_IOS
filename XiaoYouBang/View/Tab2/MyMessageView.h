@@ -7,7 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MessageEntity.h"
 
-@interface MyMessageView : UIView
+@protocol MyMessageViewDelegate <NSObject>
+
+- ( void ) clickMessage : ( MessageEntity * ) entity;
+
+@end
+
+@interface MyMessageView : UIView<UITableViewDataSource, UITableViewDelegate>
+
+@property( nonatomic, strong ) NSMutableArray * messageArray;
+@property( nonatomic, weak ) id< MyMessageViewDelegate > delegate;
 
 @end

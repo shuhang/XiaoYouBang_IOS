@@ -13,6 +13,7 @@
 #import "QuestionEntity.h"
 #import "QuestionTableViewCell.h"
 #import "JSONKit.h"
+#import "SVProgressHUD.h"
 
 @interface AllActView()
 {
@@ -35,14 +36,9 @@
         [tableView addHeaderWithTarget:self action:@selector(headerRereshing)];
         [tableView headerBeginRefreshing];
         [tableView addFooterWithTarget:self action:@selector(footerRereshing)];
-        tableView.headerPullToRefreshText = @"下拉刷新";
-        tableView.headerReleaseToRefreshText = @"松开马上刷新";
-        tableView.headerRefreshingText = @"正在刷新";
-        tableView.footerPullToRefreshText = @"上拉加载更多";
-        tableView.footerReleaseToRefreshText = @"松开加载更多";
-        tableView.footerRefreshingText = @"正在加载";
         tableView.delegate = self;
         tableView.dataSource = self;
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self addSubview:tableView];
     }
     return self;
@@ -50,7 +46,9 @@
 
 - ( void ) loadFailed
 {
-    
+    [tableView headerEndRefreshing];
+    [tableView footerEndRefreshing];
+    [SVProgressHUD showErrorWithStatus:@"刷新失败"];
 }
 
 - ( NSMutableArray * ) loadQuestionArray : ( NSDictionary * ) result
@@ -72,12 +70,13 @@
 - ( void ) headerRereshing
 {
     NSMutableDictionary * request = [NSMutableDictionary dictionary];
-    [request setValue:@"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1NGMxMDBhZDQ5NzcwM2YwNGMxMTI5OGMiLCJleHAiOiIyMDE2LTA0LTE2IDEwOjUzOjAyICswODowMCJ9.wgW7lCEPg9LGFThzTIXJzpyHR1yuTckKOjviuCIkDv0" forKey:@"token"];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
     [request setValue:[NSNumber numberWithInt:10] forKey:@"size"];
     [request setValue:@"" forKey:@"before"];
     [request setValue:[NSNumber numberWithInt:1] forKey:@"questionType"];
     
-    [[NetWork shareInstance] httpRequestWithPostPut:@"api/questions/public" params:request success:^(NSDictionary * result)
+    [[NetWork shareInstance] httpRequestWithPostPut:@"api/questions/public" params:request method:@"POST" success:^(NSDictionary * result)
      {
          int code = [result[ @"result"] intValue];
          if( code == 3000 )
@@ -101,7 +100,8 @@
 - ( void ) footerRereshing
 {
     NSMutableDictionary * request = [NSMutableDictionary dictionary];
-    [request setValue:@"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1NGMxMDBhZDQ5NzcwM2YwNGMxMTI5OGMiLCJleHAiOiIyMDE2LTA0LTE2IDEwOjUzOjAyICswODowMCJ9.wgW7lCEPg9LGFThzTIXJzpyHR1yuTckKOjviuCIkDv0" forKey:@"token"];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
     [request setValue:[NSNumber numberWithInt:10] forKey:@"size"];
     [request setValue:[NSNumber numberWithInt:1] forKey:@"questionType"];
     if( self.actArray.count == 0 )
@@ -114,7 +114,7 @@
         [request setValue:entity.modifyTime forKey:@"before"];
     }
     
-    [[NetWork shareInstance] httpRequestWithPostPut:@"api/questions/public" params:request success:^(NSDictionary * result)
+    [[NetWork shareInstance] httpRequestWithPostPut:@"api/questions/public" params:request method:@"POST" success:^(NSDictionary * result)
      {
          NSNumber * code = [result objectForKey:@"result"];
          if( [code intValue] == 3000 )
@@ -163,7 +163,7 @@
 - ( CGFloat ) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QuestionEntity * entity = [self.actArray objectAtIndex:indexPath.row];
-    CGFloat height = 100 + [Tool getHeightByString:entity.title width:Screen_Width - 30 height:45 textSize:Text_Size_Big];
+    CGFloat height = 103 + [Tool getHeightByString:entity.questionTitle width:Screen_Width - 30 height:45 textSize:Text_Size_Big];
     if( entity.myInviteArray.count > 0 ) height += 25;
     if( entity.inviteMeArray.count > 0 ) height += 25;
     

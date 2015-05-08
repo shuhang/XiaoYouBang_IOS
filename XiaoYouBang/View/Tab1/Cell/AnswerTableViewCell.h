@@ -7,7 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AnswerEntity.h"
 
-@interface AnwerTableViewCell : UITableViewCell
+@interface AnswerTableViewCell : UITableViewCell
+{
+    UIImageView * headImageView;
+    UILabel * nameLabel;
+    UILabel * commentCountLabel;
+    UILabel * praiseCountLabel;
+    UILabel * indexLabel;
+    UILabel * infoLabel;
+    UIView * line;
+}
+
+@property( nonatomic, assign ) int answerIndex;
+@property( nonatomic, strong ) AnswerEntity * entity;
+
+- ( void ) updateCell;
 
 @end

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MyQuestionView : UIView
+@interface MyQuestionView : UIView<UITableViewDataSource, UITableViewDelegate>
+
+@property( strong, nonatomic ) NSMutableArray * questionArray;
 
 @end

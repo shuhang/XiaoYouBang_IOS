@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseViewController.h"
+#import "QuestionEntity.h"
 
-@interface QuestionInfoViewController : UIViewController
+@interface QuestionInfoViewController : BaseViewController
+
+@property( nonatomic, strong ) QuestionEntity * entity;
 
 @end

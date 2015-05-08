@@ -7,7 +7,27 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
-@interface RegisterViewController5 : UIViewController
+@interface RegisterViewController5 : BaseViewController
+
+@property( nonatomic, strong ) NSString * phone;
+@property( nonatomic, strong ) NSString * password;
+@property( nonatomic, strong ) NSString * code;
+@property( nonatomic, strong ) NSString * key;
+@property( nonatomic, strong ) NSString * name;
+@property( nonatomic, strong ) NSString * birthYear;
+@property( nonatomic, strong ) NSString * pku;
+@property( nonatomic, strong ) NSString * oldHome;
+@property( nonatomic, strong ) NSString * nowHome;
+@property( nonatomic, strong ) NSString * net;
+@property( nonatomic, assign ) int sex;
+@property( nonatomic, strong ) NSData * headImageData;
+@property( nonatomic, strong ) NSString * company;
+@property( nonatomic, strong ) NSString * part;
+@property( nonatomic, strong ) NSString * job;
+@property( nonatomic, strong ) NSArray * tags;
+@property( nonatomic, strong ) NSString * leaveWord;
+@property( nonatomic, strong ) NSString * headUrl;
 
 @end

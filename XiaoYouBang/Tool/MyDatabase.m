@@ -9,5 +9,22 @@
 #import "MyDatabase.h"
 
 @implementation MyDatabase
+createSingleton( MyDatabase )
+
+- ( void ) openDatabase
+{
+    NSString * path = [DOCMENT_PATH stringByAppendingPathComponent:@"user.sqlite"];
+    database = [FMDatabase databaseWithPath:path];
+}
+
+- ( void ) closeDatabse
+{
+    [database close];
+}
+
+- ( FMDatabase * ) getDatabase
+{
+    return database;
+}
 
 @end

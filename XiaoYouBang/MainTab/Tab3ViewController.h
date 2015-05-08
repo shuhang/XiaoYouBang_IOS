@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
-@interface Tab3ViewController : UIViewController
+@interface Tab3ViewController : BaseViewController
 
 @end

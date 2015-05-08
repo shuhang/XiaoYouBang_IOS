@@ -7,7 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MessageEntity.h"
 
 @interface MessageTableViewCell : UITableViewCell
+{
+    UIImageView * headImageView;
+    UIView * bgView;
+    UIView * line;
+    UILabel * titleLabel1;
+    UILabel * titleLabel2;
+    UILabel * middleLabel1;
+    UILabel * middleLabel2;
+    UILabel * infoLabel;
+    UILabel * timeLabel;
+}
+
+@property( nonatomic, strong ) MessageEntity * entity;
+
+- ( void ) updateCell;
 
 @end

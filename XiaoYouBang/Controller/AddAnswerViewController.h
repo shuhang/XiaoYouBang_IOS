@@ -7,7 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
-@interface AddAnswerViewController : UIViewController
+@interface AddAnswerViewController : BaseViewController
+
+@property( nonatomic, strong ) NSString * questionTitle;
+@property( nonatomic, strong ) NSString * info;
+@property( nonatomic, strong ) NSString * questionId;
+@property( nonatomic, strong ) NSString * answerId;
+@property( nonatomic, assign ) int type;
+@property( nonatomic, assign ) BOOL isEdit;
 
 @end

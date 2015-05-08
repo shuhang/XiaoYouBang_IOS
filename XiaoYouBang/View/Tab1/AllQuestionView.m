@@ -35,17 +35,17 @@
         [tableView registerClass:[QuestionTableViewCell class] forCellReuseIdentifier:@"QuestionTableCell"];
         [tableView addHeaderWithTarget:self action:@selector(headerRereshing)];
         [tableView addFooterWithTarget:self action:@selector(footerRereshing)];
-        tableView.headerPullToRefreshText = @"下拉刷新";
-        tableView.headerReleaseToRefreshText = @"松开马上刷新";
-        tableView.headerRefreshingText = @"正在刷新";
-        tableView.footerPullToRefreshText = @"上拉加载更多";
-        tableView.footerReleaseToRefreshText = @"松开加载更多";
-        tableView.footerRefreshingText = @"正在加载";
         tableView.delegate = self;
         tableView.dataSource = self;
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self addSubview:tableView];
     }
     return self;
+}
+
+- ( void ) reloadTable
+{
+    [tableView reloadData];
 }
 
 - ( void ) startRefresh
@@ -56,6 +56,7 @@
 - ( void ) loadFailed
 {
     [tableView headerEndRefreshing];
+    [tableView footerEndRefreshing];
     [SVProgressHUD showErrorWithStatus:@"刷新失败"];
 }
 
@@ -149,6 +150,43 @@
      }];
 }
 
+- ( void ) doLoadQuestionInfo
+{
+    [SVProgressHUD showWithStatus:@"正在加载" maskType:SVProgressHUDMaskTypeGradient];
+    
+    NSMutableDictionary * request = [NSMutableDictionary dictionary];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
+    NSString * url = [NSString stringWithFormat:@"api/question/%@", self.selectedEntity.questionId];
+    [[NetWork shareInstance] httpRequestWithGet:url params:request success:^(NSDictionary * result)
+     {
+         if( [result[ @"result" ] intValue] == 3000 )
+         {
+             [Tool loadQuestionInfoEntity:self.selectedEntity item:result];
+             [SVProgressHUD dismiss];
+             if( [self.delegate respondsToSelector:@selector(loadQuestionInfoSuccess:)] )
+             {
+                 [self.delegate loadQuestionInfoSuccess:self.selectedEntity];
+             }
+         }
+         else
+         {
+             [SVProgressHUD showErrorWithStatus:@"加载失败"];
+         }
+     }
+     error:^(NSError * error)
+     {
+         NSLog( @"%@", error );
+         [SVProgressHUD showErrorWithStatus:@"加载失败"];
+     }];
+}
+
+- ( void ) updateSelectCell
+{
+    NSIndexPath * indexPath = [NSIndexPath indexPathForRow:self.selectedIndex inSection:0];
+    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+}
+
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -171,7 +209,7 @@
 - ( CGFloat ) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QuestionEntity * entity = [self.questionArray objectAtIndex:indexPath.row];
-    CGFloat height = 100 + [Tool getHeightByString:entity.title width:Screen_Width - 30 height:45 textSize:Text_Size_Big];
+    CGFloat height = 103 + [Tool getHeightByString:entity.questionTitle width:Screen_Width - 20 height:40 textSize:Text_Size_Big];
     if( entity.myInviteArray.count > 0 ) height += 25;
     if( entity.inviteMeArray.count > 0 ) height += 25;
     
@@ -181,6 +219,9 @@
 - (void)tableView:(UITableView *)tableView_ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView_ deselectRowAtIndexPath:indexPath animated:YES];
+    self.selectedIndex = indexPath.row;
+    self.selectedEntity = [self.questionArray objectAtIndex:indexPath.row];
+    [self doLoadQuestionInfo];
 }
 
 @end

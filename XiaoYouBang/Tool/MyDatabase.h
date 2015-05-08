@@ -7,7 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <FMDatabase.h>
 
 @interface MyDatabase : NSObject
+{
+    FMDatabase * database;
+}
+
++ ( instancetype ) shareInstance;
+
+- ( void ) openDatabase;
+- ( void ) closeDatabse;
+- ( FMDatabase * ) getDatabase;
 
 @end

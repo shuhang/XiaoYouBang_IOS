@@ -27,7 +27,7 @@
         [self.contentView addSubview:pictureSymbolImageView];
         
         pointImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"point"]];
-        pointImageView.frame = CGRectMake( 300, 20, 5, 5 );
+        pointImageView.frame = CGRectMake( Screen_Width - 20, 20, 5, 5 );
         [self.contentView addSubview:pointImageView];
         
         nameLabel = [[UILabel alloc] initWithFrame:CGRectMake( 60, 15, 70, 20 )];
@@ -36,7 +36,7 @@
         
         titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         titleLabel.font = [UIFont systemFontOfSize:Text_Size_Big];
-        titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         titleLabel.numberOfLines = 2;
         [self.contentView addSubview:titleLabel];
         
@@ -66,6 +66,10 @@
         inviteMeLabel.font = [UIFont systemFontOfSize:Text_Size_Micro];
         inviteMeLabel.textColor = Text_Red;
         [self.contentView addSubview:inviteMeLabel];
+        
+        line = [[UIView alloc] initWithFrame:CGRectZero];
+        line.backgroundColor = Color_Light_Gray;
+        [self.contentView addSubview:line];
     }
     return self;
 }
@@ -95,7 +99,6 @@
     }
     
     nameLabel.text = self.entity.userName;
-    titleLabel.text = self.entity.title;
     timeLabel.text = [Tool getShowByTime: self.entity.modifyTime];
     
     if( self.entity.myInviteArray.count > 0 )
@@ -170,13 +173,15 @@
         inviteMeLabel.hidden = YES;
     }
     
-    CGFloat titleHight = [Tool getHeightByString:self.entity.title width:Screen_Width - 30 height:45 textSize:Text_Size_Big];
-    titleLabel.frame = CGRectMake( 10, 55, Screen_Width - 30, titleHight );
+    CGFloat titleHight = [Tool getHeightByString:self.entity.questionTitle width:Screen_Width - 30 height:40 textSize:Text_Size_Big];
+    titleLabel.frame = CGRectMake( 10, 55, Screen_Width - 20, 0 );
+    titleLabel.text = self.entity.questionTitle;
+    [titleLabel sizeToFit];
     
     answerCountLabel.frame = CGRectMake( 10, 55 + titleHight + 15, 70, 20 );
     praiseCountLabel.frame = CGRectMake( 90, answerCountLabel.frame.origin.y, 70, 20 );
     commentCountLabel.frame = CGRectMake( 170, answerCountLabel.frame.origin.y, 70, 20 );
-    timeLabel.frame = CGRectMake( 260, answerCountLabel.frame.origin.y + 3, 50, 15 );
+    timeLabel.frame = CGRectMake( Screen_Width - 60, answerCountLabel.frame.origin.y + 2, 50, 15 );
     
     if( self.entity.type == 0 )
     {
@@ -192,7 +197,7 @@
             commentCountLabel.hidden = NO;
             
             answerCountLabel.text = [NSString stringWithFormat:@"回答 %d", self.entity.answerCount];
-            praiseCountLabel.text = [NSString stringWithFormat:@"评论 %d", self.entity.commentCount];
+            praiseCountLabel.text = [NSString stringWithFormat:@"评论 %d", self.entity.allCommentCount];
             commentCountLabel.text = [NSString stringWithFormat:@"赞 %d", self.entity.praiseCount];
         }
     }
@@ -211,19 +216,27 @@
         if( self.entity.inviteMeArray.count > 0 )
         {
             inviteMeLabel.frame = CGRectMake( 10, myInviteLabel.frame.origin.y + 25, 200, 15 );
+            
+            line.frame = CGRectMake( 10, [Tool getBottom:inviteMeLabel] + 10, Screen_Width - 20, 0.5 );
+        }
+        else
+        {
+            inviteMeLabel.frame = CGRectZero;
+            line.frame = CGRectMake( 10, [Tool getBottom:myInviteLabel] + 10, Screen_Width - 20, 0.5 );
         }
     }
     else if( self.entity.inviteMeArray.count > 0 )
     {
+        myInviteLabel.frame = CGRectZero;
         inviteMeLabel.frame = CGRectMake( 10, answerCountLabel.frame.origin.y + 30, 200, 15 );
+        line.frame = CGRectMake( 10, [Tool getBottom:inviteMeLabel] + 10, Screen_Width - 20, 0.5 );
     }
-}
-
-- ( void ) awakeFromNib {}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
+    else
+    {
+        myInviteLabel.frame = CGRectZero;
+        inviteMeLabel.frame = CGRectZero;
+        line.frame = CGRectMake( 10, [Tool getBottom:answerCountLabel] + 10, Screen_Width - 20, 0.5 );
+    }
 }
 
 @end

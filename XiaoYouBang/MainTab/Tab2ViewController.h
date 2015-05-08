@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
-@interface Tab2ViewController : UIViewController
+@interface Tab2ViewController : BaseViewController
 
 @end

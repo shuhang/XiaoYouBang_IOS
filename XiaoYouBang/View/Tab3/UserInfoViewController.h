@@ -7,7 +7,10 @@
 //
 
 #import "BaseViewController.h"
+#import "UserEntity.h"
 
 @interface UserInfoViewController : BaseViewController
+
+@property( nonatomic, strong ) UserEntity * entity;
 
 @end

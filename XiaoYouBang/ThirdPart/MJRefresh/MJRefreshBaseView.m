@@ -255,7 +255,8 @@ typedef void (*send_type)(void *, SEL, UIView *);
 			self.arrowImage.hidden = YES;
             
             // 回调
-            if ([self.beginRefreshingTaget respondsToSelector:self.beginRefreshingAction]) {
+            if ([self.beginRefreshingTaget respondsToSelector:self.beginRefreshingAction])
+            {
                 objc_msgSend(self.beginRefreshingTaget, self.beginRefreshingAction, self);
             }
             

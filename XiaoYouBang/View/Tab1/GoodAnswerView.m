@@ -8,8 +8,13 @@
 
 #import "GoodAnswerView.h"
 #import "MJRefresh.h"
+#import "NetWork.h"
+#import "Tool.h"
+#import "MyAnswerTableViewCell.h"
+#import "JSONKit.h"
+#import "SVProgressHUD.h"
 
-@interface GoodAnswerView()
+@interface GoodAnswerView()<MyAnswerTableViewCellDelegate>
 {
     UITableView * tableView;
 }
@@ -23,87 +28,202 @@
     {
         self.backgroundColor = [UIColor whiteColor];
         
+        self.answerArray = [NSMutableArray array];
+        
         tableView = [[UITableView alloc] initWithFrame:CGRectMake( 0, 0, frame.size.width, frame.size.height)];
-        [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+        [tableView registerClass:[MyAnswerTableViewCell class] forCellReuseIdentifier:@"MyAnswerTableCell"];
         [tableView addHeaderWithTarget:self action:@selector(headerRereshing)];
-        [tableView headerBeginRefreshing];
         [tableView addFooterWithTarget:self action:@selector(footerRereshing)];
-        tableView.headerPullToRefreshText = @"下拉刷新";
-        tableView.headerReleaseToRefreshText = @"松开马上刷新";
-        tableView.headerRefreshingText = @"正在刷新";
-        tableView.footerPullToRefreshText = @"上拉加载更多";
-        tableView.footerReleaseToRefreshText = @"松开加载更多";
-        tableView.footerRefreshingText = @"正在加载";
+        [tableView headerBeginRefreshing];
         tableView.delegate = self;
         tableView.dataSource = self;
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self addSubview:tableView];
     }
     return self;
 }
 
-- (void)headerRereshing
+- ( void ) reloadTable
 {
-    // 1.添加假数据
-    for (int i = 0; i<5; i++) {
-        [self.fakeData insertObject:@"ccc" atIndex:0];
-    }
-    
-    // 2.2秒后刷新表格UI
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        // 刷新表格
-        [tableView reloadData];
-        
-        // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
-        [tableView headerEndRefreshing];
-    });
+    [tableView reloadData];
 }
 
-- (void)footerRereshing
+- ( void ) startRefresh
 {
-    // 1.添加假数据
-    for (int i = 0; i<5; i++) {
-        [self.fakeData addObject:@"bbb"];
-    }
-    
-    // 2.2秒后刷新表格UI
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        // 刷新表格
-        [tableView reloadData];
-        
-        // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
-        [tableView footerEndRefreshing];
-    });
+    [tableView headerBeginRefreshing];
 }
 
-- (NSMutableArray *)fakeData
+- ( void ) loadFailed
 {
-    if (!_fakeData) {
-        self.fakeData = [NSMutableArray array];
+    [tableView headerEndRefreshing];
+    [tableView footerEndRefreshing];
+    [SVProgressHUD showErrorWithStatus:@"刷新失败"];
+}
+
+- ( NSMutableArray * ) loadAnswerArray : ( NSDictionary * ) result
+{
+    NSMutableArray * array = [NSMutableArray new];
+    NSArray * data = result[ @"data"];
+    for( NSDictionary * item in data )
+    {
+        AnswerEntity * entity = [AnswerEntity new];
         
-        for (int i = 0; i<12; i++) {
-            [self.fakeData addObject:@"aaa"];
-        }
+        [Tool loadAnswerInfoEntity:entity item:item];
+        
+        [array addObject:entity];
     }
-    return _fakeData;
+    
+    return array;
+}
+
+- ( void ) headerRereshing
+{
+    NSMutableDictionary * request = [NSMutableDictionary dictionary];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
+    [request setValue:[NSNumber numberWithInt:10] forKey:@"size"];
+    [request setValue:@"" forKey:@"before"];
+    
+    [[NetWork shareInstance] httpRequestWithPostPut:@"api/answers/good" params:request method:@"POST" success:^(NSDictionary * result)
+     {
+         int code = [result[ @"result"] intValue];
+         if( code == 4000 )
+         {
+             self.answerArray = [self loadAnswerArray:result];
+             [tableView reloadData];
+             [tableView headerEndRefreshing];
+         }
+         else
+         {
+             [self loadFailed];
+         }
+     }
+     error:^(NSError * error)
+     {
+         NSLog( @"%@", error );
+         [self loadFailed];
+     }];
+}
+
+- ( void ) footerRereshing
+{
+    NSMutableDictionary * request = [NSMutableDictionary dictionary];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
+    [request setValue:[NSNumber numberWithInt:10] forKey:@"size"];
+    [request setValue:[NSNumber numberWithInt:0] forKey:@"questionType"];
+    if( self.answerArray.count == 0 )
+    {
+        [request setValue:@"" forKey:@"before"];
+    }
+    else
+    {
+        AnswerEntity * entity = [self.answerArray objectAtIndex:self.answerArray.count - 1];
+        [request setValue:entity.modifyTime forKey:@"before"];
+    }
+    
+    [[NetWork shareInstance] httpRequestWithPostPut:@"api/answers/good" params:request method:@"POST" success:^(NSDictionary * result)
+     {
+         NSNumber * code = [result objectForKey:@"result"];
+         if( [code intValue] == 4000 )
+         {
+             NSMutableArray * temp = [self loadAnswerArray:result];
+             NSMutableArray * old = [NSMutableArray arrayWithArray:self.answerArray];
+             for( QuestionEntity * entity in temp )
+             {
+                 [old addObject:entity];
+             }
+             self.answerArray = old;
+             [tableView reloadData];
+             [tableView footerEndRefreshing];
+         }
+         else
+         {
+             [self loadFailed];
+         }
+     }
+     error:^(NSError * error)
+     {
+         NSLog( @"%@", error );
+         [self loadFailed];
+     }];
+}
+
+- ( void ) updateSelectCell
+{
+    NSIndexPath * indexPath = [NSIndexPath indexPathForRow:self.selectedIndex inSection:0];
+    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.fakeData.count;
+    return self.answerArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView1 cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    
-    cell.textLabel.text = self.fakeData[indexPath.row];
+    MyAnswerTableViewCell * cell = [tableView1 dequeueReusableCellWithIdentifier:@"MyAnswerTableCell"];
+    if( !cell )
+    {
+        cell = [[MyAnswerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MyAnswerTableCell"];
+    }
+    AnswerEntity * entity = [self.answerArray objectAtIndex:indexPath.row];
+    cell.entity = entity;
+    cell.delegate = self;
+    [cell updateCell];
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- ( CGFloat ) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    QuestionEntity * entity = [self.answerArray objectAtIndex:indexPath.row];
+    CGFloat height = [Tool getHeightByString:entity.info width:Screen_Width - 65 height:60 textSize:Text_Size_Small];
     
+    return height + 128;
+}
+
+- (void)tableView:(UITableView *)tableView_ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView_ deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if( [self.delegate respondsToSelector:@selector(clickAnswer:)] )
+    {
+        [self.delegate clickAnswer:[self.answerArray objectAtIndex:indexPath.row]];
+    }
+}
+
+#pragma mark MyAnswerTableViewCellDelegate
+- ( void ) clickQuestion:(NSString *)questionId
+{
+    [SVProgressHUD showWithStatus:@"正在加载" maskType:SVProgressHUDMaskTypeGradient];
+    
+    NSMutableDictionary * request = [NSMutableDictionary dictionary];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
+    NSString * url = [NSString stringWithFormat:@"api/question/%@", questionId];
+    [[NetWork shareInstance] httpRequestWithGet:url params:request success:^(NSDictionary * result)
+     {
+         if( [result[ @"result" ] intValue] == 3000 )
+         {
+             QuestionEntity * entity = [QuestionEntity new];
+             [Tool loadQuestionInfoEntity:entity item:result];
+             [SVProgressHUD dismiss];
+             if( [self.delegate respondsToSelector:@selector(loadQuestionSuccess:)] )
+             {
+                 [self.delegate loadQuestionSuccess:entity];
+             }
+         }
+         else
+         {
+             [SVProgressHUD showErrorWithStatus:@"加载失败"];
+         }
+     }
+     error:^(NSError * error)
+     {
+         NSLog( @"%@", error );
+         [SVProgressHUD showErrorWithStatus:@"加载失败"];
+     }];
 }
 
 @end

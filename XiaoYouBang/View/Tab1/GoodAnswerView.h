@@ -7,9 +7,25 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AnswerEntity.h"
+#import "QuestionEntity.h"
+
+@protocol GoodAnswerViewDelegate <NSObject>
+
+- ( void ) clickAnswer : ( AnswerEntity * ) entity;
+- ( void ) loadQuestionSuccess : ( QuestionEntity * ) entity;
+
+@end
 
 @interface GoodAnswerView : UIView<UITableViewDataSource, UITableViewDelegate>
 
-@property (strong, nonatomic) NSMutableArray *fakeData;
+@property( strong, nonatomic ) NSMutableArray * answerArray;
+@property( nonatomic, strong ) AnswerEntity * selectedEntity;
+@property( nonatomic, assign ) int selectedIndex;
+@property( nonatomic, weak ) id< GoodAnswerViewDelegate > delegate;
+
+- ( void ) startRefresh;
+- ( void ) reloadTable;
+- ( void ) updateSelectCell;
 
 @end

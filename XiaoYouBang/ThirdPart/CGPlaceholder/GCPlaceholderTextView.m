@@ -69,7 +69,7 @@
     }
     
     if ([text isEqualToString:self.placeholder]) {
-        self.textColor = COLOR_WITH_RGB(210, 208, 208, 1);
+        self.textColor = Color_Heavy_Gray;
     }
     else {
         self.textColor = self.realTextColor;
@@ -90,13 +90,13 @@
 - (void) endEditing:(NSNotification*) notification {
     if ([self.realText isEqualToString:@""] || self.realText == nil) {
         super.text = self.placeholder;
-        self.textColor = [UIColor lightGrayColor];
+        self.textColor = Color_Heavy_Gray;
     }
 }
 
 - (void) setTextColor:(UIColor *)textColor {
     if ([self.realText isEqualToString:self.placeholder]) {
-        if ([textColor isEqual:[UIColor lightGrayColor]]) [super setTextColor:textColor];
+        if ([textColor isEqual:Color_Heavy_Gray]) [super setTextColor:textColor];
         else self.realTextColor = textColor;
     }
     else {

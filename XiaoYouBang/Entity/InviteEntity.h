@@ -10,4 +10,12 @@
 
 @interface InviteEntity : NSObject
 
+@property( nonatomic, strong ) NSString * inviteUserId;
+@property( nonatomic, strong ) NSString * name;
+@property( nonatomic, strong ) NSString * headUrl;
+@property( nonatomic, strong ) NSString * time;
+@property( nonatomic, strong ) NSString * info;
+@property( nonatomic, assign ) BOOL hasAnswered;
+@property( nonatomic, assign ) BOOL isOtherInviteMe;
+
 @end

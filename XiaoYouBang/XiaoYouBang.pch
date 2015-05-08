@@ -9,7 +9,52 @@
 #ifndef XiaoYouBang_XiaoYouBang_pch
 #define XiaoYouBang_XiaoYouBang_pch
 
-// Include any system framework and library headers here that should be included in all compilation units.
-// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#define createSingleton(ServiceName)\
++(instancetype)shareInstance{\
+static ServiceName *instance = nil;\
+static dispatch_once_t onceToken;\
+dispatch_once(&onceToken, ^{\
+instance = [self new];\
+});\
+return instance;\
+}
+
+#define FORCE_CLOSE_KEYBOARD [[UIApplication sharedApplication].keyWindow endEditing:YES]
+#define DOCMENT_PATH [NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES) lastObject]
+#define OSVersionIsAtLast7 ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+
+#define Screen_Width     ([UIScreen mainScreen].bounds.size.width)
+#define Screen_Height    ([UIScreen mainScreen].bounds.size.height)
+#define Color_With_Rgb(r,g,b,a)   ([UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a])
+
+//
+#define imageQuality 0.5f
+//define plist file name
+#define User_Plist @"user_info"
+//define color
+#define Text_Red         Color_With_Rgb( 171, 23, 42, 1 )
+#define Bg_Red           Color_With_Rgb( 154, 1, 2, 1 )
+#define Color_Gray       Color_With_Rgb( 166, 166, 166, 1 )
+#define Color_Light_Gray Color_With_Rgb( 230, 230, 230, 1 )
+#define Color_Heavy_Gray Color_With_Rgb( 128, 128, 128, 1 )
+#define Blue_Stone Color_With_Rgb( 98, 195, 208, 1 )
+#define Blue_Stoen_Loght Color_With_Rgb( 219, 238, 244, 1 )
+#define Light_Red Color_With_Rgb( 253, 220, 220, 1 )
+#define Super_Light_Red Color_With_Rgb( 255, 239, 239, 1 )
+//define text size
+#define Text_Size_Big 15.5
+#define Text_Size_Small 13
+#define Text_Size_Micro 10
+#define Text_Size_Super_Micro 9
+//
+#define Server_Url @"http://118.186.214.42:4000/"
+
+//Noti Name
+#define AddNewQuestionComment @"AddNewQuestionComment"
+#define AddNewQuestion @"AddNewQuestion"
+#define AddNewAnswer @"AddNewAnswer"
+#define AddNewAnswerComment @"AddNewAnswerComment"
+#define EditQuestionSuccess @"EditQuestionSuccess"
+#define EditAnswerSuccess @"EditAnswerSuccess"
 
 #endif

@@ -10,4 +10,14 @@
 
 @implementation UserEntity
 
+- ( id ) init
+{
+    if( self = [super init] )
+    {
+        self.myAnswer = 0;
+        self.answerMe = 0;
+    }
+    return self;
+}
+
 @end

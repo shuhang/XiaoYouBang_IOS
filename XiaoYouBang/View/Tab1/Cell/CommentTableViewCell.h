@@ -7,7 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CommentEntity.h"
 
 @interface CommentTableViewCell : UITableViewCell
+{
+    UIImageView * headImageView;
+    UILabel * nameLabel;
+    UILabel * timeLabel;
+    UILabel * indexLabel;
+    UILabel * infoLabel;
+    UIView * line;
+}
+
+@property( nonatomic, strong ) CommentEntity * entity;
+@property( nonatomic, assign ) int commentIndex;
+
+- ( void ) updateCell;
 
 @end

@@ -7,7 +7,11 @@
 //
 
 #import "BaseViewController.h"
+#import "AnswerEntity.h"
 
 @interface AnswerInfoViewController : BaseViewController
+
+@property( nonatomic, strong ) AnswerEntity * entity;
+@property( nonatomic, assign ) BOOL isFromQuestionInfo;
 
 @end

@@ -22,6 +22,7 @@
     UILabel * timeLabel;
     UILabel * myInviteLabel;
     UILabel * inviteMeLabel;
+    UIView * line;
 }
 
 @property( nonatomic, strong ) QuestionEntity * entity;

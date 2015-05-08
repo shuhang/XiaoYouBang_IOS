@@ -7,7 +7,24 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UserEntity.h"
 
-@interface FriendTableView : UIView
+@protocol FriendTableViewDelegate <NSObject>
+
+- ( void ) clickItemAt : ( UserEntity * ) entity;
+- ( void ) clickMe;
+
+@end
+
+@interface FriendTableView : UIView<UITableViewDataSource, UITableViewDelegate>
+
+@property( strong, nonatomic ) NSMutableArray * userArray;
+@property( nonatomic, strong ) UserEntity * selectedEntity;
+@property( nonatomic, assign ) int selectedIndex;
+@property( nonatomic, weak ) id< FriendTableViewDelegate > delegate;
+
+- ( void ) startRefresh;
+- ( void ) reloadTable;
+- ( void ) updateSelectCell;
 
 @end

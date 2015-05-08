@@ -7,7 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "UserEntity.h"
 
 @interface MyDatabaseHelper : NSObject
+
+- ( void ) insertUser : ( UserEntity * ) userEntity;
 
 @end
