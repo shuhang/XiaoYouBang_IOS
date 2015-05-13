@@ -11,6 +11,7 @@
 #import "SVProgressHUD.h"
 #import "NetWork.h"
 #import "Tool.h"
+#import "ResetPasswordViewController1.h"
 
 @interface LoginViewController() <UITextFieldDelegate>
 {
@@ -62,7 +63,7 @@
     [self.view addSubview:fieldPassword];
     
     buttonResetPassword = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonResetPassword.frame = CGRectMake( 220, 180, 80, 25 );
+    buttonResetPassword.frame = CGRectMake( Screen_Width - 100, 180, 80, 25 );
     [buttonResetPassword.titleLabel setFont:[UIFont systemFontOfSize:Text_Size_Big]];
     [buttonResetPassword setTitleColor:Text_Red forState:UIControlStateNormal];
     [buttonResetPassword setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
@@ -108,7 +109,8 @@
 
 - ( void ) doResetPassword
 {
-    
+    ResetPasswordViewController1 * controller = [ResetPasswordViewController1 new];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - ( void ) loginSuccess

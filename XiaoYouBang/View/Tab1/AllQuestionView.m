@@ -14,6 +14,7 @@
 #import "QuestionTableViewCell.h"
 #import "JSONKit.h"
 #import "SVProgressHUD.h"
+#import "MyDatabaseHelper.h"
 
 @interface AllQuestionView()
 {
@@ -163,6 +164,11 @@
          if( [result[ @"result" ] intValue] == 3000 )
          {
              [Tool loadQuestionInfoEntity:self.selectedEntity item:result];
+             
+             MyDatabaseHelper * helper = [MyDatabaseHelper new];
+             [helper insertQuestion:self.selectedEntity.questionId modifyTime:self.selectedEntity.modifyTime updateTime:self.selectedEntity.updateTime changeTime:self.selectedEntity.changeTime];
+             [self updateSelectCell];
+             
              [SVProgressHUD dismiss];
              if( [self.delegate respondsToSelector:@selector(loadQuestionInfoSuccess:)] )
              {
@@ -209,17 +215,23 @@
 - ( CGFloat ) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QuestionEntity * entity = [self.questionArray objectAtIndex:indexPath.row];
-    CGFloat height = 103 + [Tool getHeightByString:entity.questionTitle width:Screen_Width - 20 height:40 textSize:Text_Size_Big];
+    UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    titleLabel.font = [UIFont systemFontOfSize:Text_Size_Big];
+    titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    titleLabel.numberOfLines = 2;
+    titleLabel.frame = CGRectMake( 10, 0, Screen_Width - 20, 0 );
+    [titleLabel setAttributedText:[Tool getModifyString:entity.questionTitle]];
+    [titleLabel sizeToFit];
+    CGFloat height = 101 + titleLabel.frame.size.height;
     if( entity.myInviteArray.count > 0 ) height += 25;
     if( entity.inviteMeArray.count > 0 ) height += 25;
-    
     return height;
 }
 
 - (void)tableView:(UITableView *)tableView_ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView_ deselectRowAtIndexPath:indexPath animated:YES];
-    self.selectedIndex = indexPath.row;
+    self.selectedIndex = ( int )indexPath.row;
     self.selectedEntity = [self.questionArray objectAtIndex:indexPath.row];
     [self doLoadQuestionInfo];
 }

@@ -40,6 +40,7 @@
     fieldInput.layer.borderColor = Color_Gray.CGColor;
     fieldInput.layer.borderWidth = 0.5f;
     fieldInput.delegate = self;
+    fieldInput.font = [UIFont systemFontOfSize:Text_Size_Small];
     [self.view addSubview:fieldInput];
 }
 
@@ -61,7 +62,7 @@
 {
     [SVProgressHUD showWithStatus:@"正在注册" maskType:SVProgressHUDMaskTypeGradient];
     __block RegisterViewController5 * temp = self;
-    dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+    dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ^
     {
         NSDictionary * result = [[NetWork shareInstance] uploadHeadImage:[NSString stringWithFormat:@"signup/upload?phone=%@&key=%@&code=123456", self.phone, self.key] fileName:@"head.jpg" fileData:self.headImageData mimeType:@"image/jpeg"];
         if( result == nil || [result[ @"result" ] intValue] != 2000 )
@@ -116,7 +117,7 @@
              [userDefaults setObject:self.name forKey:@"name"];
              [userDefaults setObject:[NSNumber numberWithInt:self.sex] forKey:@"sex"];
              [userDefaults setObject:[NSString stringWithFormat:@"%@%@", Server_Url, self.headUrl] forKey:@"headUrl"];
-             [userDefaults setObject:self.pku forKey:@"pku"];
+             [userDefaults setObject:[Tool getPkuShortByLong:self.pku] forKey:@"pku"];
              [userDefaults setObject:self.nowHome forKey:@"base"];
              [userDefaults setObject:self.oldHome forKey:@"hometown"];
              [userDefaults setObject:self.net forKey:@"qq"];

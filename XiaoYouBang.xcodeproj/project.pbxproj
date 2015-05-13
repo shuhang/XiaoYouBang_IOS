@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		A52DC4121AF0C520008EC5C8 /* QuestionInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A52DC4111AF0C520008EC5C8 /* QuestionInfoViewController.m */; };
+		A53A96B51B019ACE00E30CBD /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A53A96B31B019ACE00E30CBD /* icon.png */; };
+		A53A96B61B019ACE00E30CBD /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A53A96B41B019ACE00E30CBD /* icon@2x.png */; };
+		A53A96B91B01D0B500E30CBD /* QuestionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A53A96B81B01D0B500E30CBD /* QuestionTableViewController.m */; };
+		A53A96BC1B01D0C200E30CBD /* AnswerTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A53A96BB1B01D0C200E30CBD /* AnswerTableViewController.m */; };
+		A53A96BF1B01DE5200E30CBD /* InviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A53A96BE1B01DE5200E30CBD /* InviteViewController.m */; };
+		A53A96C21B01E23400E30CBD /* no.png in Resources */ = {isa = PBXBuildFile; fileRef = A53A96C01B01E23400E30CBD /* no.png */; };
+		A53A96C31B01E23400E30CBD /* yes.png in Resources */ = {isa = PBXBuildFile; fileRef = A53A96C11B01E23400E30CBD /* yes.png */; };
+		A53A96C61B01FFB400E30CBD /* ChooseInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A53A96C51B01FFB400E30CBD /* ChooseInviteViewController.m */; };
 		A55358001AEF1B0200F3E97D /* AllActView.m in Sources */ = {isa = PBXBuildFile; fileRef = A55357F81AEF1B0200F3E97D /* AllActView.m */; };
 		A55358011AEF1B0200F3E97D /* AllQuestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = A55357FA1AEF1B0200F3E97D /* AllQuestionView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A55358021AEF1B0200F3E97D /* QuestionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A55357FD1AEF1B0200F3E97D /* QuestionTableViewCell.m */; };
@@ -25,13 +33,16 @@
 		A5567E521AF70E040063BA2B /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A5567E511AF70E040063BA2B /* FriendTableViewCell.m */; };
 		A5567E551AF7134E0063BA2B /* FriendTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A5567E541AF7134E0063BA2B /* FriendTableView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A5567E581AF746120063BA2B /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5567E571AF746120063BA2B /* UserInfoViewController.m */; };
-		A5567E5B1AF7468C0063BA2B /* UserInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = A5567E5A1AF7468C0063BA2B /* UserInfoView.m */; };
+		A5567E5B1AF7468C0063BA2B /* UserInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = A5567E5A1AF7468C0063BA2B /* UserInfoView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A55957331AE892F3000C75B6 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A55957321AE892F3000C75B6 /* BaseViewController.m */; };
 		A559573B1AE8CABF000C75B6 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = A55957351AE8CABF000C75B6 /* LICENSE.txt */; };
 		A559573C1AE8CABF000C75B6 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = A55957361AE8CABF000C75B6 /* README.md */; };
 		A559573D1AE8CABF000C75B6 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A55957381AE8CABF000C75B6 /* SVProgressHUD.bundle */; };
 		A559573E1AE8CABF000C75B6 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A559573A1AE8CABF000C75B6 /* SVProgressHUD.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A55CC1FE1AF1C69900E82D0C /* AddAnswerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A55CC1FD1AF1C69900E82D0C /* AddAnswerViewController.m */; };
+		A55E0A3E1B00496900900134 /* UserIntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A55E0A3D1B00496900900134 /* UserIntroViewController.m */; };
+		A55E0A411B00984600900134 /* ResetPasswordViewController1.m in Sources */ = {isa = PBXBuildFile; fileRef = A55E0A401B00984600900134 /* ResetPasswordViewController1.m */; };
+		A55E0A441B00986600900134 /* ResetPasswordViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = A55E0A431B00986600900134 /* ResetPasswordViewController2.m */; };
 		A573D8511AF47AE400EB346B /* AnswerInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A573D8501AF47AE400EB346B /* AnswerInfoViewController.m */; };
 		A573D8541AF499F100EB346B /* MyAnswerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A573D8531AF499F100EB346B /* MyAnswerTableViewCell.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A57454D51AE798700066BCEA /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A57454D41AE798700066BCEA /* LoginViewController.m */; };
@@ -83,6 +94,8 @@
 		A5A559A21AE641F300994705 /* Tool.m in Sources */ = {isa = PBXBuildFile; fileRef = A5A559A11AE641F300994705 /* Tool.m */; };
 		A5BC3D291AFB544700E836E3 /* MyDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = A5BC3D281AFB544700E836E3 /* MyDatabase.m */; };
 		A5BC3D2C1AFB57B200E836E3 /* MyDatabaseHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A5BC3D2B1AFB57B200E836E3 /* MyDatabaseHelper.m */; };
+		A5CDCD971B03241200D6B356 /* LeavewordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5CDCD961B03241200D6B356 /* LeavewordViewController.m */; };
+		A5CDCD9A1B03248000D6B356 /* LeavewordView.m in Sources */ = {isa = PBXBuildFile; fileRef = A5CDCD991B03248000D6B356 /* LeavewordView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A5D3094D1AEF96010022B801 /* QuestionInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D3094C1AEF96010022B801 /* QuestionInfoView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A5D309501AEF98BE0022B801 /* AnswerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D3094F1AEF98BE0022B801 /* AnswerTableViewCell.m */; };
 		A5D309521AEFA6AB0022B801 /* edit_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = A5D309511AEFA6AB0022B801 /* edit_gray.png */; };
@@ -113,6 +126,18 @@
 		82F17BB55E40BB6547F39D27 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		A52DC4101AF0C520008EC5C8 /* QuestionInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionInfoViewController.h; sourceTree = "<group>"; };
 		A52DC4111AF0C520008EC5C8 /* QuestionInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestionInfoViewController.m; sourceTree = "<group>"; };
+		A53A96B31B019ACE00E30CBD /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		A53A96B41B019ACE00E30CBD /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		A53A96B71B01D0B500E30CBD /* QuestionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionTableViewController.h; sourceTree = "<group>"; };
+		A53A96B81B01D0B500E30CBD /* QuestionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestionTableViewController.m; sourceTree = "<group>"; };
+		A53A96BA1B01D0C200E30CBD /* AnswerTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnswerTableViewController.h; sourceTree = "<group>"; };
+		A53A96BB1B01D0C200E30CBD /* AnswerTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnswerTableViewController.m; sourceTree = "<group>"; };
+		A53A96BD1B01DE5200E30CBD /* InviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteViewController.h; sourceTree = "<group>"; };
+		A53A96BE1B01DE5200E30CBD /* InviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteViewController.m; sourceTree = "<group>"; };
+		A53A96C01B01E23400E30CBD /* no.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = no.png; sourceTree = "<group>"; };
+		A53A96C11B01E23400E30CBD /* yes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yes.png; sourceTree = "<group>"; };
+		A53A96C41B01FFB400E30CBD /* ChooseInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooseInviteViewController.h; sourceTree = "<group>"; };
+		A53A96C51B01FFB400E30CBD /* ChooseInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseInviteViewController.m; sourceTree = "<group>"; };
 		A55357F71AEF1B0200F3E97D /* AllActView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllActView.h; sourceTree = "<group>"; };
 		A55357F81AEF1B0200F3E97D /* AllActView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllActView.m; sourceTree = "<group>"; };
 		A55357F91AEF1B0200F3E97D /* AllQuestionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllQuestionView.h; sourceTree = "<group>"; };
@@ -158,6 +183,12 @@
 		A559573A1AE8CABF000C75B6 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 		A55CC1FC1AF1C69900E82D0C /* AddAnswerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddAnswerViewController.h; sourceTree = "<group>"; };
 		A55CC1FD1AF1C69900E82D0C /* AddAnswerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddAnswerViewController.m; sourceTree = "<group>"; };
+		A55E0A3C1B00496900900134 /* UserIntroViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserIntroViewController.h; sourceTree = "<group>"; };
+		A55E0A3D1B00496900900134 /* UserIntroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserIntroViewController.m; sourceTree = "<group>"; };
+		A55E0A3F1B00984600900134 /* ResetPasswordViewController1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPasswordViewController1.h; sourceTree = "<group>"; };
+		A55E0A401B00984600900134 /* ResetPasswordViewController1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResetPasswordViewController1.m; sourceTree = "<group>"; };
+		A55E0A421B00986600900134 /* ResetPasswordViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPasswordViewController2.h; sourceTree = "<group>"; };
+		A55E0A431B00986600900134 /* ResetPasswordViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResetPasswordViewController2.m; sourceTree = "<group>"; };
 		A573D84F1AF47AE400EB346B /* AnswerInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnswerInfoViewController.h; sourceTree = "<group>"; };
 		A573D8501AF47AE400EB346B /* AnswerInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnswerInfoViewController.m; sourceTree = "<group>"; };
 		A573D8521AF499F100EB346B /* MyAnswerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyAnswerTableViewCell.h; path = ../../Tab1/Cell/MyAnswerTableViewCell.h; sourceTree = "<group>"; };
@@ -191,7 +222,7 @@
 		A5808B3D1AF20D33002E61A8 /* CommentTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentTableViewController.m; sourceTree = "<group>"; };
 		A5808B3F1AF23DBE002E61A8 /* AnswerInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnswerInfoView.h; sourceTree = "<group>"; };
 		A5808B401AF23DBE002E61A8 /* AnswerInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnswerInfoView.m; sourceTree = "<group>"; };
-		A58295B41ADCB68B00831D0F /* XiaoYouBang.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XiaoYouBang.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A58295B41ADCB68B00831D0F /* 校友邦.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "校友邦.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A58295B81ADCB68B00831D0F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A58295B91ADCB68B00831D0F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A58295BB1ADCB68B00831D0F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -242,6 +273,10 @@
 		A5BC3D281AFB544700E836E3 /* MyDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDatabase.m; sourceTree = "<group>"; };
 		A5BC3D2A1AFB57B200E836E3 /* MyDatabaseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDatabaseHelper.h; sourceTree = "<group>"; };
 		A5BC3D2B1AFB57B200E836E3 /* MyDatabaseHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDatabaseHelper.m; sourceTree = "<group>"; };
+		A5CDCD951B03241200D6B356 /* LeavewordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeavewordViewController.h; sourceTree = "<group>"; };
+		A5CDCD961B03241200D6B356 /* LeavewordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeavewordViewController.m; sourceTree = "<group>"; };
+		A5CDCD981B03248000D6B356 /* LeavewordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeavewordView.h; sourceTree = "<group>"; };
+		A5CDCD991B03248000D6B356 /* LeavewordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeavewordView.m; sourceTree = "<group>"; };
 		A5D3094B1AEF96010022B801 /* QuestionInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionInfoView.h; sourceTree = "<group>"; };
 		A5D3094C1AEF96010022B801 /* QuestionInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestionInfoView.m; sourceTree = "<group>"; };
 		A5D3094E1AEF98BE0022B801 /* AnswerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnswerTableViewCell.h; sourceTree = "<group>"; };
@@ -335,6 +370,10 @@
 				A5808B401AF23DBE002E61A8 /* AnswerInfoView.m */,
 				A573D84F1AF47AE400EB346B /* AnswerInfoViewController.h */,
 				A573D8501AF47AE400EB346B /* AnswerInfoViewController.m */,
+				A53A96BD1B01DE5200E30CBD /* InviteViewController.h */,
+				A53A96BE1B01DE5200E30CBD /* InviteViewController.m */,
+				A53A96C41B01FFB400E30CBD /* ChooseInviteViewController.h */,
+				A53A96C51B01FFB400E30CBD /* ChooseInviteViewController.m */,
 			);
 			path = Tab1;
 			sourceTree = "<group>";
@@ -404,6 +443,16 @@
 				A5567E571AF746120063BA2B /* UserInfoViewController.m */,
 				A5567E591AF7468C0063BA2B /* UserInfoView.h */,
 				A5567E5A1AF7468C0063BA2B /* UserInfoView.m */,
+				A55E0A3C1B00496900900134 /* UserIntroViewController.h */,
+				A55E0A3D1B00496900900134 /* UserIntroViewController.m */,
+				A53A96B71B01D0B500E30CBD /* QuestionTableViewController.h */,
+				A53A96B81B01D0B500E30CBD /* QuestionTableViewController.m */,
+				A53A96BA1B01D0C200E30CBD /* AnswerTableViewController.h */,
+				A53A96BB1B01D0C200E30CBD /* AnswerTableViewController.m */,
+				A5CDCD951B03241200D6B356 /* LeavewordViewController.h */,
+				A5CDCD961B03241200D6B356 /* LeavewordViewController.m */,
+				A5CDCD981B03248000D6B356 /* LeavewordView.h */,
+				A5CDCD991B03248000D6B356 /* LeavewordView.m */,
 			);
 			path = Tab3;
 			sourceTree = "<group>";
@@ -476,6 +525,10 @@
 				A57454E61AE7B9EC0066BCEA /* RegisterViewController5.m */,
 				A55957311AE892F3000C75B6 /* BaseViewController.h */,
 				A55957321AE892F3000C75B6 /* BaseViewController.m */,
+				A55E0A3F1B00984600900134 /* ResetPasswordViewController1.h */,
+				A55E0A401B00984600900134 /* ResetPasswordViewController1.m */,
+				A55E0A421B00986600900134 /* ResetPasswordViewController2.h */,
+				A55E0A431B00986600900134 /* ResetPasswordViewController2.m */,
 			);
 			path = Start;
 			sourceTree = "<group>";
@@ -494,7 +547,7 @@
 		A58295B51ADCB68B00831D0F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A58295B41ADCB68B00831D0F /* XiaoYouBang.app */,
+				A58295B41ADCB68B00831D0F /* 校友邦.app */,
 				A58295CD1ADCB68B00831D0F /* XiaoYouBangTests.xctest */,
 			);
 			name = Products;
@@ -597,6 +650,10 @@
 		A5A5597D1AE6379800994705 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				A53A96C01B01E23400E30CBD /* no.png */,
+				A53A96C11B01E23400E30CBD /* yes.png */,
+				A53A96B31B019ACE00E30CBD /* icon.png */,
+				A53A96B41B019ACE00E30CBD /* icon@2x.png */,
 				A5D309511AEFA6AB0022B801 /* edit_gray.png */,
 				A5A5597E1AE6379800994705 /* add.png */,
 				A5A5597F1AE6379800994705 /* add_picture.png */,
@@ -672,7 +729,7 @@
 			);
 			name = XiaoYouBang;
 			productName = XiaoYouBang;
-			productReference = A58295B41ADCB68B00831D0F /* XiaoYouBang.app */;
+			productReference = A58295B41ADCB68B00831D0F /* 校友邦.app */;
 			productType = "com.apple.product-type.application";
 		};
 		A58295CC1ADCB68B00831D0F /* XiaoYouBangTests */ = {
@@ -738,9 +795,11 @@
 				A559573B1AE8CABF000C75B6 /* LICENSE.txt in Resources */,
 				A58295C31ADCB68B00831D0F /* Main.storyboard in Resources */,
 				A5A5599B1AE6379800994705 /* praise_gray.png in Resources */,
+				A53A96C31B01E23400E30CBD /* yes.png in Resources */,
 				A559573D1AE8CABF000C75B6 /* SVProgressHUD.bundle in Resources */,
 				A5A559901AE6379800994705 /* add_picture.png in Resources */,
 				A57B60171AF9C1C7007A9994 /* Default-568h@2x.png in Resources */,
+				A53A96C21B01E23400E30CBD /* no.png in Resources */,
 				A5A559921AE6379800994705 /* female_color.png in Resources */,
 				A5A559931AE6379800994705 /* female_gray.png in Resources */,
 				A5DAA11F1AE500F100DB585F /* MJRefresh.bundle in Resources */,
@@ -750,12 +809,14 @@
 				A5A5598F1AE6379800994705 /* add.png in Resources */,
 				A5A559981AE6379800994705 /* picture.png in Resources */,
 				A5A5599F1AE6379800994705 /* yuan1.png in Resources */,
+				A53A96B61B019ACE00E30CBD /* icon@2x.png in Resources */,
 				A5A5599D1AE6379800994705 /* red1.png in Resources */,
 				A5D309521AEFA6AB0022B801 /* edit_gray.png in Resources */,
 				A5A559941AE6379800994705 /* head_default.png in Resources */,
 				A5A559951AE6379800994705 /* head_hidden.png in Resources */,
 				A58295C51ADCB68B00831D0F /* Images.xcassets in Resources */,
 				A5A5599E1AE6379800994705 /* yuan.png in Resources */,
+				A53A96B51B019ACE00E30CBD /* icon.png in Resources */,
 				A5A5599C1AE6379800994705 /* praise_red.png in Resources */,
 				A5A559971AE6379800994705 /* male_gray.png in Resources */,
 				A5A559911AE6379800994705 /* addicon.png in Resources */,
@@ -838,12 +899,17 @@
 				A5BC3D291AFB544700E836E3 /* MyDatabase.m in Sources */,
 				A58295BD1ADCB68B00831D0F /* AppDelegate.m in Sources */,
 				A5D309501AEF98BE0022B801 /* AnswerTableViewCell.m in Sources */,
+				A53A96B91B01D0B500E30CBD /* QuestionTableViewController.m in Sources */,
 				A573D8541AF499F100EB346B /* MyAnswerTableViewCell.m in Sources */,
 				A5A5597C1AE626BF00994705 /* InviteEntity.m in Sources */,
+				A55E0A441B00986600900134 /* ResetPasswordViewController2.m in Sources */,
 				A5D3094D1AEF96010022B801 /* QuestionInfoView.m in Sources */,
 				A5567E581AF746120063BA2B /* UserInfoViewController.m in Sources */,
+				A53A96BC1B01D0C200E30CBD /* AnswerTableViewController.m in Sources */,
+				A5CDCD9A1B03248000D6B356 /* LeavewordView.m in Sources */,
 				A55358101AEF1B4C00F3E97D /* Tab3ViewController.m in Sources */,
 				A5A5595F1AE5E9BB00994705 /* NetWork.m in Sources */,
+				A55E0A3E1B00496900900134 /* UserIntroViewController.m in Sources */,
 				A57454E41AE7B9E10066BCEA /* RegisterViewController4.m in Sources */,
 				A5A5596D1AE6248700994705 /* QuestionEntity.m in Sources */,
 				A55358231AEF228D00F3E97D /* MyQuestionView.m in Sources */,
@@ -860,17 +926,21 @@
 				A5A559651AE5F11B00994705 /* README.md in Sources */,
 				A5DAA1211AE500F100DB585F /* MJRefreshConst.m in Sources */,
 				A55358031AEF1B0200F3E97D /* GoodAnswerView.m in Sources */,
+				A53A96BF1B01DE5200E30CBD /* InviteViewController.m in Sources */,
 				A57454E11AE7B9CD0066BCEA /* RegisterViewController3.m in Sources */,
 				A57454DB1AE7B9AC0066BCEA /* RegisterViewController1.m in Sources */,
 				A5808B3E1AF20D33002E61A8 /* CommentTableViewController.m in Sources */,
 				A57B601C1AF9FCB5007A9994 /* MessageTableViewCell.m in Sources */,
 				A573D8511AF47AE400EB346B /* AnswerInfoViewController.m in Sources */,
 				A57454DE1AE7B9BC0066BCEA /* RegisterViewController2.m in Sources */,
+				A5CDCD971B03241200D6B356 /* LeavewordViewController.m in Sources */,
 				A5A559A21AE641F300994705 /* Tool.m in Sources */,
+				A53A96C61B01FFB400E30CBD /* ChooseInviteViewController.m in Sources */,
 				A57B601F1AF9FCDC007A9994 /* MessageEntity.m in Sources */,
 				A58295BA1ADCB68B00831D0F /* main.m in Sources */,
 				A55358301AEF2EFC00F3E97D /* AddQuestionViewController.m in Sources */,
 				A5567E551AF7134E0063BA2B /* FriendTableView.m in Sources */,
+				A55E0A411B00984600900134 /* ResetPasswordViewController1.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -944,7 +1014,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "925c4929-b0c2-4abb-8373-086a0e1ff7ea";
+				PROVISIONING_PROFILE = "b1b4ff06-68d1-4068-8934-5d8647a9affb";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -982,7 +1052,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "925c4929-b0c2-4abb-8373-086a0e1ff7ea";
+				PROVISIONING_PROFILE = "b1b4ff06-68d1-4068-8934-5d8647a9affb";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1000,11 +1070,11 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/XiaoYouBang/XiaoYouBang.pch";
 				INFOPLIST_FILE = XiaoYouBang/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				New_Setting = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "925c4929-b0c2-4abb-8373-086a0e1ff7ea";
+				PRODUCT_NAME = "校友邦";
+				PROVISIONING_PROFILE = "b1b4ff06-68d1-4068-8934-5d8647a9affb";
 			};
 			name = Debug;
 		};
@@ -1020,11 +1090,11 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/XiaoYouBang/XiaoYouBang.pch";
 				INFOPLIST_FILE = XiaoYouBang/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				New_Setting = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "925c4929-b0c2-4abb-8373-086a0e1ff7ea";
+				PRODUCT_NAME = "校友邦";
+				PROVISIONING_PROFILE = "b1b4ff06-68d1-4068-8934-5d8647a9affb";
 			};
 			name = Release;
 		};

@@ -36,6 +36,8 @@ UIPickerViewDataSource>
     UIView * tempView;
 
     int pkuIndex;
+    
+    UITextField * nowField;
 }
 @end
 
@@ -60,7 +62,7 @@ UIPickerViewDataSource>
     [self.view addSubview:scrollView];
     
     buttonHead = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonHead.frame = CGRectMake( 120, 20, 90, 90 );
+    buttonHead.frame = CGRectMake( ( Screen_Width - 90 ) / 2, 20, 90, 90 );
     buttonHead.backgroundColor = [UIColor whiteColor];
     [buttonHead.layer setBorderWidth:0.5];
     [buttonHead.layer setBorderColor:Color_Gray.CGColor];
@@ -71,13 +73,13 @@ UIPickerViewDataSource>
     [scrollView addSubview:buttonHead];
     
     buttonMale = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonMale.frame = CGRectMake( 130, buttonHead.frame.origin.y + 100, 25, 25 );
+    buttonMale.frame = CGRectMake( ( Screen_Width - 90 ) / 2 + 10, buttonHead.frame.origin.y + 100, 25, 25 );
     [buttonMale setImage:[UIImage imageNamed:@"male_gray"] forState:UIControlStateNormal];
     [buttonMale addTarget:self action:@selector(chooseMale) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:buttonMale];
     
     buttonFemale = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonFemale.frame = CGRectMake( 175, buttonMale.frame.origin.y, 25, 25 );
+    buttonFemale.frame = CGRectMake( ( Screen_Width - 90 ) / 2 + 55, buttonMale.frame.origin.y, 25, 25 );
     [buttonFemale setImage:[UIImage imageNamed:@"female_gray"] forState:UIControlStateNormal];
     [buttonFemale addTarget:self action:@selector(chooseFemale) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:buttonFemale];
@@ -142,6 +144,17 @@ UIPickerViewDataSource>
     [fieldNet setValue:Color_Gray forKeyPath:@"_placeholderLabel.textColor"];
     [self adjustTextField:fieldNet];
     [scrollView addSubview:fieldNet];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    //增加监听，当键退出时收出消息
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
 }
 
 - ( void ) choosePku
@@ -150,7 +163,7 @@ UIPickerViewDataSource>
     tempView.backgroundColor = Color_Gray;
     
     UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake( 250, 5, 60, 30 );
+    button.frame = CGRectMake( Screen_Width - 70, 5, 60, 30 );
     button.backgroundColor = Color_Heavy_Gray;
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button setTitle:@"确定" forState:UIControlStateNormal];
@@ -175,7 +188,7 @@ UIPickerViewDataSource>
         [tempView removeFromSuperview];
     }
     
-    pkuIndex = [pickerView selectedRowInComponent:0];
+    pkuIndex = ( int )[pickerView selectedRowInComponent:0];
     self.pku = [[Tool getPkyArrayLong] objectAtIndex:pkuIndex];
     [buttonPku setTitle:self.pku forState:UIControlStateNormal];
 }
@@ -307,6 +320,49 @@ UIPickerViewDataSource>
     [fieldNet resignFirstResponder];
 }
 
+- (void)keyboardWillShow:(NSNotification *)aNotification
+{
+    //获取键盘的高度
+    NSDictionary *userInfo = [aNotification userInfo];
+    NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [aValue CGRectValue];
+    int keyboardHeight = keyboardRect.size.height;
+    
+    if( Screen_Height - keyboardHeight - 100 > nowField.frame.origin.y + nowField.frame.size.height){
+        
+    }
+    else{
+        CGFloat moveHeight = nowField.frame.origin.y - (Screen_Height - keyboardHeight - nowField.frame.size.height);
+        [UIView beginAnimations:@"scrollView" context:nil];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        [UIView setAnimationDuration:0.275f];
+        self.view.frame = CGRectMake(self.view.frame.origin.x, -moveHeight - 64, Screen_Width, Screen_Height);
+        [UIView commitAnimations];
+    }
+}
+
+//当键退出时调用
+- (void)keyboardWillHide:(NSNotification *)aNotification
+{
+    
+}
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    nowField = textField;
+}
+
+
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [UIView beginAnimations:@"scrollView" context:nil];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [UIView setAnimationCurve:0.275f];
+    self.view.frame = CGRectMake(self.view.frame.origin.x, 0 , Screen_Width, Screen_Height);
+    [UIView commitAnimations];
+    
+}
+
 - (void)takePhoto
 {
     UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;
@@ -353,7 +409,7 @@ UIPickerViewDataSource>
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo
 {
     [picker dismissViewControllerAnimated:YES completion:^{}];
-    self.headImageData = UIImageJPEGRepresentation( image, imageQuality );
+    self.headImageData = UIImageJPEGRepresentation( [Tool scaleImage:image toScale:CGSizeMake( 400, 400 )], imageQuality );
     [buttonHead setTitle:@"" forState:UIControlStateNormal];
     [buttonHead setImage:image forState:UIControlStateNormal];
 }

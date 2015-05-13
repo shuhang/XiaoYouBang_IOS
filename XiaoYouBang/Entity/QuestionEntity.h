@@ -25,7 +25,7 @@
 @property( nonatomic, strong ) NSString * editTime;
 @property( nonatomic, strong ) NSString * questionTitle;
 @property( nonatomic, strong ) NSString * info;
-@property( nonatomic, assign ) NSInteger type;
+@property( nonatomic, assign ) int type;
 @property( nonatomic, assign ) NSInteger sex;
 @property( nonatomic, assign ) NSInteger answerCount;
 @property( nonatomic, assign ) NSInteger praiseCount;

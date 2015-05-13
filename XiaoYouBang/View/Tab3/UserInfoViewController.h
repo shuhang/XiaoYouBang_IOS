@@ -12,5 +12,6 @@
 @interface UserInfoViewController : BaseViewController
 
 @property( nonatomic, strong ) UserEntity * entity;
+@property( nonatomic, assign ) BOOL shouldRefresh;
 
 @end

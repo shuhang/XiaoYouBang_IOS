@@ -33,6 +33,8 @@
 @property( nonatomic, assign ) int answerMe;
 @property( nonatomic, assign ) int myAnswer;
 @property( nonatomic, assign ) int leaveWord;
+@property( nonatomic, assign ) BOOL hasAnswered;
+@property( nonatomic, assign ) BOOL hasInvited;
 @property( nonatomic, strong ) NSMutableArray * tagArray;
 @property( nonatomic, strong ) NSMutableArray * commentArray;
 

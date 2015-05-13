@@ -9,8 +9,6 @@
 #import "Tool.h"
 #import "JSONKit.h"
 
-static UserEntity * myEntity;
-
 @implementation Tool
 
 + ( CGFloat ) getHeightByString:(NSString *)value width:(NSInteger)width height:(NSInteger)height textSize:(NSInteger)textSize
@@ -32,6 +30,15 @@ static UserEntity * myEntity;
     }
 }
 
++ ( NSMutableAttributedString * ) getModifyString:(NSString *)value
+{
+    NSMutableAttributedString * attributedString1 = [[NSMutableAttributedString alloc] initWithString:value];
+    NSMutableParagraphStyle * paragraphStyle1 = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle1 setLineSpacing:5];
+    [attributedString1 addAttribute:NSParagraphStyleAttributeName value:paragraphStyle1 range:NSMakeRange(0, [value length])];
+    return attributedString1;
+}
+
 + ( NSString * ) getShowByTime:(NSString *)time
 {
     NSDateFormatter * format = [NSDateFormatter new];
@@ -47,16 +54,16 @@ static UserEntity * myEntity;
     }
     else if( ( temp = timeInterval / 60 ) < 60 )
     {
-        return [NSString stringWithFormat:@"%d分钟前", temp];
+        return [NSString stringWithFormat:@"%ld分钟前", (long)temp];
     }
     else if( ( temp = temp / 60 ) < 24 )
     {
-        return [NSString stringWithFormat:@"%d小时前", temp];
+        return [NSString stringWithFormat:@"%ld小时前", (long)temp];
     }
     else
     {
         temp = temp / 24;
-        return [NSString stringWithFormat:@"%d天前", temp];
+        return [NSString stringWithFormat:@"%ld天前", (long)temp];
     }
 }
 
@@ -78,14 +85,60 @@ static UserEntity * myEntity;
     return [NSString stringWithFormat:@"%@ %@", time1, time2];
 }
 
-+ ( void ) setMyEntity:(UserEntity *)entity
++ (UIImage *)scaleImage:(UIImage *)scaledImage toScale:(CGSize)reSize
 {
-    myEntity = entity;
+    float drawW = 0.0;
+    float drawH = 0.0;
+    
+    CGSize size_new = scaledImage.size;
+    
+    if (size_new.width > reSize.width) {
+        drawW = (size_new.width - reSize.width)/2.0;
+    }
+    if (size_new.height > reSize.height) {
+        drawH = (size_new.height - reSize.height)/2.0;
+    }
+
+    CGRect myImageRect = CGRectMake(drawW, drawH, reSize.width, reSize.height);
+    UIImage * bigImage= scaledImage;
+    scaledImage = nil;
+    CGImageRef imageRef = bigImage.CGImage;
+    CGImageRef subImageRef = CGImageCreateWithImageInRect(imageRef, myImageRect);
+    
+    UIGraphicsBeginImageContext(reSize);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextDrawImage(context, myImageRect, subImageRef);
+    UIImage* smallImage = [UIImage imageWithCGImage:subImageRef];
+    UIGraphicsEndImageContext();
+    return smallImage;
 }
 
 + ( UserEntity * ) getMyEntity
 {
-    return myEntity;
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    UserEntity * entity = [UserEntity new];
+    entity.userId = [userDefaults objectForKey:@"userId"];
+    entity.name = [userDefaults objectForKey:@"name"];
+    entity.sex = [[userDefaults objectForKey:@"sex"] intValue];
+    entity.headUrl = [userDefaults objectForKey:@"headUrl"];
+    entity.birthday = [userDefaults objectForKey:@"birthyear"];
+    entity.pku = [userDefaults objectForKey:@"pku"];
+    entity.nowHome = [userDefaults objectForKey:@"base"];
+    entity.oldHome = [userDefaults objectForKey:@"hometown"];
+    entity.qq = [userDefaults objectForKey:@"qq"];
+    entity.job1 = [userDefaults objectForKey:@"company"];
+    entity.job2 = [userDefaults objectForKey:@"department"];
+    entity.job3 = [userDefaults objectForKey:@"job"];
+    entity.intro = [userDefaults objectForKey:@"intro"];
+    entity.tagArray = [userDefaults objectForKey:@"tags"];
+    entity.userVersion = [[userDefaults objectForKey:@"version"] intValue];
+    entity.praiseCount = [[userDefaults objectForKey:@"praisedCount"] intValue];
+    entity.answerCount = [[userDefaults objectForKey:@"answerCount"] intValue];
+    entity.questionCount = [[userDefaults objectForKey:@"questionCount"] intValue];
+    entity.inviteName = [userDefaults objectForKey:@"inviteUserName"];
+    entity.inviteHeadUrl = [userDefaults objectForKey:@"inviteUserHeadUrl"];
+    entity.inviteUserId = [userDefaults objectForKey:@"inviteUserId"];
+    return entity;
 }
 
 + ( void ) loadQuestionTableEntity:(QuestionEntity *)entity item:(NSDictionary *)item
@@ -320,11 +373,18 @@ static UserEntity * myEntity;
     if( item[ @"replyId" ] != nil )
     {
         entity.replyId = [NSString stringWithFormat:@"%@", item[ @"replyId" ]];
-        entity.replyName = [NSString stringWithFormat:@"%@", item[ @"replyName" ]];
     }
     else
     {
         entity.replyId = @"";
+    }
+    if( item[ @"replyName" ] != nil )
+    {
+        entity.replyName = [NSString stringWithFormat:@"%@", item[ @"replyName" ]];
+        entity.info = [NSString stringWithFormat:@"回复 %@：%@", entity.replyName, entity.info];
+    }
+    else
+    {
         entity.replyName = @"";
     }
     if( item[ @"commentType" ] != nil )
@@ -529,6 +589,21 @@ static UserEntity * myEntity;
 {
     NSArray * arrayShort = [self getPkuArrayShort];
     return [[self getPkyArrayLong] objectAtIndex:[arrayShort indexOfObject:pku]];
+}
+
++ ( BOOL ) judgeIsMe:(NSString *)userId
+{
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    if( [userId isEqualToString:[userDefaults objectForKey:@"userId" ]] )
+    {
+        return YES;
+    }
+    return NO;
+}
+
++ ( NSInteger ) nameSort:(UserEntity *)user1 user2:(UserEntity *)user2 context:(void *)context
+{
+    return [user1.name localizedCompare:user2.name];
 }
 
 + ( NSArray * ) getPkuArrayShort

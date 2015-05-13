@@ -16,6 +16,11 @@
 #import "CommentTableViewController.h"
 #import "AnswerInfoViewController.h"
 #import "AddQuestionViewController.h"
+#import "MyDatabaseHelper.h"
+#import "UserEntity.h"
+#import "UserInfoViewController.h"
+#import "Tool.h"
+#import "InviteViewController.h"
 
 @interface QuestionInfoViewController ()<QuestionInfoViewDelegate>
 {
@@ -34,8 +39,7 @@
     [self setupTitle:[NSString stringWithFormat:@"%@的提问", self.entity.userName]];
     [self hideNextButton];
     
-    infoView = [[QuestionInfoView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, Screen_Height + 50)];
-    infoView.entity = self.entity;
+    infoView = [[QuestionInfoView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, Screen_Height + 50) entity:self.entity];
     infoView.delegate = self;
     [self.view addSubview:infoView];
     
@@ -45,6 +49,27 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addAnswer:) name:AddNewAnswer object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addQuestionComment:) name:AddNewQuestionComment object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editQuestionSuccess:) name:EditQuestionSuccess object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inviteUser:) name:InviteUserSuccess object:nil];
+}
+
+- ( void ) inviteUser : ( NSNotification * ) noti
+{
+    NSDictionary * dic = [noti userInfo];
+    InviteEntity * invite = [InviteEntity new];
+    invite.name = dic[ @"userName" ];
+    [self.entity.myInviteArray addObject:invite];
+    
+    
+    CommentEntity * entity = [CommentEntity new];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    entity.userHeadUrl = [userDefaults objectForKey:@"headUrl"];
+    entity.userName = [userDefaults objectForKey:@"name"];
+    entity.userId = [userDefaults objectForKey:@"userId"];
+    entity.time = dic[ @"time" ];
+    entity.info = [NSString stringWithFormat:@"邀请 %@ 回答：%@", dic[ @"userName" ], dic[ @"value" ]];
+    [self.entity.commentArray insertObject:entity atIndex:0];
+    
+    [infoView updateHeader];
 }
 
 - ( void ) editQuestionSuccess : ( NSNotification * ) noti
@@ -80,10 +105,10 @@
 
 - ( void ) doBack
 {
-    self.tabBarController.tabBar.hidden = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AddNewAnswer object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AddNewQuestionComment object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:EditQuestionSuccess object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:InviteUserSuccess object:nil];
     [super doBack];
 }
 
@@ -129,7 +154,10 @@
 
 - ( void ) inviteOther
 {
-    
+    InviteViewController * controller = [InviteViewController new];
+    controller.arrayInviters = self.entity.myInviteArray;
+    controller.questionId = self.entity.questionId;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - ( void ) praiseQuestion
@@ -186,14 +214,72 @@
     controller.type = 0;
     controller.fatherCommentArray = self.entity.commentArray;
     controller.commentArray = [NSMutableArray arrayWithArray:self.entity.commentArray];
-    controller.commentCount = self.entity.questionCommentCount;
+    controller.commentCount = ( int )self.entity.questionCommentCount;
     controller.isFromQuestionInfo = YES;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
 - ( void ) clickUser
 {
+    if( [Tool judgeIsMe:self.entity.userId] )
+    {
+        [self showMe];
+    }
+    else
+    {
+        MyDatabaseHelper * helper = [MyDatabaseHelper new];
+        UserEntity * user = [helper getUserById:self.entity.userId];
+        if( user != nil )
+        {
+            UserInfoViewController * controller = [UserInfoViewController new];
+            controller.entity = user;
+            controller.shouldRefresh = YES;
+            [self.navigationController pushViewController:controller animated:YES];
+        }
+        else
+        {
+            [self loadUserInfo];
+        }
+    }
+}
+
+- ( void ) loadUserInfo
+{
+    [SVProgressHUD showWithStatus:@"正在加载个人资料" maskType:SVProgressHUDMaskTypeGradient];
     
+    NSMutableDictionary * request = [NSMutableDictionary dictionary];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
+    NSString * url = [NSString stringWithFormat:@"api/user/%@", self.entity.userId];
+    [[NetWork shareInstance] httpRequestWithGet:url params:request success:^(NSDictionary * result)
+     {
+         UserEntity * user = [UserEntity new];
+         [Tool loadUserInfoEntity:user item:result];
+         user.answerMe = [result[ @"answerMeCount" ] intValue];
+         user.myAnswer = [result[ @"myAnswerCount" ] intValue];
+         
+         MyDatabaseHelper * helper = [MyDatabaseHelper new];
+         [helper insertOrUpdateUsers:[NSArray arrayWithObjects:user, nil] updateTime:@"" symbol:NO];
+         
+         [SVProgressHUD dismiss];
+         
+         UserInfoViewController * controller = [UserInfoViewController new];
+         controller.entity = user;
+         controller.shouldRefresh = NO;
+         [self.navigationController pushViewController:controller animated:YES];
+     }
+     error:^(NSError * error)
+     {
+         NSLog( @"%@", error );
+         [SVProgressHUD showErrorWithStatus:@"加载失败"];
+     }];
+}
+
+- ( void ) showMe
+{
+    UserInfoViewController * controller = [UserInfoViewController new];
+    controller.entity = [Tool getMyEntity];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - ( void ) clickAnswerAtIndex:(int)index

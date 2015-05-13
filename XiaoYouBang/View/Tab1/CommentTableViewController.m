@@ -56,7 +56,7 @@
         UIButton * buttonComment = [UIButton buttonWithType:UIButtonTypeCustom];
         buttonComment.backgroundColor = Color_Gray;
         buttonComment.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
-        buttonComment.frame = CGRectMake( 20, 7, 125, 26 );
+        buttonComment.frame = CGRectMake( 20, 7, ( Screen_Width - 70 ) / 2, 26 );
         [buttonComment setTitle:@"评论灌水" forState:UIControlStateNormal];
         [buttonComment setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [buttonComment setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
@@ -66,7 +66,7 @@
         UIButton * buttonCare = [UIButton buttonWithType:UIButtonTypeCustom];
         buttonCare.backgroundColor = Color_Gray;
         buttonCare.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
-        buttonCare.frame = CGRectMake( 175, 7, 125, 26 );
+        buttonCare.frame = CGRectMake( 50 + ( Screen_Width - 70 ) / 2, 7, ( Screen_Width - 70 ) / 2, 26 );
         [buttonCare setTitle:@"关心一下" forState:UIControlStateNormal];
         [buttonCare setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [buttonCare setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
@@ -213,7 +213,7 @@
 
 - ( void ) refreshSuccess
 {
-    [questionCommentHeaderView updateHeader:[NSString stringWithFormat:@"问题的评论 %d", tableView.commentArray.count]];
+    [questionCommentHeaderView updateHeader:[NSString stringWithFormat:@"问题的评论 %lu", (unsigned long)tableView.commentArray.count]];
 }
 
 #pragma mark - UIActionSheetDelegate

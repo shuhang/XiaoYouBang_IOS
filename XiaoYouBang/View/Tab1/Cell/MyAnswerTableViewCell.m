@@ -81,13 +81,13 @@
     timeLabel.text = [Tool getShowTime:self.entity.createTime];
     
     infoLabel.frame= CGRectMake( 55, 80, Screen_Width - 65, [Tool getHeightByString:self.entity.info width:Screen_Width - 65 height:60 textSize:Text_Size_Small] );
-    infoLabel.text = self.entity.info;
+    [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
     
     commentLabel.frame = CGRectMake( Screen_Width - 60, [Tool getBottom:infoLabel] + 15, 50, 20 );
-    commentLabel.text = [NSString stringWithFormat:@"评论 %d", self.entity.commentCount];
+    commentLabel.text = [NSString stringWithFormat:@"评论 %ld", (long)self.entity.commentCount];
     
     praiseLabel.frame = CGRectMake( Screen_Width - 110, commentLabel.frame.origin.y, 40, 20 );
-    praiseLabel.text = [NSString stringWithFormat:@"赞 %d", self.entity.praiseCount];
+    praiseLabel.text = [NSString stringWithFormat:@"赞 %ld", (long)self.entity.praiseCount];
     
     line.frame = CGRectMake( 10, [Tool getBottom:commentLabel] + 10, Screen_Width - 20, 0.5 );
 }

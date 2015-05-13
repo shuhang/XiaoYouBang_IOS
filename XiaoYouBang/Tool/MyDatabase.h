@@ -11,13 +11,15 @@
 
 @interface MyDatabase : NSObject
 {
-    FMDatabase * database;
+    //FMDatabase * database;
 }
 
 + ( instancetype ) shareInstance;
+@property( nonatomic, strong ) FMDatabase * database;
 
 - ( void ) openDatabase;
-- ( void ) closeDatabse;
+- ( void ) closeDatabase;
+- ( void ) createAllTable;
 - ( FMDatabase * ) getDatabase;
 
 @end

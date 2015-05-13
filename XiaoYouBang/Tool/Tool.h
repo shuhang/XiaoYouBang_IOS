@@ -24,8 +24,9 @@
                        textSize : ( NSInteger ) textSize;
 
 + ( NSString * ) getShowByTime : ( NSString * ) time;
++ ( NSMutableAttributedString * ) getModifyString : ( NSString * ) value;
 
-+ ( void ) setMyEntity : ( UserEntity * ) entity;
++ (UIImage *)scaleImage:(UIImage *)scaledImage toScale:(CGSize)reSize;
 + ( UserEntity * ) getMyEntity;
 
 + ( void ) loadQuestionTableEntity : ( QuestionEntity * ) entity
@@ -63,4 +64,8 @@
                       token: ( NSString * ) token
                    success : ( SuccessBlock ) successBlock
                      error : ( ErrorBlock ) errorBlock;
+
++ ( BOOL ) judgeIsMe : ( NSString * ) userId;
+
++ ( NSInteger ) nameSort : ( UserEntity * ) user1 user2 : ( UserEntity * ) user2 context : ( void * ) context;
 @end

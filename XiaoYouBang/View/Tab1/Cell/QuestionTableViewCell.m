@@ -10,6 +10,7 @@
 #import <UIImageView+WebCache.h>
 #import "Tool.h"
 #import "InviteEntity.h"
+#import "MyDatabaseHelper.h"
 
 @implementation QuestionTableViewCell
 
@@ -80,6 +81,16 @@
     
     [headImageView sd_setImageWithURL:[NSURL URLWithString: self.entity.userHeadUrl] placeholderImage:[UIImage imageNamed:@"head_default"]];
     
+    MyDatabaseHelper * helper = [MyDatabaseHelper new];
+    if( [helper judgeQuestionExist:self.entity.questionId] )
+    {
+        pointImageView.hidden = YES;
+    }
+    else
+    {
+        pointImageView.hidden = NO;
+    }
+    
     if( self.entity.hasImage == NO )
     {
         pictureSymbolImageView.hidden = YES;
@@ -88,15 +99,15 @@
     {
         pictureSymbolImageView.hidden = NO;
     }
-    
-    if( self.entity.isNew )
-    {
-        pointImageView.hidden = YES;
-    }
-    else
-    {
-        pointImageView.hidden = NO;
-    }
+//    
+//    if( self.entity.isNew )
+//    {
+//        pointImageView.hidden = YES;
+//    }
+//    else
+//    {
+//        pointImageView.hidden = NO;
+//    }
     
     nameLabel.text = self.entity.userName;
     timeLabel.text = [Tool getShowByTime: self.entity.modifyTime];
@@ -118,7 +129,7 @@
         }
         if( self.entity.myInviteArray.count > 2 )
         {
-            [myInviteText appendString:[NSString stringWithFormat:@"等%d人", self.entity.myInviteArray.count]];
+            [myInviteText appendString:[NSString stringWithFormat:@"等%lu人", (unsigned long)self.entity.myInviteArray.count]];
         }
         
         if( self.entity.type == 0 )
@@ -154,16 +165,16 @@
         }
         if( self.entity.inviteMeArray.count > 2 )
         {
-            [inviteMeText appendString:[NSString stringWithFormat:@"等%d人邀请你", self.entity.inviteMeArray.count]];
+            [inviteMeText appendString:[NSString stringWithFormat:@"等%lu人", (unsigned long)self.entity.inviteMeArray.count]];
         }
         
         if( self.entity.type == 0 )
         {
-            [inviteMeText appendString:@"回答"];
+            [inviteMeText appendString:@" 邀请你回答"];
         }
         else if( self.entity.type == 1 )
         {
-            [inviteMeText appendString:@"参加"];
+            [inviteMeText appendString:@" 邀请你参加"];
         }
         
         inviteMeLabel.text = inviteMeText;
@@ -172,13 +183,12 @@
     {
         inviteMeLabel.hidden = YES;
     }
-    
-    CGFloat titleHight = [Tool getHeightByString:self.entity.questionTitle width:Screen_Width - 30 height:40 textSize:Text_Size_Big];
+
     titleLabel.frame = CGRectMake( 10, 55, Screen_Width - 20, 0 );
-    titleLabel.text = self.entity.questionTitle;
+    [titleLabel setAttributedText:[Tool getModifyString:self.entity.questionTitle]];
     [titleLabel sizeToFit];
     
-    answerCountLabel.frame = CGRectMake( 10, 55 + titleHight + 15, 70, 20 );
+    answerCountLabel.frame = CGRectMake( 10, [Tool getBottom:titleLabel] + 15, 70, 20 );
     praiseCountLabel.frame = CGRectMake( 90, answerCountLabel.frame.origin.y, 70, 20 );
     commentCountLabel.frame = CGRectMake( 170, answerCountLabel.frame.origin.y, 70, 20 );
     timeLabel.frame = CGRectMake( Screen_Width - 60, answerCountLabel.frame.origin.y + 2, 50, 15 );
@@ -189,25 +199,25 @@
         {
             commentCountLabel.hidden = YES;
             
-            answerCountLabel.text = [NSString stringWithFormat:@"回答 %d", self.entity.answerCount];
-            praiseCountLabel.text = [NSString stringWithFormat:@"赞 %d", self.entity.praiseCount];
+            answerCountLabel.text = [NSString stringWithFormat:@"回答 %ld", (long)self.entity.answerCount];
+            praiseCountLabel.text = [NSString stringWithFormat:@"赞 %ld", (long)self.entity.praiseCount];
         }
         else
         {
             commentCountLabel.hidden = NO;
             
-            answerCountLabel.text = [NSString stringWithFormat:@"回答 %d", self.entity.answerCount];
-            praiseCountLabel.text = [NSString stringWithFormat:@"评论 %d", self.entity.allCommentCount];
-            commentCountLabel.text = [NSString stringWithFormat:@"赞 %d", self.entity.praiseCount];
+            answerCountLabel.text = [NSString stringWithFormat:@"回答 %ld", (long)self.entity.answerCount];
+            praiseCountLabel.text = [NSString stringWithFormat:@"评论 %ld", (long)self.entity.allCommentCount];
+            commentCountLabel.text = [NSString stringWithFormat:@"赞 %ld", (long)self.entity.praiseCount];
         }
     }
     else
     {
         commentCountLabel.hidden = NO;
         
-        answerCountLabel.text = [NSString stringWithFormat:@"报名 %d", self.entity.joinCount];
-        praiseCountLabel.text = [NSString stringWithFormat:@"赞 %d", self.entity.praiseCount];
-        commentCountLabel.text = [NSString stringWithFormat:@"总结 %d", self.entity.answerCount];
+        answerCountLabel.text = [NSString stringWithFormat:@"报名 %ld", (long)self.entity.joinCount];
+        praiseCountLabel.text = [NSString stringWithFormat:@"赞 %ld", (long)self.entity.praiseCount];
+        commentCountLabel.text = [NSString stringWithFormat:@"总结 %ld", (long)self.entity.answerCount];
     }
     
     if( self.entity.myInviteArray.count > 0 )

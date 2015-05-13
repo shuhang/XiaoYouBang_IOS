@@ -17,6 +17,8 @@
 @property( nonatomic, strong ) NSString * commentId;
 @property( nonatomic, strong ) NSString * replyId;
 @property( nonatomic, strong ) NSString * replyName;
+@property( nonatomic, strong ) NSString * userId;
+@property( nonatomic, strong ) NSString * hostName;
 @property( nonatomic, assign ) BOOL isEdit;
 
 /**
@@ -24,6 +26,7 @@
  *  1 : answer
  *  2 : act
  *  3 : leaveword
+ *  4 : intro
  */
 @property( nonatomic, assign ) int type;
 

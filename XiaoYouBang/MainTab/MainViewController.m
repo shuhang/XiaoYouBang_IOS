@@ -7,6 +7,7 @@
 //
 
 #import "MainViewController.h"
+#import "MyDatabase.h"
 
 @interface MainViewController ()
 @end
@@ -16,6 +17,8 @@
 - ( void ) viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[MyDatabase shareInstance] createAllTable];
 }
 
 - ( void ) setupTabbarItem

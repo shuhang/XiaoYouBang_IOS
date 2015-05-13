@@ -25,7 +25,7 @@
         nameLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
         [self.contentView addSubview:nameLabel];
         
-        timeLabel = [[UILabel alloc] initWithFrame:CGRectMake( Screen_Width - 65, 18, 60, 15 )];
+        timeLabel = [[UILabel alloc] initWithFrame:CGRectMake( Screen_Width - 65, 17, 60, 15 )];
         timeLabel.font = [UIFont systemFontOfSize:Text_Size_Micro];
         timeLabel.textColor = Color_Gray;
         [self.contentView addSubview:timeLabel];
@@ -58,7 +58,7 @@
     
     CGFloat height = [Tool getHeightByString:self.entity.info width:Screen_Width - 75 height:99999999 textSize:Text_Size_Small];
     infoLabel.frame = CGRectMake( 60, indexLabel.frame.origin.y, Screen_Width - 75, height );
-    infoLabel.text = self.entity.info;
+    [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
     
     line.frame = CGRectMake( 10, [Tool getBottom:infoLabel] + 10, Screen_Width - 20, 0.5 );
 }

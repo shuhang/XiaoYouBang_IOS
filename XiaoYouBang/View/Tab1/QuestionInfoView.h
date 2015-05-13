@@ -76,5 +76,6 @@
 
 - ( void ) updateHeader;
 - ( void ) updateTable;
+- ( id ) initWithFrame:(CGRect)frame entity:( QuestionEntity * ) entity;
 
 @end

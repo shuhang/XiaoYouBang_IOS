@@ -152,7 +152,14 @@
 - ( CGFloat ) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     MessageEntity * entity = [self.messageArray objectAtIndex:indexPath.row];
-    CGFloat height = [Tool getHeightByString:entity.info width:Screen_Width - 55 height:300 textSize:Text_Size_Small];
+    UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    titleLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
+    titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    titleLabel.numberOfLines = 3;
+    titleLabel.frame = CGRectMake( 45, 0, Screen_Width - 55, 0 );
+    [titleLabel setAttributedText:[Tool getModifyString:entity.info]];
+    [titleLabel sizeToFit];
+    CGFloat height = titleLabel.frame.size.height;
     
     return height + 90;
 }

@@ -56,5 +56,11 @@ return instance;\
 #define AddNewAnswerComment @"AddNewAnswerComment"
 #define EditQuestionSuccess @"EditQuestionSuccess"
 #define EditAnswerSuccess @"EditAnswerSuccess"
+#define EditIntroSuccess @"EditIntroSuccess"
+#define ChooseInviter @"ChooseInviter"
+#define InviteUserSuccess @"InviteUserSuccess"
+#define AddUserComment @"AddUserComment"
+#define EditLeaveWord @"EditLeaveWord"
+#define LeaveWordBack @"LeaveWordBack"
 
 #endif

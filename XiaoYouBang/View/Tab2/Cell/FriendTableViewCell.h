@@ -21,6 +21,9 @@
 }
 
 @property( nonatomic, strong ) UserEntity * entity;
+// 0 : friend
+// 1 : invite
+@property( nonatomic, assign ) int type;
 
 - ( void ) updateCell;
 

@@ -65,8 +65,8 @@
             [buttonEdit addTarget:self action:@selector(edit) forControlEvents:UIControlEventTouchUpInside];
             [bottomView2 addSubview:buttonEdit];
             
-            buttonEdit.frame = CGRectMake( 50, 7, 90, 26 );
-            buttonComment2.frame = CGRectMake( 180, 7, 90, 26 );
+            buttonEdit.frame = CGRectMake( 50, 7, ( Screen_Width - 140 ) / 2, 26 );
+            buttonComment2.frame = CGRectMake( 90 + ( Screen_Width - 140 ) / 2, 7, ( Screen_Width - 140 ) / 2, 26 );
         }
         else
         {
@@ -101,9 +101,9 @@
             [buttonSave addTarget:self action:@selector(save) forControlEvents:UIControlEventTouchUpInside];
             [bottomView1 addSubview:buttonSave];
             
-            buttonPraise.frame = CGRectMake( 15, 7, 90, 26 );
-            buttonComment1.frame = CGRectMake( 115, 7, 90, 26 );
-            buttonSave.frame = CGRectMake( 215, 7, 90, 26 );
+            buttonPraise.frame = CGRectMake( 15, 7, ( Screen_Width - 50 ) / 3, 26 );
+            buttonComment1.frame = CGRectMake( 25 + ( Screen_Width - 50 ) / 3, 7, ( Screen_Width - 50 ) / 3, 26 );
+            buttonSave.frame = CGRectMake( 35 + ( Screen_Width - 50 ) / 3 * 2, 7, ( Screen_Width - 50 ) / 3, 26 );
             if( self.entity.hasPraised )
             {
                 buttonPraise.backgroundColor = Bg_Red;
@@ -165,6 +165,13 @@
     infoLabel.numberOfLines = 0;
     infoLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [headerView addSubview:infoLabel];
+    
+    inviteLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    inviteLabel.font = [UIFont systemFontOfSize:Text_Size_Micro];
+    inviteLabel.numberOfLines = 0;
+    inviteLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    inviteLabel.textColor = Text_Red;
+    [headerView addSubview:inviteLabel];
     
     praiseView = [[UIView alloc] initWithFrame:CGRectZero];
     praiseView.backgroundColor = Light_Red;
@@ -273,21 +280,49 @@
     companyJobLabel.text = [NSString stringWithFormat:@"%@ %@", self.entity.company, self.entity.job];
 
     infoLabel.frame = CGRectMake( 10, [Tool getBottom:userView] + 10, Screen_Width - 20, 0 );
-    infoLabel.text = self.entity.info;
+    [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
     [infoLabel sizeToFit];
     
-    if( self.entity.editTime == nil || [self.entity.editTime isEqualToString:@""] )
+    NSMutableString * inviters = [NSMutableString string];
+    int sum = 0;
+    for( NSString * value in self.entity.inviteArray )
     {
-        editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:infoLabel], 0, 0 );
+        if( sum > 0 ) [inviters appendString:@"、"];
+        [inviters appendString:value];
+        sum ++;
+    }
+    if( sum > 0 )
+    {
+        inviteLabel.text = [NSString stringWithFormat:@"应 %@ 邀请作答", inviters];
+        inviteLabel.frame = CGRectMake( 10, [Tool getBottom:infoLabel] + 20, Screen_Width - 20, 0 );
+        [inviteLabel sizeToFit];
+        
+        if( self.entity.editTime == nil || [self.entity.editTime isEqualToString:@""] )
+        {
+            editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:inviteLabel], 0, 0 );
+        }
+        else
+        {
+            editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:inviteLabel] + 10, 150, 15 );
+            editLabel.text = [NSString stringWithFormat:@"此回答编辑于 %@", [Tool getShowTime:self.entity.editTime]];
+        }
     }
     else
     {
-        editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:infoLabel] + 20, 150, 15 );
-        editLabel.text = [NSString stringWithFormat:@"此回答编辑于 %@", [Tool getShowTime:self.entity.editTime]];
+        inviteLabel.hidden = YES;
+        if( self.entity.editTime == nil || [self.entity.editTime isEqualToString:@""] )
+        {
+            editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:infoLabel], 0, 0 );
+        }
+        else
+        {
+            editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:infoLabel] + 20, 150, 15 );
+            editLabel.text = [NSString stringWithFormat:@"此回答编辑于 %@", [Tool getShowTime:self.entity.editTime]];
+        }
     }
     
     NSMutableString * users = [NSMutableString string];
-    int count = [self.entity.praiseArray count];
+    int count = ( int ) [self.entity.praiseArray count];
     for( int i = 0; i < count; i ++ )
     {
         if( i != 0 )
@@ -298,10 +333,10 @@
     }
     
     praiseCountLabel.frame = CGRectMake( 12, [Tool getBottom:editLabel] + 25, 45, 20 );
-    praiseCountLabel.text = [NSString stringWithFormat:@"赞 %d", self.entity.praiseArray.count];
+    praiseCountLabel.text = [NSString stringWithFormat:@"赞 %lu", (unsigned long)self.entity.praiseArray.count];
     
     praiseUserLabel.frame = CGRectMake( 60, praiseCountLabel.frame.origin.y + 3, Screen_Width - 70, 0 );
-    praiseUserLabel.text = users;
+    [praiseUserLabel setAttributedText:[Tool getModifyString:users]];
     [praiseUserLabel sizeToFit];
     
     if( users.length != 0 )
@@ -314,7 +349,7 @@
     }
     
     commentCountLabel.frame = CGRectMake( 10, [Tool getBottom:praiseView] + 10, 150, 20 );
-    commentCountLabel.text = [NSString stringWithFormat:@"评论 %d", self.entity.commentArray.count];
+    commentCountLabel.text = [NSString stringWithFormat:@"评论 %lu", (unsigned long)self.entity.commentArray.count];
     
     headerView.frame = CGRectMake( 0, 0, Screen_Width, [Tool getBottom:commentCountLabel] );
 }
@@ -338,7 +373,7 @@
 
 - ( void ) updateTable
 {
-    commentCountLabel.text = [NSString stringWithFormat:@"评论 %d", self.entity.commentArray.count];
+    commentCountLabel.text = [NSString stringWithFormat:@"评论 %lu", (unsigned long)self.entity.commentArray.count];
     tableView.tableHeaderView = headerView;
     [tableView reloadData];
 }
@@ -406,7 +441,7 @@
     }
     CommentEntity * entity = [self.entity.commentArray objectAtIndex:indexPath.row];
     cell.entity = entity;
-    cell.commentIndex = self.entity.commentCount - indexPath.row;
+    cell.commentIndex = ( int )( self.entity.commentCount - indexPath.row );
     [cell updateCell];
     return cell;
 }
@@ -414,7 +449,14 @@
 - ( CGFloat ) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CommentEntity * entity = [self.entity.commentArray objectAtIndex:indexPath.row];
-    CGFloat height = [Tool getHeightByString:entity.info width:Screen_Width - 75 height:99999999 textSize:Text_Size_Small];
+    UILabel * tempLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    tempLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
+    tempLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    tempLabel.numberOfLines = 0;
+    tempLabel.frame = CGRectMake( 60, 0, Screen_Width - 75, 0 );
+    [tempLabel setAttributedText:[Tool getModifyString:entity.info]];
+    [tempLabel sizeToFit];
+    CGFloat height = tempLabel.frame.size.height;
     
     return height + 60;
 }
@@ -425,7 +467,7 @@
     
     if( [self.delegate respondsToSelector:@selector(clickCommentAtIndex:)] )
     {
-        [self.delegate clickCommentAtIndex:indexPath.row];
+        [self.delegate clickCommentAtIndex:( int )indexPath.row];
     }
 }
 

@@ -11,6 +11,17 @@
 
 @interface MyDatabaseHelper : NSObject
 
-- ( void ) insertUser : ( UserEntity * ) userEntity;
+- ( void ) insertOrUpdateUsers : ( NSArray * ) userArray
+                    updateTime : ( NSString * ) time
+                        symbol : ( BOOL ) symbol;
+- ( UserEntity * ) getUserById : ( NSString * ) userId;
+- ( UserEntity * ) getUserByName : ( NSString * ) userName;
+- ( NSMutableArray * ) getUserList;
+
+- ( BOOL ) judgeQuestionExist : ( NSString * ) questionId;
+- ( void ) insertQuestion : ( NSString * ) questionId
+               modifyTime : ( NSString * ) modifyTime
+               updateTime : ( NSString * ) updateTime
+               changeTime : ( NSString * ) changeTime;
 
 @end

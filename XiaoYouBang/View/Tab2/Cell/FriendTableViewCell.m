@@ -25,7 +25,7 @@
         nameLabel.font = [UIFont systemFontOfSize:Text_Size_Big];
         [self.contentView addSubview:nameLabel];
         
-        praiseCountLabel = [[UILabel alloc] initWithFrame:CGRectMake( Screen_Width - 85, 15, 70, 20 )];
+        praiseCountLabel = [[UILabel alloc] initWithFrame:CGRectMake( Screen_Width - 115, 17, 100, 20 )];
         praiseCountLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
         praiseCountLabel.textAlignment = NSTextAlignmentRight;
         praiseCountLabel.textColor = Text_Red;
@@ -68,8 +68,25 @@
     {
         [sexImageView setImage:[UIImage imageNamed:@"male_color"]];
     }
-    
-    praiseCountLabel.text = [NSString stringWithFormat:@"赞 %d", self.entity.praiseCount];
+    if( self.type == 0 )
+    {
+        praiseCountLabel.text = [NSString stringWithFormat:@"赞 %d", self.entity.praiseCount];
+    }
+    else if( self.type == 1 )
+    {
+        if( self.entity.hasInvited )
+        {
+            praiseCountLabel.text = @"该用户已邀请";
+        }
+        else if( self.entity.hasAnswered )
+        {
+            praiseCountLabel.text = @"该用户已作答";
+        }
+        else
+        {
+            praiseCountLabel.text = @"";
+        }
+    }
     pkuLabel.text = [NSString stringWithFormat:@"北京大学 %@", [Tool getPkuLongByShort:self.entity.pku]];
     jobLabel.text = [NSString stringWithFormat:@"%@ %@ %@", self.entity.job1, self.entity.job2, self.entity.job3];
     line.frame = CGRectMake( 10, [Tool getBottom:jobLabel] + 10, Screen_Width - 20, 0.5 );

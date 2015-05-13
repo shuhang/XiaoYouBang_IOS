@@ -78,7 +78,7 @@
              if( code == 3000 )
              {
                  self.commentArray = [Tool loadCommentArray:result[ @"data" ]];
-                 self.commentCount = self.commentArray.count;
+                 self.commentCount = ( int )self.commentArray.count;
                  [tableView reloadData];
                  [tableView headerEndRefreshing];
                  
@@ -115,7 +115,7 @@
     }
     CommentEntity * entity = [self.commentArray objectAtIndex:indexPath.row];
     cell.entity = entity;
-    cell.commentIndex = self.commentArray.count - indexPath.row;
+    cell.commentIndex = ( int )( self.commentArray.count - indexPath.row );
     [cell updateCell];
     return cell;
 }
@@ -123,7 +123,14 @@
 - ( CGFloat ) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CommentEntity * entity = [self.commentArray objectAtIndex:indexPath.row];
-    CGFloat height = [Tool getHeightByString:entity.info width:Screen_Width - 75 height:99999999 textSize:Text_Size_Small];
+    UILabel * tempLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    tempLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
+    tempLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    tempLabel.numberOfLines = 0;
+    tempLabel.frame = CGRectMake( 60, 0, Screen_Width - 75, 0 );
+    [tempLabel setAttributedText:[Tool getModifyString:entity.info]];
+    [tempLabel sizeToFit];
+    CGFloat height = tempLabel.frame.size.height;
     
     return height + 60;
 }
@@ -134,7 +141,7 @@
     
     if( [self.delegate respondsToSelector:@selector(clickCommentAtIndex:)] )
     {
-        [self.delegate clickCommentAtIndex:indexPath.row];
+        [self.delegate clickCommentAtIndex:( int )indexPath.row];
     }
 }
 

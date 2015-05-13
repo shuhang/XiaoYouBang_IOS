@@ -13,6 +13,7 @@
 #import "FriendTableViewCell.h"
 #import "SVProgressHUD.h"
 #import <UIImageView+WebCache.h>
+#import "MyDatabaseHelper.h"
 
 @interface FriendTableView()
 {
@@ -27,12 +28,12 @@
 
 @implementation FriendTableView
 
-- ( id ) initWithFrame:(CGRect)frame
+- ( id ) initWithFrame:(CGRect)frame userArray:( NSMutableArray * ) array
 {
     if( self = [super initWithFrame:frame] )
     {
         self.backgroundColor = [UIColor whiteColor];
-        self.userArray = [NSMutableArray array];
+        self.userArray = array;
         
         [self initHeaderView];
         
@@ -45,13 +46,15 @@
         tableView.dataSource = self;
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self addSubview:tableView];
+        
+        friendCountLabel.text = [NSString stringWithFormat:@"共%lu人", (unsigned long)self.userArray.count];
     }
     return self;
 }
 
 - ( void ) initHeaderView
 {
-    headerView = [[UIView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, 181 )];
+    headerView = [[UIView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, 191 )];
     headerView.backgroundColor = [UIColor whiteColor];
     
     UILabel * tempLabel = [[UILabel alloc] initWithFrame:CGRectMake( 15, 15, 80, 20 )];
@@ -141,20 +144,20 @@
     NSMutableDictionary * request = [NSMutableDictionary dictionary];
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
-    if( [userDefaults objectForKey:@"friend_update_time"] == nil )
+    if( [userDefaults objectForKey:@"user_update_time"] == nil )
     {
         [request setValue:@"" forKey:@"after"];
     }
     else
     {
-        [request setValue:[userDefaults objectForKey:@"friend_update_time"] forKey:@"after"];
+        [request setValue:[userDefaults objectForKey:@"user_update_time"] forKey:@"after"];
     }
     [[NetWork shareInstance] httpRequestWithPostPut:@"api/users" params:request method:@"POST" success:^(NSDictionary * result)
      {
          int code = [result[ @"result"] intValue];
          if( code == 8000 )
          {
-             [self loadSuccess:result];
+             [self loadSuccess:result updateTime:result[ @"updateTime" ]];
          }
          else
          {
@@ -168,8 +171,9 @@
      }];
 }
 
-- ( void ) loadSuccess : ( NSDictionary * ) result
+- ( void ) loadSuccess : ( NSDictionary * ) result updateTime : ( NSString * ) time
 {
+    NSMutableArray * temp = [NSMutableArray array];
     NSArray * array = result[ @"data" ];
     for( NSDictionary * item in array )
     {
@@ -177,13 +181,49 @@
         
         [Tool loadUserInfoEntity:entity item:item];
         
-        [self.userArray addObject:entity];
+        [temp addObject:entity];
     }
+    
+    MyDatabaseHelper * helper = [MyDatabaseHelper new];
+    [helper insertOrUpdateUsers:temp updateTime:time symbol:YES];
+    
+    NSMutableDictionary * hashMap = [NSMutableDictionary dictionary];
+    for( UserEntity * entity in temp )
+    {
+        [hashMap setObject:[NSNumber numberWithBool:YES] forKey:entity.userId];
+    }
+    
+    NSMutableArray * old = [NSMutableArray arrayWithArray:self.userArray];
+    int count = ( int )[old count];
+    for( int i = count - 1; i >= 0; i -- )
+    {
+        UserEntity * entity = [old objectAtIndex:i];
+        if( hashMap[ entity.userId ] )
+        {
+            [old removeObjectAtIndex:i];
+        }
+    }
+    
+    for( UserEntity * entity in temp )
+    {
+        [old addObject:entity];
+    }
+    
+    old = ( NSMutableArray * ) [old sortedArrayUsingFunction:sortByName2 context:NULL];
+    
+    self.userArray = old;
     
     [tableView reloadData];
     [tableView headerEndRefreshing];
     
-    friendCountLabel.text = [NSString stringWithFormat:@"共%d人", self.userArray.count];
+    friendCountLabel.text = [NSString stringWithFormat:@"共%lu人", (unsigned long)self.userArray.count];
+}
+
+NSInteger sortByName2( id u1, id u2, void *context )
+{
+    UserEntity * user1 = ( UserEntity * ) u1;
+    UserEntity * user2 = ( UserEntity * ) u2;
+    return [user1.name localizedCompare:user2.name];
 }
 
 - ( void ) reloadTable
@@ -224,13 +264,14 @@
     }
     UserEntity * entity = [self.userArray objectAtIndex:indexPath.row];
     cell.entity = entity;
+    cell.type = 0;
     [cell updateCell];
     return cell;
 }
 
 - ( CGFloat ) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 113;
+    return 111;
 }
 
 - (void)tableView:(UITableView *)tableView_ didSelectRowAtIndexPath:(NSIndexPath *)indexPath

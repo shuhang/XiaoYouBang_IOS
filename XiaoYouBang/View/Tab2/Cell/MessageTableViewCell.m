@@ -85,7 +85,7 @@
             middleLabel2.frame = CGRectZero;
             
             infoLabel.frame = CGRectMake( 45, [Tool getBottom:middleLabel1] + 10, Screen_Width - 55, 0 );
-            infoLabel.text = self.entity.info;
+            [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
             [infoLabel sizeToFit];
             
             break;
@@ -107,7 +107,7 @@
             middleLabel2.frame = CGRectZero;
             
             infoLabel.frame = CGRectMake( 45, [Tool getBottom:middleLabel1] + 10, Screen_Width - 55, 0 );
-            infoLabel.text = self.entity.info;
+            [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
             [infoLabel sizeToFit];
             
             break;
@@ -130,7 +130,7 @@
             middleLabel2.frame = CGRectMake( 45 + self.entity.middleUserName.length * 13, 40, 100, 20 );
             
             infoLabel.frame = CGRectMake( 45, [Tool getBottom:middleLabel1] + 10, Screen_Width - 55, 0 );
-            infoLabel.text = self.entity.info;
+            [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
             [infoLabel sizeToFit];
             
             break;
@@ -152,7 +152,7 @@
             middleLabel2.frame = CGRectMake( 45 + self.entity.middleUserName.length * 13, 40, 120, 20 );
             
             infoLabel.frame = CGRectMake( 45, [Tool getBottom:middleLabel1] + 10, Screen_Width - 55, 0 );
-            infoLabel.text = self.entity.info;
+            [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
             [infoLabel sizeToFit];
             
             break;
@@ -180,7 +180,7 @@
             middleLabel2.frame = CGRectZero;
             
             infoLabel.frame = CGRectMake( 45, [Tool getBottom:middleLabel1] + 10, Screen_Width - 55, 0 );
-            infoLabel.text = self.entity.info;
+            [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
             [infoLabel sizeToFit];
             
             break;
@@ -201,7 +201,7 @@
             middleLabel2.frame = CGRectZero;
             
             infoLabel.frame = CGRectMake( 45, [Tool getBottom:middleLabel1] + 10, Screen_Width - 55, 0 );
-            infoLabel.text = self.entity.info;
+            [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
             [infoLabel sizeToFit];
             
             break;
@@ -224,7 +224,7 @@
             middleLabel2.frame = CGRectMake( 45 + self.entity.middleUserName.length * 13, 40, 100, 20 );
             
             infoLabel.frame = CGRectMake( 45, [Tool getBottom:middleLabel1] + 10, Screen_Width - 55, 0 );
-            infoLabel.text = self.entity.info;
+            [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
             [infoLabel sizeToFit];
             
             break;

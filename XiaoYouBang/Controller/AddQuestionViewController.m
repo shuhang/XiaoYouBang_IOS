@@ -25,7 +25,7 @@
     [super viewDidLoad];
     
     self.tabBarController.tabBar.hidden = YES;
-    
+    self.view.backgroundColor = Color_With_Rgb( 255, 255, 255, 1 );
     [self setupTitle:@"添加提问"];
     [self setupNextButtonTitle:@"发布"];
     
@@ -73,6 +73,11 @@
     if( self.questionTitle.length < 1 || self.questionTitle.length > 36 )
     {
         [SVProgressHUD showErrorWithStatus:@"标题最多36个字"];
+        return;
+    }
+    if( [self.questionTitle rangeOfString:@"?"].length == 0 && [self.questionTitle rangeOfString:@""].length == 0 )
+    {
+        [SVProgressHUD showErrorWithStatus:@"标题至少包含一个问号"];
         return;
     }
     self.info = inputInfo.text;

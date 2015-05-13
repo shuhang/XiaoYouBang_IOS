@@ -163,7 +163,14 @@
 - ( CGFloat ) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QuestionEntity * entity = [self.actArray objectAtIndex:indexPath.row];
-    CGFloat height = 103 + [Tool getHeightByString:entity.questionTitle width:Screen_Width - 30 height:45 textSize:Text_Size_Big];
+    UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    titleLabel.font = [UIFont systemFontOfSize:Text_Size_Big];
+    titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    titleLabel.numberOfLines = 2;
+    titleLabel.frame = CGRectMake( 10, 0, Screen_Width - 20, 0 );
+    [titleLabel setAttributedText:[Tool getModifyString:entity.questionTitle]];
+    [titleLabel sizeToFit];
+    CGFloat height = 101 + titleLabel.frame.size.height;
     if( entity.myInviteArray.count > 0 ) height += 25;
     if( entity.inviteMeArray.count > 0 ) height += 25;
     

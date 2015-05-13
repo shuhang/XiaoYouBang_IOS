@@ -11,4 +11,6 @@
 
 @interface Tab3ViewController : BaseViewController
 
+@property( strong, nonatomic ) NSMutableArray * userArray;
+
 @end

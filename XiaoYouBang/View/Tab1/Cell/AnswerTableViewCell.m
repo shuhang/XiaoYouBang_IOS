@@ -58,13 +58,13 @@
 {
     [headImageView sd_setImageWithURL:[NSURL URLWithString:self.entity.userHeadUrl] placeholderImage:[UIImage imageNamed:@"head_default"]];
     nameLabel.text = self.entity.name;
-    commentCountLabel.text = [NSString stringWithFormat:@"评论 %d", self.entity.commentCount];
-    praiseCountLabel.text = [NSString stringWithFormat:@"赞 %d", self.entity.praiseCount];
+    commentCountLabel.text = [NSString stringWithFormat:@"评论 %ld", (long)self.entity.commentCount];
+    praiseCountLabel.text = [NSString stringWithFormat:@"赞 %ld", (long)self.entity.praiseCount];
     indexLabel.text = [NSString stringWithFormat:@"%d答", self.answerIndex];
     
     CGFloat height = [Tool getHeightByString:self.entity.info width:Screen_Width - 75 height:60 textSize:Text_Size_Small];
     infoLabel.frame = CGRectMake( 60, indexLabel.frame.origin.y, Screen_Width - 75, height );
-    infoLabel.text = self.entity.info;
+    [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
     
     line.frame = CGRectMake( 10, [Tool getBottom:infoLabel] + 10, Screen_Width - 20, 0.5 );
 }

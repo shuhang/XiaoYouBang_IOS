@@ -14,6 +14,9 @@
 #import "AddAnswerViewController.h"
 #import "Tool.h"
 #import "QuestionInfoViewController.h"
+#import "MyDatabaseHelper.h"
+#import "UserInfoViewController.h"
+#import "UserEntity.h"
 
 @interface AnswerInfoViewController ()<AnswerInfoViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 {
@@ -147,7 +150,65 @@
 
 - ( void ) clickUser
 {
+    if( [Tool judgeIsMe:self.entity.userId] )
+    {
+        [self showMe];
+    }
+    else
+    {
+        MyDatabaseHelper * helper = [MyDatabaseHelper new];
+        UserEntity * user = [helper getUserById:self.entity.userId];
+        if( user != nil )
+        {
+            UserInfoViewController * controller = [UserInfoViewController new];
+            controller.entity = user;
+            controller.shouldRefresh = YES;
+            [self.navigationController pushViewController:controller animated:YES];
+        }
+        else
+        {
+            [self loadUserInfo];
+        }
+    }
+}
+
+- ( void ) loadUserInfo
+{
+    [SVProgressHUD showWithStatus:@"正在加载个人资料" maskType:SVProgressHUDMaskTypeGradient];
     
+    NSMutableDictionary * request = [NSMutableDictionary dictionary];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
+    NSString * url = [NSString stringWithFormat:@"api/user/%@", self.entity.userId];
+    [[NetWork shareInstance] httpRequestWithGet:url params:request success:^(NSDictionary * result)
+     {
+         UserEntity * user = [UserEntity new];
+         [Tool loadUserInfoEntity:user item:result];
+         user.answerMe = [result[ @"answerMeCount" ] intValue];
+         user.myAnswer = [result[ @"myAnswerCount" ] intValue];
+         
+         MyDatabaseHelper * helper = [MyDatabaseHelper new];
+         [helper insertOrUpdateUsers:[NSArray arrayWithObjects:user, nil] updateTime:@"" symbol:NO];
+         
+         [SVProgressHUD dismiss];
+         
+         UserInfoViewController * controller = [UserInfoViewController new];
+         controller.entity = user;
+         controller.shouldRefresh = NO;
+         [self.navigationController pushViewController:controller animated:YES];
+     }
+     error:^(NSError * error)
+     {
+         NSLog( @"%@", error );
+         [SVProgressHUD showErrorWithStatus:@"加载失败"];
+     }];
+}
+
+- ( void ) showMe
+{
+    UserInfoViewController * controller = [UserInfoViewController new];
+    controller.entity = [Tool getMyEntity];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - ( void ) clickQuestion
@@ -256,7 +317,7 @@
 {
     self.entity.isHasSaved = YES;
     [infoView updateSaveButton];
-    [SVProgressHUD dismiss];
+    [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
 }
 
 - ( void ) cancelSaveSuccess

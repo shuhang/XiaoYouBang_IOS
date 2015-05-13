@@ -23,7 +23,7 @@
 - ( void ) viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.view.backgroundColor = Color_With_Rgb( 255, 255, 255, 1 );
     [self setupTitle:@"添加回答"];
     [self setupNextButtonTitle:@"发布"];
     

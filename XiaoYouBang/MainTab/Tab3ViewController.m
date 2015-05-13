@@ -9,6 +9,8 @@
 #import "Tab3ViewController.h"
 #import "FriendTableView.h"
 #import "UserInfoViewController.h"
+#import "MyDatabaseHelper.h"
+#import "Tool.h"
 
 @interface Tab3ViewController () <FriendTableViewDelegate>
 {
@@ -26,9 +28,21 @@
     [self hideBackButton];
     [self hideNextButton];
     
-    friendView = [[FriendTableView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, Screen_Height)];
+    MyDatabaseHelper * helper = [MyDatabaseHelper new];
+    NSMutableArray * array = [helper getUserList];
+    self.userArray = ( NSMutableArray * )[array sortedArrayUsingFunction:sortByName1 context:NULL];
+
+    
+    friendView = [[FriendTableView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, Screen_Height) userArray:self.userArray];
     friendView.delegate = self;
     [self.view addSubview:friendView];
+}
+
+NSInteger sortByName1( id u1, id u2, void *context )
+{
+    UserEntity * user1 = ( UserEntity * ) u1;
+    UserEntity * user2 = ( UserEntity * ) u2;
+    return [user1.name localizedCompare:user2.name];
 }
 
 - ( void ) viewWillAppear:(BOOL)animated
@@ -42,37 +56,14 @@
 {
     UserInfoViewController * controller = [UserInfoViewController new];
     controller.entity = entity;
+    controller.shouldRefresh = YES;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
 - ( void ) clickMe
 {
-    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-    UserEntity * entity = [UserEntity new];
-    entity.userId = [userDefaults objectForKey:@"userId"];
-    entity.name = [userDefaults objectForKey:@"name"];
-    entity.sex = [[userDefaults objectForKey:@"sex"] intValue];
-    entity.headUrl = [userDefaults objectForKey:@"headUrl"];
-    entity.birthday = [userDefaults objectForKey:@"birthyear"];
-    entity.pku = [userDefaults objectForKey:@"pku"];
-    entity.nowHome = [userDefaults objectForKey:@"base"];
-    entity.oldHome = [userDefaults objectForKey:@"hometown"];
-    entity.qq = [userDefaults objectForKey:@"qq"];
-    entity.job1 = [userDefaults objectForKey:@"company"];
-    entity.job2 = [userDefaults objectForKey:@"department"];
-    entity.job3 = [userDefaults objectForKey:@"job"];
-    entity.intro = [userDefaults objectForKey:@"intro"];
-    entity.tagArray = [userDefaults objectForKey:@"tags"];
-    entity.userVersion = [[userDefaults objectForKey:@"version"] intValue];
-    entity.praiseCount = [[userDefaults objectForKey:@"praisedCount"] intValue];
-    entity.answerCount = [[userDefaults objectForKey:@"questionCount"] intValue];
-    entity.questionCount = [[userDefaults objectForKey:@"answerCount"] intValue];
-    entity.inviteName = [userDefaults objectForKey:@"inviteUserName"];
-    entity.inviteHeadUrl = [userDefaults objectForKey:@"inviteUserHeadUrl"];
-    entity.inviteUserId = [userDefaults objectForKey:@"inviteUserId"];
-    
     UserInfoViewController * controller = [UserInfoViewController new];
-    controller.entity = entity;
+    controller.entity = [Tool getMyEntity];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
