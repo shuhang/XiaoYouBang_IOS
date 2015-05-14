@@ -21,7 +21,7 @@
         self.joinCount = 0;
         
         self.commentArray = [NSMutableArray array];
-        self.actArray = [NSMutableArray array];
+        self.joinArray = [NSMutableArray array];
         self.imageArray = [NSMutableArray array];
         self.praiseArray = [NSMutableArray array];
     }

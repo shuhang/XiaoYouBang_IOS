@@ -1,14 +1,13 @@
-
 //
-//  QuestionInfoViewController.m
+//  ActInfoViewController.m
 //  XiaoYouBang
 //
-//  Created by shuhang on 15/4/29.
+//  Created by shuhang on 15/5/14.
 //  Copyright (c) 2015年 shuhang. All rights reserved.
 //
 
-#import "QuestionInfoViewController.h"
-#import "QuestionInfoView.h"
+#import "ActInfoViewController.h"
+#import "ActInfoView.h"
 #import "AddAnswerViewController.h"
 #import "AddCommentViewController.h"
 #import "CommentEntity.h"
@@ -22,13 +21,13 @@
 #import "Tool.h"
 #import "InviteViewController.h"
 
-@interface QuestionInfoViewController ()<QuestionInfoViewDelegate>
+@interface ActInfoViewController ()<ActInfoViewDelegate>
 {
-    QuestionInfoView * infoView;
+    ActInfoView * infoView;
 }
 @end
 
-@implementation QuestionInfoViewController
+@implementation ActInfoViewController
 
 - ( void ) viewDidLoad
 {
@@ -36,10 +35,10 @@
     
     self.tabBarController.tabBar.hidden = YES;
     
-    [self setupTitle:[NSString stringWithFormat:@"%@的提问", self.entity.userName]];
+    [self setupTitle:[NSString stringWithFormat:@"%@发起的活动", self.entity.userName]];
     [self hideNextButton];
     
-    infoView = [[QuestionInfoView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, Screen_Height + 50) entity:self.entity];
+    infoView = [[ActInfoView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, Screen_Height + 50 ) entity:self.entity];
     infoView.delegate = self;
     [self.view addSubview:infoView];
     
@@ -47,9 +46,36 @@
     [infoView updateTable];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addAnswer:) name:AddNewAnswer object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addQuestionComment:) name:AddNewQuestionComment object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addQuestionComment:) name:AddNewActComment object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editQuestionSuccess:) name:EditQuestionSuccess object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inviteUser:) name:QuestionInviteSuccess object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inviteUser:) name:ActInviteSuccess object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addActJoin:) name:AddNewActJoin object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editActJoin:) name:EditActJoin object:nil];
+}
+
+- ( void ) editActJoin : ( NSNotification * ) noti
+{
+    NSDictionary * dic = [noti userInfo];
+    for( CommentEntity * comment in self.entity.joinArray )
+    {
+        if( [Tool judgeIsMe:comment.userId] )
+        {
+            comment.info = [dic objectForKey:@"info"];
+            break;
+        }
+    }
+    [infoView updateHeader];
+}
+
+- ( void ) addActJoin : ( NSNotification * ) noti
+{
+    NSDictionary * dic = [noti userInfo];
+    CommentEntity * entity = [dic objectForKey:@"comment"];
+    self.entity.hasSigned = YES;
+    [self.entity.joinArray insertObject:entity atIndex:0];
+    self.entity.joinCount ++;
+    
+    [infoView updateHeader];
 }
 
 - ( void ) inviteUser : ( NSNotification * ) noti
@@ -58,14 +84,14 @@
     InviteEntity * invite = [InviteEntity new];
     invite.name = dic[ @"userName" ];
     [self.entity.myInviteArray addObject:invite];
-
+    
     CommentEntity * entity = [CommentEntity new];
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     entity.userHeadUrl = [userDefaults objectForKey:@"headUrl"];
     entity.userName = [userDefaults objectForKey:@"name"];
     entity.userId = [userDefaults objectForKey:@"userId"];
     entity.time = dic[ @"time" ];
-    entity.info = [NSString stringWithFormat:@"邀请 %@ 回答：%@", dic[ @"userName" ], dic[ @"value" ]];
+    entity.info = [NSString stringWithFormat:@"邀请 %@ 参加：%@", dic[ @"userName" ], dic[ @"value" ]];
     [self.entity.commentArray insertObject:entity atIndex:0];
     
     [infoView updateHeader];
@@ -105,14 +131,16 @@
 - ( void ) doBack
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AddNewAnswer object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AddNewQuestionComment object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AddNewActComment object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:EditQuestionSuccess object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:QuestionInviteSuccess object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ActInviteSuccess object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AddNewActJoin object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:EditActJoin object:nil];
     [super doBack];
 }
 
 #pragma mark QuestionInfoViewDelegate
-- ( void ) addOrEditAnswer
+- ( void ) addOrEditSum
 {
     if( self.entity.hasAnswered )
     {
@@ -133,15 +161,36 @@
 
 - ( void ) addComment
 {
+    [self clickComment];
+}
+
+- ( void ) addJoin
+{
     AddCommentViewController * controller = [AddCommentViewController new];
-    controller.isEdit = NO;
+    if( self.entity.hasSigned )
+    {
+        controller.isEdit = YES;
+        for( CommentEntity * comment in self.entity.joinArray )
+        {
+            if( [Tool judgeIsMe:comment.userId] )
+            {
+                controller.info = comment.info;
+                controller.commentId = comment.commentId;
+                break;
+            }
+        }
+    }
+    else
+    {
+        controller.isEdit = NO;
+    }
     controller.questionId = self.entity.questionId;
-    controller.type = 0;
+    controller.type = 2;
     controller.replyId = @"";
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-- ( void ) editQuestion
+- ( void ) editAct
 {
     AddQuestionViewController * controller = [AddQuestionViewController new];
     controller.questionId = self.entity.questionId;
@@ -156,11 +205,10 @@
     InviteViewController * controller = [InviteViewController new];
     controller.arrayInviters = self.entity.myInviteArray;
     controller.questionId = self.entity.questionId;
-    controller.type = 0;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-- ( void ) praiseQuestion
+- ( void ) praiseAct
 {
     if( self.entity.hasPraised )
     {
@@ -211,11 +259,18 @@
     CommentTableViewController * controller = [CommentTableViewController new];
     controller.questionTitle = self.entity.questionTitle;
     controller.questionId = self.entity.questionId;
-    controller.type = 0;
+    controller.type = 1;
     controller.commentArray = [NSMutableArray arrayWithArray:self.entity.commentArray];
     controller.commentCount = ( int )self.entity.questionCommentCount;
     controller.isFromQuestionInfo = YES;
+    controller.inviteArray = self.entity.myInviteArray;
+    controller.joinArray = self.entity.joinArray;
     [self.navigationController pushViewController:controller animated:YES];
+}
+
+- ( void ) clickJoin
+{
+    
 }
 
 - ( void ) clickUser
@@ -281,7 +336,7 @@
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-- ( void ) clickAnswerAtIndex:(int)index
+- ( void ) clickSumAtIndex:(int)index
 {
     AnswerInfoViewController * controller = [AnswerInfoViewController new];
     controller.entity = [self.entity.answerArray objectAtIndex:index];

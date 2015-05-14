@@ -12,6 +12,7 @@
 #import "Tool.h"
 #import "AddCommentViewController.h"
 #import "QuestionInfoViewController.h"
+#import "InviteViewController.h"
 
 @interface CommentTableViewController ()<CommentTableViewDelegate, UIActionSheetDelegate>
 {
@@ -80,6 +81,99 @@
             [tableView startRefresh];
         }
     }
+    else if( self.type == 1 )
+    {
+        tableView.questionId = self.questionId;
+        [self setupTitle:@"活动灌水"];
+        NSString * title = [NSString stringWithFormat:@"活动：%@", self.questionTitle];
+        questionCommentHeaderView = [[QuestionCommentTableHeaderView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, [Tool getHeightByString:title width:Screen_Width - 20 height:60 textSize:Text_Size_Small] + 60 ) title:title value:[NSString stringWithFormat:@"活动灌水 %d", self.commentCount]];
+        [tableView addSelfHeaderView:questionCommentHeaderView];
+        
+        UITapGestureRecognizer * gestureHead = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickQuestionTitle:)];
+        [questionCommentHeaderView addGestureRecognizer:gestureHead];
+        
+        UIView * bottom = [[UIView alloc] initWithFrame:CGRectMake( 0, Screen_Height - 40, Screen_Width, 40 )];
+        bottom.backgroundColor = Color_Heavy_Gray;
+        [self.view addSubview:bottom];
+        
+        UIButton * buttonComment = [UIButton buttonWithType:UIButtonTypeCustom];
+        buttonComment.backgroundColor = Color_Gray;
+        buttonComment.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
+        buttonComment.frame = CGRectMake( 20, 7, ( Screen_Width - 70 ) / 2, 26 );
+        [buttonComment setTitle:@"评论灌水" forState:UIControlStateNormal];
+        [buttonComment setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [buttonComment setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+        [buttonComment addTarget:self action:@selector(addActComment) forControlEvents:UIControlEventTouchUpInside];
+        [bottom addSubview:buttonComment];
+        
+        UIButton * buttonCare = [UIButton buttonWithType:UIButtonTypeCustom];
+        buttonCare.backgroundColor = Color_Gray;
+        buttonCare.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
+        buttonCare.frame = CGRectMake( 50 + ( Screen_Width - 70 ) / 2, 7, ( Screen_Width - 70 ) / 2, 26 );
+        [buttonCare setTitle:@"邀请报名" forState:UIControlStateNormal];
+        [buttonCare setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [buttonCare setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+        [buttonCare addTarget:self action:@selector(inviteJoin) forControlEvents:UIControlEventTouchUpInside];
+        [bottom addSubview:buttonCare];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addQuestionComment:) name:AddNewActComment object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inviteUser:) name:ActInviteSuccess object:nil];
+
+        if( self.shouldRefresh )
+        {
+            [tableView startRefresh];
+        }
+    }
+}
+
+- ( void ) inviteUser : ( NSNotification * ) noti
+{
+    NSDictionary * dic = [noti userInfo];
+    
+    CommentEntity * entity = [CommentEntity new];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    entity.userHeadUrl = [userDefaults objectForKey:@"headUrl"];
+    entity.userName = [userDefaults objectForKey:@"name"];
+    entity.userId = [userDefaults objectForKey:@"userId"];
+    entity.time = dic[ @"time" ];
+    entity.info = [NSString stringWithFormat:@"邀请 %@ 参加：%@", dic[ @"userName" ], dic[ @"value" ]];
+    [self.commentArray insertObject:entity atIndex:0];
+    self.commentCount ++;
+    tableView.commentCount ++;
+    
+    [questionCommentHeaderView updateHeader:[NSString stringWithFormat:@"活动灌水 %d", self.commentCount]];
+    [tableView updateTable];
+}
+
+- ( void ) addActComment : ( NSNotification * ) noti
+{
+    NSDictionary * dic = [noti userInfo];
+    CommentEntity * entity = [dic objectForKey:@"comment"];
+    [self.commentArray insertObject:entity atIndex:0];
+    self.commentCount ++;
+    tableView.commentCount ++;
+    [questionCommentHeaderView updateHeader:[NSString stringWithFormat:@"活动灌水 %d", self.commentCount]];
+    [tableView updateTable];
+}
+
+- ( void ) addActComment
+{
+    AddCommentViewController * controller = [AddCommentViewController new];
+    controller.isEdit = NO;
+    controller.questionId = self.questionId;
+    controller.type = 5;
+    controller.replyId = @"";
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+- ( void ) inviteJoin
+{
+    InviteViewController * controller = [InviteViewController new];
+    controller.arrayInviters = self.inviteArray;
+    controller.questionId = self.questionId;
+    controller.type = 1;
+    controller.arrayJoin = self.joinArray;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - ( void ) clickQuestionTitle : (UITapGestureRecognizer *)tap
@@ -123,6 +217,8 @@
 - ( void ) doBack
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AddNewQuestionComment object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AddNewActComment object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ActInviteSuccess object:nil];
     [super doBack];
 }
 
@@ -133,7 +229,14 @@
     [self.commentArray insertObject:entity atIndex:0];
     self.commentCount ++;
     tableView.commentCount ++;
-    [questionCommentHeaderView updateHeader:[NSString stringWithFormat:@"问题的评论 %d", self.commentCount]];
+    if( self.type == 0 )
+    {
+        [questionCommentHeaderView updateHeader:[NSString stringWithFormat:@"问题的评论 %d", self.commentCount]];
+    }
+    else
+    {
+        [questionCommentHeaderView updateHeader:[NSString stringWithFormat:@"活动灌水 %d", self.commentCount]];
+    }
     [tableView updateTable];
 }
 
@@ -227,7 +330,14 @@
             AddCommentViewController * controller = [AddCommentViewController new];
             controller.isEdit = NO;
             controller.questionId = self.questionId;
-            controller.type = 0;
+            if( self.type == 0 )
+            {
+                controller.type = 0;
+            }
+            else if( self.type == 1 )
+            {
+                controller.type = 5;
+            }
             controller.replyId = temp.userId;
             controller.replyName = temp.userName;
             [self.navigationController pushViewController:controller animated:YES];

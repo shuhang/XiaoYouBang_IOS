@@ -41,6 +41,11 @@ return instance;\
 #define Blue_Stoen_Loght Color_With_Rgb( 219, 238, 244, 1 )
 #define Light_Red Color_With_Rgb( 253, 220, 220, 1 )
 #define Super_Light_Red Color_With_Rgb( 255, 239, 239, 1 )
+#define Green Color_With_Rgb( 172, 206, 34, 1 )
+#define Light_Green Color_With_Rgb( 231, 247, 231, 1 )
+#define Deep_Yellow Color_With_Rgb( 255, 179, 0, 1 )
+#define Text_Green Color_With_Rgb( 97, 134, 27, 1 )
+#define Text_Coffee Color_With_Rgb( 157, 144, 113, 1 )
 //define text size
 #define Text_Size_Big 15.5
 #define Text_Size_Small 13
@@ -51,14 +56,18 @@ return instance;\
 
 //Noti Name
 #define AddNewQuestionComment @"AddNewQuestionComment"
+#define AddNewActComment @"AddNewActComment"
 #define AddNewQuestion @"AddNewQuestion"
 #define AddNewAnswer @"AddNewAnswer"
 #define AddNewAnswerComment @"AddNewAnswerComment"
+#define AddNewActJoin @"AddNewActJoin"
+#define EditActJoin @"EditActJoin"
 #define EditQuestionSuccess @"EditQuestionSuccess"
 #define EditAnswerSuccess @"EditAnswerSuccess"
 #define EditIntroSuccess @"EditIntroSuccess"
 #define ChooseInviter @"ChooseInviter"
-#define InviteUserSuccess @"InviteUserSuccess"
+#define QuestionInviteSuccess @"QuestionInviteSuccess"
+#define ActInviteSuccess @"ActInviteSuccess"
 #define AddUserComment @"AddUserComment"
 #define EditLeaveWord @"EditLeaveWord"
 #define LeaveWordBack @"LeaveWordBack"

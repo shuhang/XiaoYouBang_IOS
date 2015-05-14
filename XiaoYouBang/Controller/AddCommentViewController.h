@@ -22,11 +22,12 @@
 @property( nonatomic, assign ) BOOL isEdit;
 
 /**
- *  0 : question
+ *  0 : question comment
  *  1 : answer
  *  2 : act
  *  3 : leaveword
- *  4 : intro
+ *  4 : intro 
+ *  5 : act comment
  */
 @property( nonatomic, assign ) int type;
 

@@ -15,10 +15,11 @@
 #import "QuestionEntity.h"
 #import "QuestionInfoViewController.h"
 #import "AnswerInfoViewController.h"
+#import "ActInfoViewController.h"
 
 #define viewHeight 106
 
-@interface Tab1ViewController () <AllQuestionViewDelegate, GoodAnswerViewDelegate>
+@interface Tab1ViewController () <AllQuestionViewDelegate, AllActViewDelegate, GoodAnswerViewDelegate>
 {
     NSInteger nowIndex;
     UIView * mainView;
@@ -206,6 +207,7 @@
                 if( viewAllAct == nil )
                 {
                     viewAllAct = [[AllActView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, Screen_Height - viewHeight - 50 )];
+                    viewAllAct.delegate = self;
                 }
                 [mainView addSubview:viewAllAct];
             }
@@ -234,6 +236,14 @@
 - ( void ) loadQuestionInfoSuccess:(QuestionEntity *)entity
 {
     QuestionInfoViewController * controller = [QuestionInfoViewController new];
+    controller.entity = entity;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+#pragma mark AllActViewDelegate
+- ( void ) loadActInfoSuccess:(QuestionEntity *)entity
+{
+    ActInfoViewController * controller = [ActInfoViewController new];
     controller.entity = entity;
     [self.navigationController pushViewController:controller animated:YES];
 }

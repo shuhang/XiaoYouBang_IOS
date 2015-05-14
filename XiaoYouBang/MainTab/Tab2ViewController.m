@@ -19,7 +19,7 @@
 
 #define viewHeight 106
 
-@interface Tab2ViewController ()<MyAnswerViewDelegate, MySaveViewDelegate, MyMessageViewDelegate>
+@interface Tab2ViewController ()<MyAnswerViewDelegate, MySaveViewDelegate, MyMessageViewDelegate, MyQuestionViewDelegate>
 {
     NSInteger nowIndex;
     UIView * mainView;
@@ -223,6 +223,14 @@
          NSLog( @"%@", error );
          [SVProgressHUD showErrorWithStatus:@"加载失败"];
      }];
+}
+
+#pragma mark MyQuestionViewDelegate
+- ( void ) loadQuestionInfoSuccess:(QuestionEntity *)entity
+{
+    QuestionInfoViewController * controller = [QuestionInfoViewController new];
+    controller.entity = entity;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 #pragma mark MyAnswerViewDelegate

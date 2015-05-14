@@ -25,10 +25,10 @@
 @property( nonatomic, strong ) NSString * editTime;
 @property( nonatomic, strong ) NSString * questionTitle;
 @property( nonatomic, strong ) NSString * questionerName;
-@property( nonatomic, assign ) NSInteger type;
-@property( nonatomic, assign ) NSInteger sex;
-@property( nonatomic, assign ) NSInteger praiseCount;
-@property( nonatomic, assign ) NSInteger commentCount;
+@property( nonatomic, assign ) int type;
+@property( nonatomic, assign ) int sex;
+@property( nonatomic, assign ) int praiseCount;
+@property( nonatomic, assign ) int commentCount;
 @property( nonatomic, assign ) BOOL isInvisible;
 @property( nonatomic, assign ) BOOL hasPraised;
 @property( nonatomic, assign ) BOOL hasImage;

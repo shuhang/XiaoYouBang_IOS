@@ -34,7 +34,14 @@
     
     self.tabBarController.tabBar.hidden = YES;
     
-    [self setupTitle:[NSString stringWithFormat:@"%@的回答", self.entity.name]];
+    if( self.entity.type == 0 )
+    {
+        [self setupTitle:[NSString stringWithFormat:@"%@的回答", self.entity.name]];
+    }
+    else if( self.entity.type == 1 )
+    {
+        [self setupTitle:[NSString stringWithFormat:@"%@的总结", self.entity.name]];
+    }
     [self hideNextButton];
     
     infoView = [[AnswerInfoView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, Screen_Height + 50) entity:self.entity];
@@ -138,6 +145,7 @@
     controller.questionTitle = self.entity.questionTitle;
     controller.answerId = self.entity.answerId;
     controller.info = self.entity.info;
+    controller.type = self.entity.type;
     [self.navigationController pushViewController:controller animated:YES];
 }
 

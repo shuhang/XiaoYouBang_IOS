@@ -14,6 +14,7 @@
 #import "QuestionTableViewCell.h"
 #import "JSONKit.h"
 #import "SVProgressHUD.h"
+#import "MyDatabaseHelper.h"
 
 @interface AllActView()
 {
@@ -42,6 +43,16 @@
         [self addSubview:tableView];
     }
     return self;
+}
+
+- ( void ) reloadTable
+{
+    [tableView reloadData];
+}
+
+- ( void ) startRefresh
+{
+    [tableView headerBeginRefreshing];
 }
 
 - ( void ) loadFailed
@@ -141,6 +152,48 @@
      }];
 }
 
+- ( void ) doLoadActInfo
+{
+    [SVProgressHUD showWithStatus:@"正在加载" maskType:SVProgressHUDMaskTypeGradient];
+    
+    NSMutableDictionary * request = [NSMutableDictionary dictionary];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
+    NSString * url = [NSString stringWithFormat:@"api/question/%@", self.selectedEntity.questionId];
+    [[NetWork shareInstance] httpRequestWithGet:url params:request success:^(NSDictionary * result)
+     {
+         if( [result[ @"result" ] intValue] == 3000 )
+         {
+             [Tool loadQuestionInfoEntity:self.selectedEntity item:result];
+             
+             MyDatabaseHelper * helper = [MyDatabaseHelper new];
+             [helper insertQuestion:self.selectedEntity.questionId modifyTime:self.selectedEntity.modifyTime updateTime:self.selectedEntity.updateTime changeTime:self.selectedEntity.changeTime];
+             [self updateSelectCell];
+             
+             [SVProgressHUD dismiss];
+             if( [self.delegate respondsToSelector:@selector(loadActInfoSuccess:)] )
+             {
+                 [self.delegate loadActInfoSuccess:self.selectedEntity];
+             }
+         }
+         else
+         {
+             [SVProgressHUD showErrorWithStatus:@"加载失败"];
+         }
+     }
+     error:^(NSError * error)
+     {
+         NSLog( @"%@", error );
+         [SVProgressHUD showErrorWithStatus:@"加载失败"];
+     }];
+}
+
+- ( void ) updateSelectCell
+{
+    NSIndexPath * indexPath = [NSIndexPath indexPathForRow:self.selectedIndex inSection:0];
+    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+}
+
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -180,6 +233,10 @@
 - (void)tableView:(UITableView *)tableView_ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView_ deselectRowAtIndexPath:indexPath animated:YES];
+    
+    self.selectedIndex = ( int )indexPath.row;
+    self.selectedEntity = [self.actArray objectAtIndex:indexPath.row];
+    [self doLoadActInfo];
 }
 
 @end

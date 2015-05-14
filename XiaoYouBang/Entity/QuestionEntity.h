@@ -44,7 +44,7 @@
 @property( nonatomic, strong ) NSMutableArray * myInviteArray; //InviteEntity
 @property( nonatomic, strong ) NSMutableArray * answerArray;   //AnswerEntity
 @property( nonatomic, strong ) NSMutableArray * commentArray;  //CommentEntity
-@property( nonatomic, strong ) NSMutableArray * actArray;      //CommentEntity
+@property( nonatomic, strong ) NSMutableArray * joinArray;     //CommentEntity
 @property( nonatomic, strong ) NSMutableArray * imageArray;    //NSString
 @property( nonatomic, strong ) NSMutableArray * praiseArray;   //NSString
 @property( nonatomic, strong ) AnswerEntity * myAnswer;

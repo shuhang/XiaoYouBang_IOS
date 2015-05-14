@@ -254,14 +254,26 @@
     }
     entity.answerArray = answerArray;
     
-    NSMutableArray * commentArray = [NSMutableArray array];
+    entity.commentArray = [NSMutableArray array];
+    entity.joinArray = [NSMutableArray array];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     for( NSDictionary * comment in item[ @"comments" ] )
     {
         CommentEntity * commentEntity = [CommentEntity new];
         [self loadCommentInfoEntity:commentEntity item:comment];
-        [commentArray addObject:commentEntity];
+        if( commentEntity.type == 0 )
+        {
+            [entity.commentArray addObject:commentEntity];
+        }
+        else
+        {
+            if( [commentEntity.userId isEqualToString:[userDefaults objectForKey:@"userId"]] )
+            {
+                entity.hasSigned = YES;
+            }
+            [entity.joinArray addObject:commentEntity];
+        }
     }
-    entity.commentArray = commentArray;
     
     NSMutableArray * myInviteArray = [NSMutableArray array];
     for( NSDictionary * invite in item[ @"invitingList" ] )

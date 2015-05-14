@@ -80,7 +80,14 @@
         }
         else if( self.entity.hasAnswered )
         {
-            praiseCountLabel.text = @"该用户已作答";
+            if( self.inviteType == 0 )
+            {
+                praiseCountLabel.text = @"该用户已作答";
+            }
+            else
+            {
+                praiseCountLabel.text = @"该用户已报名";
+            }
         }
         else
         {

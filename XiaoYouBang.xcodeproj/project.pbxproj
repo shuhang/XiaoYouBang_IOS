@@ -16,7 +16,7 @@
 		A53A96C21B01E23400E30CBD /* no.png in Resources */ = {isa = PBXBuildFile; fileRef = A53A96C01B01E23400E30CBD /* no.png */; };
 		A53A96C31B01E23400E30CBD /* yes.png in Resources */ = {isa = PBXBuildFile; fileRef = A53A96C11B01E23400E30CBD /* yes.png */; };
 		A53A96C61B01FFB400E30CBD /* ChooseInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A53A96C51B01FFB400E30CBD /* ChooseInviteViewController.m */; };
-		A55358001AEF1B0200F3E97D /* AllActView.m in Sources */ = {isa = PBXBuildFile; fileRef = A55357F81AEF1B0200F3E97D /* AllActView.m */; };
+		A55358001AEF1B0200F3E97D /* AllActView.m in Sources */ = {isa = PBXBuildFile; fileRef = A55357F81AEF1B0200F3E97D /* AllActView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A55358011AEF1B0200F3E97D /* AllQuestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = A55357FA1AEF1B0200F3E97D /* AllQuestionView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A55358021AEF1B0200F3E97D /* QuestionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A55357FD1AEF1B0200F3E97D /* QuestionTableViewCell.m */; };
 		A55358031AEF1B0200F3E97D /* GoodAnswerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A55357FF1AEF1B0200F3E97D /* GoodAnswerView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -24,7 +24,7 @@
 		A553580E1AEF1B4C00F3E97D /* Tab1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A55358081AEF1B4C00F3E97D /* Tab1ViewController.m */; };
 		A553580F1AEF1B4C00F3E97D /* Tab2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A553580A1AEF1B4C00F3E97D /* Tab2ViewController.m */; };
 		A55358101AEF1B4C00F3E97D /* Tab3ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A553580C1AEF1B4C00F3E97D /* Tab3ViewController.m */; };
-		A55358231AEF228D00F3E97D /* MyQuestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = A55358221AEF228D00F3E97D /* MyQuestionView.m */; };
+		A55358231AEF228D00F3E97D /* MyQuestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = A55358221AEF228D00F3E97D /* MyQuestionView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A55358261AEF22A500F3E97D /* MyAnswerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A55358251AEF22A500F3E97D /* MyAnswerView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A55358291AEF22B000F3E97D /* MyMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A55358281AEF22B000F3E97D /* MyMessageView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A553582C1AEF22BD00F3E97D /* MySaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = A553582B1AEF22BD00F3E97D /* MySaveView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -34,6 +34,9 @@
 		A5567E551AF7134E0063BA2B /* FriendTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A5567E541AF7134E0063BA2B /* FriendTableView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A5567E581AF746120063BA2B /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5567E571AF746120063BA2B /* UserInfoViewController.m */; };
 		A5567E5B1AF7468C0063BA2B /* UserInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = A5567E5A1AF7468C0063BA2B /* UserInfoView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		A558E9201B043AC200A8F3CD /* ActInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = A558E91F1B043AC200A8F3CD /* ActInfoView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		A558E9231B044F5300A8F3CD /* ActInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A558E9221B044F5300A8F3CD /* ActInfoViewController.m */; };
+		A558E9261B049C4E00A8F3CD /* AddActViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A558E9251B049C4E00A8F3CD /* AddActViewController.m */; };
 		A55957331AE892F3000C75B6 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A55957321AE892F3000C75B6 /* BaseViewController.m */; };
 		A559573B1AE8CABF000C75B6 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = A55957351AE8CABF000C75B6 /* LICENSE.txt */; };
 		A559573C1AE8CABF000C75B6 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = A55957361AE8CABF000C75B6 /* README.md */; };
@@ -174,6 +177,12 @@
 		A5567E571AF746120063BA2B /* UserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoViewController.m; sourceTree = "<group>"; };
 		A5567E591AF7468C0063BA2B /* UserInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoView.h; sourceTree = "<group>"; };
 		A5567E5A1AF7468C0063BA2B /* UserInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoView.m; sourceTree = "<group>"; };
+		A558E91E1B043AC200A8F3CD /* ActInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActInfoView.h; sourceTree = "<group>"; };
+		A558E91F1B043AC200A8F3CD /* ActInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActInfoView.m; sourceTree = "<group>"; };
+		A558E9211B044F5300A8F3CD /* ActInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActInfoViewController.h; sourceTree = "<group>"; };
+		A558E9221B044F5300A8F3CD /* ActInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActInfoViewController.m; sourceTree = "<group>"; };
+		A558E9241B049C4E00A8F3CD /* AddActViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddActViewController.h; sourceTree = "<group>"; };
+		A558E9251B049C4E00A8F3CD /* AddActViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddActViewController.m; sourceTree = "<group>"; };
 		A55957311AE892F3000C75B6 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		A55957321AE892F3000C75B6 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		A55957351AE8CABF000C75B6 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -374,6 +383,10 @@
 				A53A96BE1B01DE5200E30CBD /* InviteViewController.m */,
 				A53A96C41B01FFB400E30CBD /* ChooseInviteViewController.h */,
 				A53A96C51B01FFB400E30CBD /* ChooseInviteViewController.m */,
+				A558E91E1B043AC200A8F3CD /* ActInfoView.h */,
+				A558E91F1B043AC200A8F3CD /* ActInfoView.m */,
+				A558E9211B044F5300A8F3CD /* ActInfoViewController.h */,
+				A558E9221B044F5300A8F3CD /* ActInfoViewController.m */,
 			);
 			path = Tab1;
 			sourceTree = "<group>";
@@ -475,6 +488,8 @@
 				A55CC1FC1AF1C69900E82D0C /* AddAnswerViewController.h */,
 				A55CC1FD1AF1C69900E82D0C /* AddAnswerViewController.m */,
 				A5808B301AF1DFD4002E61A8 /* AddCommentViewController.h */,
+				A558E9241B049C4E00A8F3CD /* AddActViewController.h */,
+				A558E9251B049C4E00A8F3CD /* AddActViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -885,6 +900,7 @@
 				A55CC1FE1AF1C69900E82D0C /* AddAnswerViewController.m in Sources */,
 				A553582C1AEF22BD00F3E97D /* MySaveView.m in Sources */,
 				A553580E1AEF1B4C00F3E97D /* Tab1ViewController.m in Sources */,
+				A558E9201B043AC200A8F3CD /* ActInfoView.m in Sources */,
 				A55358261AEF22A500F3E97D /* MyAnswerView.m in Sources */,
 				A55358021AEF1B0200F3E97D /* QuestionTableViewCell.m in Sources */,
 				A52DC4121AF0C520008EC5C8 /* QuestionInfoViewController.m in Sources */,
@@ -909,6 +925,7 @@
 				A5CDCD9A1B03248000D6B356 /* LeavewordView.m in Sources */,
 				A55358101AEF1B4C00F3E97D /* Tab3ViewController.m in Sources */,
 				A5A5595F1AE5E9BB00994705 /* NetWork.m in Sources */,
+				A558E9231B044F5300A8F3CD /* ActInfoViewController.m in Sources */,
 				A55E0A3E1B00496900900134 /* UserIntroViewController.m in Sources */,
 				A57454E41AE7B9E10066BCEA /* RegisterViewController4.m in Sources */,
 				A5A5596D1AE6248700994705 /* QuestionEntity.m in Sources */,
@@ -927,6 +944,7 @@
 				A5DAA1211AE500F100DB585F /* MJRefreshConst.m in Sources */,
 				A55358031AEF1B0200F3E97D /* GoodAnswerView.m in Sources */,
 				A53A96BF1B01DE5200E30CBD /* InviteViewController.m in Sources */,
+				A558E9261B049C4E00A8F3CD /* AddActViewController.m in Sources */,
 				A57454E11AE7B9CD0066BCEA /* RegisterViewController3.m in Sources */,
 				A57454DB1AE7B9AC0066BCEA /* RegisterViewController1.m in Sources */,
 				A5808B3E1AF20D33002E61A8 /* CommentTableViewController.m in Sources */,

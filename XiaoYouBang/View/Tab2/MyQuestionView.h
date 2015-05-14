@@ -7,9 +7,24 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "QuestionEntity.h"
+
+@protocol MyQuestionViewDelegate <NSObject>
+
+- ( void ) loadQuestionInfoSuccess : ( QuestionEntity * ) entity;
+
+@end
 
 @interface MyQuestionView : UIView<UITableViewDataSource, UITableViewDelegate>
 
 @property( strong, nonatomic ) NSMutableArray * questionArray;
+@property( nonatomic, strong ) QuestionEntity * selectedEntity;
+@property( nonatomic, assign ) int selectedIndex;
+
+@property( nonatomic, weak ) id< MyQuestionViewDelegate > delegate;
+
+- ( void ) startRefresh;
+- ( void ) reloadTable;
+- ( void ) updateSelectCell;
 
 @end

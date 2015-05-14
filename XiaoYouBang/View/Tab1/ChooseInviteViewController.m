@@ -48,6 +48,7 @@
     UserEntity * entity = [self.arrayUsers objectAtIndex:indexPath.row];
     cell.entity = entity;
     cell.type = 1;
+    cell.inviteType = self.type;
     [cell updateCell];
     return cell;
 }

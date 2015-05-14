@@ -60,7 +60,14 @@
             buttonEdit.backgroundColor = Color_Gray;
             [buttonEdit setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [buttonEdit setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
-            [buttonEdit setTitle:@"编辑回答" forState:UIControlStateNormal];
+            if( self.entity.type == 0 )
+            {
+                [buttonEdit setTitle:@"编辑回答" forState:UIControlStateNormal];
+            }
+            else
+            {
+                [buttonEdit setTitle:@"编辑总结" forState:UIControlStateNormal];
+            }
             buttonEdit.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
             [buttonEdit addTarget:self action:@selector(edit) forControlEvents:UIControlEventTouchUpInside];
             [bottomView2 addSubview:buttonEdit];
@@ -247,7 +254,15 @@
 
 - ( void ) updateHeader
 {
-    NSString * title = [NSString stringWithFormat:@"问题：%@", self.entity.questionTitle];
+    NSString * title = @"";
+    if( self.entity.type == 0 )
+    {
+        title = [NSString stringWithFormat:@"问题：%@", self.entity.questionTitle];
+    }
+    else
+    {
+        title = [NSString stringWithFormat:@"活动：%@", self.entity.questionTitle];
+    }
     questionTitleLabel.frame = CGRectMake( 10, 10, Screen_Width - 20, 0 );
     questionTitleLabel.text = title;
     [questionTitleLabel sizeToFit];
@@ -293,7 +308,14 @@
     }
     if( sum > 0 )
     {
-        inviteLabel.text = [NSString stringWithFormat:@"应 %@ 邀请作答", inviters];
+        if( self.entity.type == 0 )
+        {
+            inviteLabel.text = [NSString stringWithFormat:@"应 %@ 邀请作答", inviters];
+        }
+        else
+        {
+            inviteLabel.text = [NSString stringWithFormat:@"应 %@ 邀请参加", inviters];
+        }
         inviteLabel.frame = CGRectMake( 10, [Tool getBottom:infoLabel] + 20, Screen_Width - 20, 0 );
         [inviteLabel sizeToFit];
         
@@ -304,7 +326,14 @@
         else
         {
             editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:inviteLabel] + 10, 150, 15 );
-            editLabel.text = [NSString stringWithFormat:@"此回答编辑于 %@", [Tool getShowTime:self.entity.editTime]];
+            if( self.entity.type == 0 )
+            {
+                editLabel.text = [NSString stringWithFormat:@"此回答编辑于 %@", [Tool getShowTime:self.entity.editTime]];
+            }
+            else
+            {
+                editLabel.text = [NSString stringWithFormat:@"此总结编辑于 %@", [Tool getShowTime:self.entity.editTime]];
+            }
         }
     }
     else
@@ -317,7 +346,14 @@
         else
         {
             editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:infoLabel] + 20, 150, 15 );
-            editLabel.text = [NSString stringWithFormat:@"此回答编辑于 %@", [Tool getShowTime:self.entity.editTime]];
+            if( self.entity.type == 0 )
+            {
+                editLabel.text = [NSString stringWithFormat:@"此回答编辑于 %@", [Tool getShowTime:self.entity.editTime]];
+            }
+            else
+            {
+                editLabel.text = [NSString stringWithFormat:@"此总结编辑于 %@", [Tool getShowTime:self.entity.editTime]];
+            }
         }
     }
     

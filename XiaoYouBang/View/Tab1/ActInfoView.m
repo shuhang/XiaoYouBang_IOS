@@ -1,12 +1,12 @@
 //
-//  QuestionInfoView.m
+//  ActInfoView.m
 //  XiaoYouBang
 //
-//  Created by shuhang on 15/4/28.
+//  Created by shuhang on 15/5/14.
 //  Copyright (c) 2015年 shuhang. All rights reserved.
 //
 
-#import "QuestionInfoView.h"
+#import "ActInfoView.h"
 #import "NetWork.h"
 #import "MJRefresh.h"
 #import "AnswerTableViewCell.h"
@@ -14,7 +14,7 @@
 #import <UIImageView+WebCache.h>
 #import "SVProgressHUD.h"
 
-@interface QuestionInfoView()
+@interface ActInfoView()
 {
     UITableView * tableView;
     
@@ -22,7 +22,7 @@
 }
 @end
 
-@implementation QuestionInfoView
+@implementation ActInfoView
 
 - ( id ) initWithFrame:(CGRect)frame entity:(QuestionEntity *)entity
 {
@@ -30,7 +30,7 @@
     {
         self.backgroundColor = [UIColor whiteColor];
         self.entity = entity;
-
+        
         [self initHeadView];
         
         tableView = [[UITableView alloc] initWithFrame:CGRectMake( 0, 0, frame.size.width, frame.size.height)];
@@ -51,7 +51,7 @@
 - ( void ) initHeadView
 {
     headerView = [[UIView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, 0 )];
-   
+    
     userView = [[UIView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, 65 )];
     [headerView addSubview:userView];
     UITapGestureRecognizer * gestureHead = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickUser:)];
@@ -61,6 +61,11 @@
     [headerView addSubview:commentView];
     UITapGestureRecognizer * gestureComment = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickComment:)];
     [commentView addGestureRecognizer:gestureComment];
+    
+    joinView = [[UIView alloc] initWithFrame:CGRectZero];
+    [headerView addSubview:joinView];
+    UITapGestureRecognizer * gestureJoin = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickJoin:)];
+    [joinView addGestureRecognizer:gestureJoin];
     
     headImageView = [[UIImageView alloc] initWithFrame:CGRectMake( 10, 15, 50, 50 )];
     [userView addSubview:headImageView];
@@ -105,7 +110,7 @@
     
     buttonEdit = [UIButton buttonWithType:UIButtonTypeCustom];
     buttonEdit.frame = CGRectZero;
-    [buttonEdit setTitle:@"编辑问题" forState:UIControlStateNormal];
+    [buttonEdit setTitle:@"编辑活动" forState:UIControlStateNormal];
     buttonEdit.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
     [buttonEdit setTitleColor:Color_Gray forState:UIControlStateNormal];
     [buttonEdit setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
@@ -136,21 +141,96 @@
     [buttonPraise addTarget:self action:@selector(praise) forControlEvents:UIControlEventTouchUpInside];
     [headerView addSubview:buttonPraise];
     
-    commentCountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    commentCountLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
-    commentCountLabel.textColor = Color_Heavy_Gray;
-    [commentView addSubview:commentCountLabel];
-    
     editLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     editLabel.font = [UIFont systemFontOfSize:Text_Size_Micro];
     editLabel.textColor = Color_Gray;
     [headerView addSubview:editLabel];
     
+    ///////////////////////////////////////////////
+    joinCountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    joinCountLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
+    joinCountLabel.textColor = Color_Heavy_Gray;
+    [joinView addSubview:joinCountLabel];
+    
+    buttonJoin = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonJoin.backgroundColor = Green;
+    [buttonJoin setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [buttonJoin setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+    [buttonJoin setTitle:@"" forState:UIControlStateNormal];
+    buttonJoin.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Micro];
+    [buttonJoin addTarget:self action:@selector(join) forControlEvents:UIControlEventTouchUpInside];
+    [joinView addSubview:buttonJoin];
+    /////
+    joinImageView1 = [[UIImageView alloc] initWithFrame:CGRectZero];
+    [joinView addSubview:joinImageView1];
+    
+    joinNameLabel1 = [[UILabel alloc] initWithFrame:CGRectZero];
+    joinNameLabel1.font = [UIFont systemFontOfSize:Text_Size_Micro];
+    joinNameLabel1.textColor = Text_Green;
+    [joinView addSubview:joinNameLabel1];
+    
+    joinInfoLabel1 = [[UILabel alloc] initWithFrame:CGRectZero];
+    joinInfoLabel1.font = [UIFont systemFontOfSize:Text_Size_Small];
+    joinInfoLabel1.textColor = Color_Gray;
+    joinInfoLabel1.numberOfLines = 2;
+    joinInfoLabel1.lineBreakMode = NSLineBreakByTruncatingTail;
+    [joinView addSubview:joinInfoLabel1];
+    
+    joinIndexLabel1 = [[UILabel alloc] initWithFrame:CGRectZero];
+    joinIndexLabel1.font = [UIFont systemFontOfSize:Text_Size_Super_Micro];
+    joinIndexLabel1.textColor = Color_Gray;
+    [joinView addSubview:joinIndexLabel1];
+    /////
+    joinImageView2 = [[UIImageView alloc] initWithFrame:CGRectZero];
+    [joinView addSubview:joinImageView2];
+    
+    joinNameLabel2 = [[UILabel alloc] initWithFrame:CGRectZero];
+    joinNameLabel2.font = [UIFont systemFontOfSize:Text_Size_Micro];
+    joinNameLabel2.textColor = Text_Green;
+    [joinView addSubview:joinNameLabel2];
+    
+    joinInfoLabel2 = [[UILabel alloc] initWithFrame:CGRectZero];
+    joinInfoLabel2.font = [UIFont systemFontOfSize:Text_Size_Small];
+    joinInfoLabel2.textColor = Color_Gray;
+    joinInfoLabel2.numberOfLines = 2;
+    joinInfoLabel2.lineBreakMode = NSLineBreakByTruncatingTail;
+    [joinView addSubview:joinInfoLabel2];
+    
+    joinIndexLabel2 = [[UILabel alloc] initWithFrame:CGRectZero];
+    joinIndexLabel2.font = [UIFont systemFontOfSize:Text_Size_Super_Micro];
+    joinIndexLabel2.textColor = Color_Gray;
+    [joinView addSubview:joinIndexLabel2];
+    //////
+    joinImageView3 = [[UIImageView alloc] initWithFrame:CGRectZero];
+    [joinView addSubview:joinImageView3];
+    
+    joinNameLabel3 = [[UILabel alloc] initWithFrame:CGRectZero];
+    joinNameLabel3.font = [UIFont systemFontOfSize:Text_Size_Micro];
+    joinNameLabel3.textColor = Text_Green;
+    [joinView addSubview:joinNameLabel3];
+    
+    joinInfoLabel3 = [[UILabel alloc] initWithFrame:CGRectZero];
+    joinInfoLabel3.font = [UIFont systemFontOfSize:Text_Size_Small];
+    joinInfoLabel3.textColor = Color_Gray;
+    joinInfoLabel3.numberOfLines = 2;
+    joinInfoLabel3.lineBreakMode = NSLineBreakByTruncatingTail;
+    [joinView addSubview:joinInfoLabel3];
+    
+    joinIndexLabel3 = [[UILabel alloc] initWithFrame:CGRectZero];
+    joinIndexLabel3.font = [UIFont systemFontOfSize:Text_Size_Super_Micro];
+    joinIndexLabel3.textColor = Color_Gray;
+    [joinView addSubview:joinIndexLabel3];
+    ///////////////////////////////////////////////
+    commentCountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    commentCountLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
+    commentCountLabel.textColor = Color_Heavy_Gray;
+    [commentView addSubview:commentCountLabel];
+    
     buttonComment = [UIButton buttonWithType:UIButtonTypeCustom];
     buttonComment.backgroundColor = Blue_Stone;
     [buttonComment setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [buttonComment setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
-    [buttonComment setTitle:@"评论/灌水" forState:UIControlStateNormal];
+    [buttonComment setTitle:@"灌水/邀请" forState:UIControlStateNormal];
     buttonComment.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Micro];
     [buttonComment addTarget:self action:@selector(comment) forControlEvents:UIControlEventTouchUpInside];
     [commentView addSubview:buttonComment];
@@ -215,23 +295,14 @@
     commentIndexLabel3.textColor = Color_Gray;
     [commentView addSubview:commentIndexLabel3];
     
-    buttonAddAnswer = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonAddAnswer.backgroundColor = Bg_Red;
-    buttonAddAnswer.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Big];
-    [buttonAddAnswer setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [buttonAddAnswer setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
-    [buttonAddAnswer setTitle:@"添加回答" forState:UIControlStateNormal];
-    [buttonAddAnswer addTarget:self action:@selector(addEditAnswer) forControlEvents:UIControlEventTouchUpInside];
-    [headerView addSubview:buttonAddAnswer];
-    
-    buttonInvite = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonInvite.backgroundColor = Bg_Red;
-    [buttonInvite setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [buttonInvite setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
-    [buttonInvite setTitle:@"邀请回答" forState:UIControlStateNormal];
-    buttonInvite.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Big];
-    [buttonInvite addTarget:self action:@selector(invite) forControlEvents:UIControlEventTouchUpInside];
-    [headerView addSubview:buttonInvite];
+    buttonAddSum = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonAddSum.backgroundColor = Bg_Red;
+    [buttonAddSum setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [buttonAddSum setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+    [buttonAddSum setTitle:@"" forState:UIControlStateNormal];
+    buttonAddSum.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Micro];
+    [buttonAddSum addTarget:self action:@selector(addEditAnswer) forControlEvents:UIControlEventTouchUpInside];
+    [headerView addSubview:buttonAddSum];
     
     answerCountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     answerCountLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
@@ -253,21 +324,25 @@
     line4 = [[UIView alloc] initWithFrame:CGRectZero];
     line4.backgroundColor = Color_Light_Gray;
     [headerView addSubview:line4];
-}
-
-- ( void ) invite
-{
-    if( [self.delegate respondsToSelector:@selector(inviteOther)] )
-    {
-        [self.delegate inviteOther];
-    }
+    
+    line5 = [[UIView alloc] initWithFrame:CGRectZero];
+    line5.backgroundColor = Color_Light_Gray;
+    [joinView addSubview:line5];
+    
+    line6 = [[UIView alloc] initWithFrame:CGRectZero];
+    line6.backgroundColor = Color_Light_Gray;
+    [headerView addSubview:line6];
+    
+    line7 = [[UIView alloc] initWithFrame:CGRectZero];
+    line7.backgroundColor = Color_Light_Gray;
+    [headerView addSubview:line7];
 }
 
 - ( void ) addEditAnswer
 {
-    if( [self.delegate respondsToSelector:@selector(addOrEditAnswer)] )
+    if( [self.delegate respondsToSelector:@selector(addOrEditSum)] )
     {
-        [self.delegate addOrEditAnswer];
+        [self.delegate addOrEditSum];
     }
 }
 
@@ -279,19 +354,27 @@
     }
 }
 
+- ( void ) join
+{
+    if( [self.delegate respondsToSelector:@selector(addJoin)] )
+    {
+        [self.delegate addJoin];
+    }
+}
+
 - ( void ) praise
 {
-    if( [self.delegate respondsToSelector:@selector(praiseQuestion)] )
+    if( [self.delegate respondsToSelector:@selector(praiseAct)] )
     {
-        [self.delegate praiseQuestion];
+        [self.delegate praiseAct];
     }
 }
 
 - ( void ) edit
 {
-    if( [self.delegate respondsToSelector:@selector(editQuestion)] )
+    if( [self.delegate respondsToSelector:@selector(editAct)] )
     {
-        [self.delegate editQuestion];
+        [self.delegate editAct];
     }
 }
 
@@ -300,6 +383,14 @@
     if( [self.delegate respondsToSelector:@selector(clickComment)] )
     {
         [self.delegate clickComment];
+    }
+}
+
+- ( void ) clickJoin : (UITapGestureRecognizer *)tap
+{
+    if( [self.delegate respondsToSelector:@selector(clickJoin)] )
+    {
+        [self.delegate clickJoin];
     }
 }
 
@@ -334,7 +425,7 @@
     timeLabel.text = [Tool getShowTime:self.entity.createTime];
     
     companyJobLabel.text = [NSString stringWithFormat:@"%@ %@", self.entity.company, self.entity.job];
-
+    
     titleLabel.frame = CGRectMake( 10, [Tool getBottom:headImageView] + 10, Screen_Width - 20, 0);
     [titleLabel setAttributedText:[Tool getModifyString:self.entity.questionTitle]];
     [titleLabel sizeToFit];
@@ -362,7 +453,7 @@
     else
     {
         editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:infoLabel] + 20, 150, 15 );
-        editLabel.text = [NSString stringWithFormat:@"此问题编辑于 %@", [Tool getShowTime:self.entity.editTime]];
+        editLabel.text = [NSString stringWithFormat:@"此活动编辑于 %@", [Tool getShowTime:self.entity.editTime]];
         
         if( [self.entity.userId isEqualToString:[userDefaults objectForKey:@"userId"]] )
         {
@@ -415,13 +506,96 @@
         line2.frame = CGRectMake( 0, [Tool getBottom:praiseCountLabel] + 15, Screen_Width, 10 );
     }
     
+    ///////////////////////////////////
+    joinCountLabel.frame = CGRectMake( praiseCountLabel.frame.origin.x, 10, 150, 20 );
+    joinCountLabel.text = [NSString stringWithFormat:@"活动报名 %lu", (unsigned long)self.entity.joinArray.count];
+    
+    buttonJoin.frame = CGRectMake( Screen_Width - 70, 10, 60, 20 );
+    if( self.entity.hasSigned )
+    {
+        [buttonJoin setTitle:@"修改报名" forState:UIControlStateNormal];
+    }
+    else
+    {
+        [buttonJoin setTitle:@"我要报名" forState:UIControlStateNormal];
+    }
+    
+    line5.frame = CGRectMake( 10, [Tool getBottom:buttonJoin] + 5, Screen_Width - 20, 1 );
+    
+    if( self.entity.joinArray.count > 0 )
+    {
+        CommentEntity * entity1 = [self.entity.joinArray objectAtIndex:0];
+        
+        joinImageView1.frame = CGRectMake( joinCountLabel.frame.origin.x, [Tool getBottom:line5] + 15, 20, 20 );
+        [joinImageView1 sd_setImageWithURL:[NSURL URLWithString:entity1.userHeadUrl] placeholderImage:[UIImage imageNamed:@"head_default"]];
+        
+        joinNameLabel1.frame = CGRectMake( [Tool getRight:joinImageView1] + 10, joinImageView1.frame.origin.y, 70, 15 );
+        joinNameLabel1.text = entity1.userName;
+        
+        joinIndexLabel1.frame = CGRectMake( joinImageView1.frame.origin.x, [Tool getBottom:joinImageView1] + 5, 20, 10 );
+        joinIndexLabel1.text = [NSString stringWithFormat:@"%lu报", (unsigned long)self.entity.joinArray.count];
+        
+        joinInfoLabel1.frame = CGRectMake( joinNameLabel1.frame.origin.x, joinIndexLabel1.frame.origin.y, Screen_Width - 50, [Tool getHeightByString:entity1.info width:Screen_Width - 50 height:40 textSize:Text_Size_Small]);
+        joinInfoLabel1.text = entity1.info;
+        
+        if( self.entity.joinArray.count > 1 )
+        {
+            CommentEntity * entity2 = [self.entity.joinArray objectAtIndex:1];
+            
+            joinImageView2.frame = CGRectMake( joinCountLabel.frame.origin.x, [Tool getBottom:joinInfoLabel1] + 15, 20, 20 );
+            [joinImageView2 sd_setImageWithURL:[NSURL URLWithString:entity2.userHeadUrl] placeholderImage:[UIImage imageNamed:@"head_default"]];
+            
+            joinNameLabel2.frame = CGRectMake( [Tool getRight:joinImageView2] + 10, joinImageView2.frame.origin.y, 70, 15 );
+            joinNameLabel2.text = entity2.userName;
+            
+            joinIndexLabel2.frame = CGRectMake( joinImageView2.frame.origin.x, [Tool getBottom:joinImageView2] + 5, 20, 10 );
+            joinIndexLabel2.text = [NSString stringWithFormat:@"%d报", ( int )self.entity.joinArray.count - 1];
+            
+            joinInfoLabel2.frame = CGRectMake( joinNameLabel2.frame.origin.x, joinIndexLabel2.frame.origin.y, Screen_Width - 50, [Tool getHeightByString:entity2.info width:Screen_Width - 50 height:40 textSize:Text_Size_Small]);
+            joinInfoLabel2.text = entity2.info;
+            
+            if( self.entity.joinArray.count > 2 )
+            {
+                CommentEntity * entity3 = [self.entity.joinArray objectAtIndex:2];
+                
+                joinImageView3.frame = CGRectMake( joinCountLabel.frame.origin.x, [Tool getBottom:joinInfoLabel2] + 15, 20, 20 );
+                [joinImageView3 sd_setImageWithURL:[NSURL URLWithString:entity3.userHeadUrl] placeholderImage:[UIImage imageNamed:@"head_default"]];
+                
+                joinNameLabel3.frame = CGRectMake( [Tool getRight:joinImageView3] + 10, joinImageView3.frame.origin.y, 70, 15 );
+                joinNameLabel3.text = entity3.userName;
+                
+                joinIndexLabel3.frame = CGRectMake( joinImageView3.frame.origin.x, [Tool getBottom:joinImageView3] + 5, 20, 10 );
+                joinIndexLabel3.text = [NSString stringWithFormat:@"%d报", ( int )self.entity.joinArray.count - 2];
+                
+                joinInfoLabel3.frame = CGRectMake( joinNameLabel3.frame.origin.x, joinIndexLabel3.frame.origin.y, Screen_Width - 50, [Tool getHeightByString:entity3.info width:Screen_Width - 50 height:40 textSize:Text_Size_Small]);
+                joinInfoLabel3.text = entity3.info;
+                
+                joinView.frame = CGRectMake( 0, [Tool getBottom:line2], Screen_Width, [Tool getBottom:joinInfoLabel3] + 15  );
+            }
+            else
+            {
+                joinView.frame = CGRectMake( 0, [Tool getBottom:line2], Screen_Width, [Tool getBottom:joinInfoLabel2] + 15  );
+            }
+        }
+        else
+        {
+            joinView.frame = CGRectMake( 0, [Tool getBottom:line2], Screen_Width, [Tool getBottom:joinInfoLabel1] + 15  );
+        }
+    }
+    else
+    {
+        joinView.frame = CGRectMake( 0, [Tool getBottom:line2], Screen_Width, 76 );
+    }
+    
+    line6.frame = CGRectMake( 0, [Tool getBottom:joinView], Screen_Width, 10 );
+    ///////////////////////////////////
     commentCountLabel.frame = CGRectMake( praiseCountLabel.frame.origin.x, 10, 150, 20 );
-    commentCountLabel.text = [NSString stringWithFormat:@"问题的评论 %lu", (unsigned long)self.entity.commentArray.count];
+    commentCountLabel.text = [NSString stringWithFormat:@"灌水/邀请 %lu", (unsigned long)self.entity.commentArray.count];
     
     buttonComment.frame = CGRectMake( Screen_Width - 70, 10, 60, 20 );
     
     line3.frame = CGRectMake( 10, [Tool getBottom:buttonComment] + 5, Screen_Width - 20, 1 );
-
+    
     if( self.entity.commentArray.count > 0 )
     {
         CommentEntity * entity1 = [self.entity.commentArray objectAtIndex:0];
@@ -470,21 +644,21 @@
                 commentInfoLabel3.frame = CGRectMake( commentNameLabel3.frame.origin.x, commentIndexLabel3.frame.origin.y, Screen_Width - 50, [Tool getHeightByString:entity3.info width:Screen_Width - 50 height:40 textSize:Text_Size_Small]);
                 commentInfoLabel3.text = entity3.info;
                 
-                commentView.frame = CGRectMake( 0, [Tool getBottom:line2], Screen_Width, [Tool getBottom:commentInfoLabel3] + 15  );
+                commentView.frame = CGRectMake( 0, [Tool getBottom:line6], Screen_Width, [Tool getBottom:commentInfoLabel3] + 15  );
             }
             else
             {
-                commentView.frame = CGRectMake( 0, [Tool getBottom:line2], Screen_Width, [Tool getBottom:commentInfoLabel2] + 15  );
+                commentView.frame = CGRectMake( 0, [Tool getBottom:line6], Screen_Width, [Tool getBottom:commentInfoLabel2] + 15  );
             }
         }
         else
         {
-            commentView.frame = CGRectMake( 0, [Tool getBottom:line2], Screen_Width, [Tool getBottom:commentInfoLabel1] + 15  );
+            commentView.frame = CGRectMake( 0, [Tool getBottom:line6], Screen_Width, [Tool getBottom:commentInfoLabel1] + 15  );
         }
     }
     else
     {
-        commentView.frame = CGRectMake( 0, [Tool getBottom:line2], Screen_Width, 76 );
+        commentView.frame = CGRectMake( 0, [Tool getBottom:line6], Screen_Width, 76 );
     }
     
     if( self.entity.myInviteArray.count > 0 )
@@ -587,24 +761,29 @@
         line4.frame = CGRectMake( 0, [Tool getBottom:commentView], Screen_Width, 10 );
     }
     
-    buttonAddAnswer.frame = CGRectMake( 20, [Tool getBottom:line4] + 10, ( Screen_Width - 60 ) / 2, 30 );
+    answerCountLabel.frame = CGRectMake( praiseCountLabel.frame.origin.x, [Tool getBottom:line4] + 10, 150, 20 );
+    answerCountLabel.text = [NSString stringWithFormat:@"活动总结 %lu", (unsigned long)self.entity.answerCount];
+    
+    buttonAddSum.frame = CGRectMake( Screen_Width - 70, [Tool getBottom:line4] + 10, 60, 20 );
     if( self.entity.hasAnswered == YES )
     {
-        buttonAddAnswer.backgroundColor = Color_Heavy_Gray;
-        [buttonAddAnswer setTitle:@"编辑回答" forState:UIControlStateNormal];
+        buttonAddSum.backgroundColor = Color_Heavy_Gray;
+        [buttonAddSum setTitle:@"编辑总结" forState:UIControlStateNormal];
     }
-    buttonInvite.frame = CGRectMake( 40 + ( Screen_Width - 60 ) / 2, buttonAddAnswer.frame.origin.y, ( Screen_Width - 60 ) / 2, 30 );
+    else
+    {
+        [buttonAddSum setTitle:@"添加总结" forState:UIControlStateNormal];
+    }
     
-    answerCountLabel.frame = CGRectMake( commentCountLabel.frame.origin.x, [Tool getBottom:buttonAddAnswer] + 10, 100, 20 );
-    answerCountLabel.text = [NSString stringWithFormat:@"回答 %ld", (long)self.entity.answerCount];
-    
-    headerView.frame = CGRectMake( 0, 0, Screen_Width, [Tool getBottom:answerCountLabel] );
+    line7.frame = CGRectMake( 10, [Tool getBottom:buttonAddSum] + 5, Screen_Width - 20, 1 );
+
+    headerView.frame = CGRectMake( 0, 0, Screen_Width, [Tool getBottom:line7] + 10 );
     tableView.tableHeaderView = headerView;
 }
 
 - ( void ) updateTable
 {
-    answerCountLabel.text = [NSString stringWithFormat:@"回答 %ld", (long)self.entity.answerCount];
+    answerCountLabel.text = [NSString stringWithFormat:@"活动总结 %ld", (long)self.entity.answerCount];
     [tableView reloadData];
 }
 
@@ -736,7 +915,7 @@
     [tempLabel setAttributedText:[Tool getModifyString:entity.info]];
     [tempLabel sizeToFit];
     CGFloat height = tempLabel.frame.size.height;
-
+    
     return height + 63;
 }
 
@@ -744,9 +923,9 @@
 {
     [tableView_ deselectRowAtIndexPath:indexPath animated:YES];
     
-    if( [self.delegate respondsToSelector:@selector(clickAnswerAtIndex:)] )
+    if( [self.delegate respondsToSelector:@selector(clickSumAtIndex:)] )
     {
-        [self.delegate clickAnswerAtIndex:( int )indexPath.row];
+        [self.delegate clickSumAtIndex:( int )indexPath.row];
     }
 }
 

@@ -14,6 +14,7 @@
 #import "InviteEntity.h"
 #import "ChooseInviteViewController.h"
 #import <UIImageView+WebCache.h>
+#import "CommentEntity.h"
 
 @interface InviteViewController ()
 {
@@ -30,7 +31,14 @@
 {
     [super viewDidLoad];
     
-    [self setupTitle:@"邀请回答"];
+    if( self.type == 0 )
+    {
+        [self setupTitle:@"邀请回答"];
+    }
+    else
+    {
+        [self setupTitle:@"邀请参加"];
+    }
     [self setupNextButtonTitle:@"完成"];
     self.canInvite = NO;
     self.view.backgroundColor = Color_With_Rgb( 255, 255, 255, 1 );
@@ -99,7 +107,49 @@
 
 - ( void ) clickHead : (UITapGestureRecognizer *)tap
 {
-    [self loadAnswererId];
+    if( self.type == 0 )
+    {
+        [self loadAnswererId];
+    }
+    else
+    {
+        NSMutableDictionary * dictionJoin = [NSMutableDictionary dictionary];
+        for( CommentEntity * item in self.arrayJoin )
+        {
+            [dictionJoin setObject:[NSNumber numberWithBool:YES] forKey:item.userId];
+        }
+        
+        NSMutableDictionary * dictionInviters = [NSMutableDictionary dictionary];
+        for( InviteEntity * item in self.arrayInviters )
+        {
+            [dictionInviters setObject:[NSNumber numberWithBool:YES] forKey:item.inviteUserId];
+        }
+        
+        if( self.arrayUsers.count == 0 )
+        {
+            MyDatabaseHelper * helper = [MyDatabaseHelper new];
+            self.arrayUsers = [helper getUserList];
+            self.arrayUsers = ( NSMutableArray * )[self.arrayUsers sortedArrayUsingFunction:sortByName3 context:NULL];
+        }
+        
+        for( UserEntity * user in self.arrayUsers )
+        {
+            if( [dictionJoin objectForKey:user.userId] )
+            {
+                user.hasAnswered = YES;
+            }
+            if( [dictionInviters objectForKey:user.userId] )
+            {
+                user.hasInvited = YES;
+            }
+        }
+        
+        ChooseInviteViewController * controller = [ChooseInviteViewController new];
+        controller.arrayUsers = self.arrayUsers;
+        controller.type = self.type;
+        [SVProgressHUD dismiss];
+        [self.navigationController pushViewController:controller animated:YES];
+    }
 }
 
 - ( void ) doBack
@@ -170,6 +220,7 @@
     
     ChooseInviteViewController * controller = [ChooseInviteViewController new];
     controller.arrayUsers = self.arrayUsers;
+    controller.type = self.type;
     [SVProgressHUD dismiss];
     [self.navigationController pushViewController:controller animated:YES];
 }
@@ -207,7 +258,7 @@ NSInteger sortByName3( id u1, id u2, void *context )
     [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
     [request setValue:self.userId forKey:@"target"];
     [request setValue:self.reason forKey:@"words"];
-    [request setValue:[NSNumber numberWithInt:0] forKey:@"inviteType"];
+    [request setValue:[NSNumber numberWithInt:self.type] forKey:@"inviteType"];
     
     NSString * url = [NSString stringWithFormat:@"api/question/%@/invite", self.questionId];
     [[NetWork shareInstance] httpRequestWithPostPut:url params:request method:@"POST" success:^(NSDictionary * result)
@@ -233,7 +284,14 @@ NSInteger sortByName3( id u1, id u2, void *context )
 {
     [SVProgressHUD dismiss];
     NSDictionary * info = @{ @"userName" : self.name, @"time" : time, @"value" : self.reason };
-    [[NSNotificationCenter defaultCenter] postNotificationName:InviteUserSuccess object:nil userInfo:info];
+    if( self.type == 0 )
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:QuestionInviteSuccess object:nil userInfo:info];
+    }
+    else
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:ActInviteSuccess object:nil userInfo:info];
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 

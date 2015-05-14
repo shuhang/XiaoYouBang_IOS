@@ -37,7 +37,7 @@
         inputInfo.text = self.info;
     }
     
-    if( self.type == 0 || self.type == 1 )
+    if( self.type == 0 || self.type == 1 || self.type == 5 )
     {
         [self setupTitle:@"评论"];
         [self setupNextButtonTitle:@"发表"];
@@ -52,7 +52,9 @@
     }
     else if( self.type == 2 )
     {
-        
+        [self setupTitle:@"活动报名"];
+        [self setupNextButtonTitle:@"发表"];
+        inputInfo.placeholder = @"请写下你的报名人数或者说明...";
     }
     else if( self.type == 3 )
     {
@@ -92,13 +94,24 @@
         return;
     }
     
-    if( self.type == 0 )
+    if( self.type == 0 || self.type == 5 )
     {
         [self addQuestionComment];
     }
     else if( self.type == 1 )
     {
         [self addAnswerComment];
+    }
+    else if( self.type == 2 )
+    {
+        if( self.isEdit )
+        {
+            [self editActJoin];
+        }
+        else
+        {
+            [self addActJoin];
+        }
     }
     else if( self.type == 3 )
     {
@@ -115,6 +128,97 @@
     {
         [self editIntro];
     }
+}
+
+- ( void ) editActJoin
+{
+    FORCE_CLOSE_KEYBOARD;
+    [SVProgressHUD showWithStatus:@"正在发表" maskType:SVProgressHUDMaskTypeGradient];
+    
+    NSMutableDictionary * request = [NSMutableDictionary dictionary];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
+    [request setValue:[NSNumber numberWithInt:1] forKey:@"commentType"];
+    [request setValue:self.info forKey:@"content"];
+    [request setValue:self.commentId forKey:@"commentId"];
+    
+    NSString * url = [NSString stringWithFormat:@"api/question/%@/comment/edit", self.questionId];
+    [[NetWork shareInstance] httpRequestWithPostPut:url params:request method:@"PUT" success:^(NSDictionary * result)
+     {
+         int code = [result[ @"result"] intValue];
+         if( code == 3000 )
+         {
+             [self editActJoinSuccess];
+         }
+         else
+         {
+             [SVProgressHUD showErrorWithStatus:@"发表失败"];
+         }
+     }
+     error:^(NSError * error)
+     {
+         NSLog( @"%@", error );
+         [SVProgressHUD showErrorWithStatus:@"发表失败"];
+     }];
+}
+
+- ( void ) editActJoinSuccess
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:EditActJoin object:nil userInfo:@{ @"info" : self.info }];
+    [SVProgressHUD dismiss];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- ( void ) addActJoin
+{
+    FORCE_CLOSE_KEYBOARD;
+    [SVProgressHUD showWithStatus:@"正在发表" maskType:SVProgressHUDMaskTypeGradient];
+    
+    NSMutableDictionary * request = [NSMutableDictionary dictionary];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
+    [request setValue:[NSNumber numberWithInt:1] forKey:@"commentType"];
+    [request setValue:self.info forKey:@"content"];
+    
+    NSString * url = [NSString stringWithFormat:@"api/question/%@/comment", self.questionId];
+    [[NetWork shareInstance] httpRequestWithPostPut:url params:request method:@"POST" success:^(NSDictionary * result)
+     {
+         int code = [result[ @"result"] intValue];
+         if( code == 3000 )
+         {
+             NSString * commentId = [NSString stringWithFormat:@"%@", result[ @"id" ]];
+             NSString * time = [NSString stringWithFormat:@"%@", result[ @"time" ]];
+             [self addActJoinSuccess:commentId time:time];
+         }
+         else
+         {
+             [SVProgressHUD showErrorWithStatus:@"发表失败"];
+         }
+     }
+     error:^(NSError * error)
+     {
+         NSLog( @"%@", error );
+         [SVProgressHUD showErrorWithStatus:@"发表失败"];
+     }];
+}
+
+- ( void ) addActJoinSuccess : ( NSString * ) commentId time : ( NSString * ) time
+{
+    CommentEntity * entity = [CommentEntity new];
+    entity.commentId = commentId;
+    entity.time = time;
+    entity.questionId = self.questionId;
+    entity.info = self.info;
+    entity.type = 1;
+    
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    entity.userHeadUrl = [userDefaults objectForKey:@"headUrl"];
+    entity.userName = [userDefaults objectForKey:@"name"];
+    entity.userId = [userDefaults objectForKey:@"userId"];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:AddNewActJoin object:nil userInfo:@{ @"comment" : entity }];
+    [SVProgressHUD dismiss];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - ( void ) editLeaveWord
@@ -377,7 +481,14 @@
     entity.userName = [userDefaults objectForKey:@"name"];
     entity.userId = [userDefaults objectForKey:@"userId"];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:AddNewQuestionComment object:nil userInfo:@{ @"comment" : entity }];
+    if( self.type == 0 )
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:AddNewQuestionComment object:nil userInfo:@{ @"comment" : entity }];
+    }
+    else
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:AddNewActComment object:nil userInfo:@{ @"comment" : entity }];
+    }
     [SVProgressHUD dismiss];
     [self.navigationController popViewControllerAnimated:YES];
 }

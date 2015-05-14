@@ -12,7 +12,8 @@
 @interface CommentTableViewController : BaseViewController
 
 @property( nonatomic, strong ) NSMutableArray * commentArray;
-@property( nonatomic, strong ) NSMutableArray * fatherCommentArray;
+@property( nonatomic, strong ) NSMutableArray * inviteArray;
+@property( nonatomic, strong ) NSMutableArray * joinArray;
 @property( nonatomic, strong ) NSString * questionTitle;
 @property( nonatomic, strong ) NSString * questionId;
 @property( nonatomic, assign ) int commentCount;

@@ -24,6 +24,9 @@
 // 0 : friend
 // 1 : invite
 @property( nonatomic, assign ) int type;
+// 0 : question
+// 1 : act
+@property( nonatomic, assign ) int inviteType;
 
 - ( void ) updateCell;
 

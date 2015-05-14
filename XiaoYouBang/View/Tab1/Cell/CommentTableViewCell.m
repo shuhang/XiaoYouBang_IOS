@@ -57,8 +57,9 @@
     indexLabel.text = [NSString stringWithFormat:@"%d评", self.commentIndex];
     
     CGFloat height = [Tool getHeightByString:self.entity.info width:Screen_Width - 75 height:99999999 textSize:Text_Size_Small];
-    infoLabel.frame = CGRectMake( 60, indexLabel.frame.origin.y, Screen_Width - 75, height );
+    infoLabel.frame = CGRectMake( 60, indexLabel.frame.origin.y - 5, Screen_Width - 75, height );
     [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
+    [infoLabel sizeToFit];
     
     line.frame = CGRectMake( 10, [Tool getBottom:infoLabel] + 10, Screen_Width - 20, 0.5 );
 }

@@ -12,4 +12,10 @@
 
 @property( nonatomic, strong ) NSMutableArray * arrayUsers;
 
+/**
+ *  0 : question
+    1 : act
+ **/
+@property( nonatomic, assign ) int type;
+
 @end

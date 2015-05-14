@@ -24,7 +24,6 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = Color_With_Rgb( 255, 255, 255, 1 );
-    [self setupTitle:@"添加回答"];
     [self setupNextButtonTitle:@"发布"];
     
     UIView * tempView = [UIView new];
@@ -46,13 +45,27 @@
     
     inputInfo = [[GCPlaceholderTextView alloc] initWithFrame:CGRectMake( 0, [Tool getBottom:tempView] + 10, Screen_Width, Screen_Height - [Tool getBottom:label] - 10 )];
     inputInfo.font = [UIFont systemFontOfSize:Text_Size_Big];
-    inputInfo.placeholder = @"写下你的答案、建议、参考...";
     [self.view addSubview:inputInfo];
     
-    if( self.isEdit )
+    if( self.type == 0 )
     {
-        [self setupTitle:@"编辑回答"];
-        inputInfo.text = self.info;
+        [self setupTitle:@"添加回答"];
+        inputInfo.placeholder = @"写下你的答案、建议、参考...";
+        if( self.isEdit )
+        {
+            [self setupTitle:@"编辑回答"];
+            inputInfo.text = self.info;
+        }
+    }
+    else if( self.type == 1 )
+    {
+        [self setupTitle:@"添加活动总结"];
+        inputInfo.placeholder = @"写下你的活动总结...";
+        if( self.isEdit )
+        {
+            [self setupTitle:@"编辑活动总结"];
+            inputInfo.text = self.info;
+        }
     }
 }
 - ( void ) doNext

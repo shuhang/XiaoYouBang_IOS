@@ -82,6 +82,7 @@
     
     infoLabel.frame= CGRectMake( 55, 80, Screen_Width - 65, [Tool getHeightByString:self.entity.info width:Screen_Width - 65 height:60 textSize:Text_Size_Small] );
     [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
+    [infoLabel sizeToFit];
     
     commentLabel.frame = CGRectMake( Screen_Width - 60, [Tool getBottom:infoLabel] + 15, 50, 20 );
     commentLabel.text = [NSString stringWithFormat:@"评论 %ld", (long)self.entity.commentCount];
