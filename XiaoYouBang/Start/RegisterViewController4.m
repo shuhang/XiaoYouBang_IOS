@@ -17,7 +17,7 @@
     UITextField * fieldTag3;
     UITextField * fieldTag4;
     UITextField * fieldTag5;
-    UITextField * nowField;
+    //UITextField * nowField;
 }
 @end
 
@@ -91,17 +91,17 @@
     [self adjustTextField:fieldTag5];
     [fieldTag5 setBorderStyle:UITextBorderStyleRoundedRect];
     [self.view addSubview:fieldTag5];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    //增加监听，当键退出时收出消息
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(keyboardWillShow:)
+//                                                 name:UIKeyboardWillShowNotification
+//                                               object:nil];
+//    
+//    //增加监听，当键退出时收出消息
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(keyboardWillHide:)
+//                                                 name:UIKeyboardWillHideNotification
+//                                               object:nil];
 }
 
 - ( void ) doNext
@@ -168,47 +168,47 @@
     [fieldTag4 resignFirstResponder];
     [fieldTag5 resignFirstResponder];
 }
-- (void)keyboardWillShow:(NSNotification *)aNotification
-{
-    //获取键盘的高度
-    NSDictionary *userInfo = [aNotification userInfo];
-    NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
-    CGRect keyboardRect = [aValue CGRectValue];
-    int keyboardHeight = keyboardRect.size.height;
-    
-    if( Screen_Height - keyboardHeight - 100 > nowField.frame.origin.y + nowField.frame.size.height){
-        
-    }
-    else{
-        CGFloat moveHeight = nowField.frame.origin.y - (Screen_Height - keyboardHeight - nowField.frame.size.height);
-        [UIView beginAnimations:@"scrollView" context:nil];
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-        [UIView setAnimationDuration:0.275f];
-        self.view.frame = CGRectMake(self.view.frame.origin.x, -moveHeight - 64, Screen_Width, Screen_Height);
-        [UIView commitAnimations];
-    }
-}
-
-//当键退出时调用
-- (void)keyboardWillHide:(NSNotification *)aNotification
-{
-    
-}
-
--(void)textFieldDidBeginEditing:(UITextField *)textField
-{
-    nowField = textField;
-}
-
-
--(void)textFieldDidEndEditing:(UITextField *)textField
-{
-    [UIView beginAnimations:@"scrollView" context:nil];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    [UIView setAnimationCurve:0.275f];
-    self.view.frame = CGRectMake(self.view.frame.origin.x, 0 , Screen_Width, Screen_Height);
-    [UIView commitAnimations];
-    
-}
+//- (void)keyboardWillShow:(NSNotification *)aNotification
+//{
+//    //获取键盘的高度
+//    NSDictionary *userInfo = [aNotification userInfo];
+//    NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+//    CGRect keyboardRect = [aValue CGRectValue];
+//    int keyboardHeight = keyboardRect.size.height;
+//    
+//    if( Screen_Height - keyboardHeight - 100 > nowField.frame.origin.y + nowField.frame.size.height){
+//        
+//    }
+//    else{
+//        CGFloat moveHeight = nowField.frame.origin.y - (Screen_Height - keyboardHeight - nowField.frame.size.height);
+//        [UIView beginAnimations:@"scrollView" context:nil];
+//        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//        [UIView setAnimationDuration:0.275f];
+//        self.view.frame = CGRectMake(self.view.frame.origin.x, -moveHeight - 64, Screen_Width, Screen_Height);
+//        [UIView commitAnimations];
+//    }
+//}
+//
+////当键退出时调用
+//- (void)keyboardWillHide:(NSNotification *)aNotification
+//{
+//    
+//}
+//
+//-(void)textFieldDidBeginEditing:(UITextField *)textField
+//{
+//    nowField = textField;
+//}
+//
+//
+//-(void)textFieldDidEndEditing:(UITextField *)textField
+//{
+//    [UIView beginAnimations:@"scrollView" context:nil];
+//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//    [UIView setAnimationCurve:0.275f];
+//    self.view.frame = CGRectMake(self.view.frame.origin.x, 0 , Screen_Width, Screen_Height);
+//    [UIView commitAnimations];
+//    
+//}
 
 @end

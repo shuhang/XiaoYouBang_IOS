@@ -1,6 +1,6 @@
 //
 //  AddQuestionViewController.h
-//  XiaoYouBang
+//
 //
 //  Created by shuhang on 15/4/28.
 //  Copyright (c) 2015年 shuhang. All rights reserved.
@@ -15,5 +15,11 @@
 @property( nonatomic, strong ) NSString * info;
 @property( nonatomic, strong ) NSString * questionId;
 @property( nonatomic, assign ) BOOL isEdit;
+
+/**
+  0 : question
+  1 : act
+ **/
+@property( nonatomic, assign ) int type;
 
 @end

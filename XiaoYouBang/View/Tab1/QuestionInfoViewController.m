@@ -148,6 +148,7 @@
     controller.questionTitle = self.entity.questionTitle;
     controller.info = self.entity.info;
     controller.isEdit = YES;
+    controller.type = 0;
     [self.navigationController pushViewController:controller animated:YES];
 }
 

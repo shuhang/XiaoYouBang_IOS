@@ -16,6 +16,7 @@
 #import "QuestionInfoViewController.h"
 #import "AnswerInfoViewController.h"
 #import "ActInfoViewController.h"
+#import "AddActViewController.h"
 
 #define viewHeight 106
 
@@ -67,6 +68,7 @@
     [self.view addSubview:segmentedControl];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addQuestion:) name:AddNewQuestion object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addAct:) name:AddNewAct object:nil];
 }
 
 - ( void ) addQuestion : ( NSNotification * ) noti
@@ -75,6 +77,14 @@
     QuestionEntity * entity = [dic objectForKey:@"question"];
     [viewAllQuestion.questionArray insertObject:entity atIndex:0];
     [viewAllQuestion reloadTable];
+}
+
+- ( void ) addAct : ( NSNotification * ) noti
+{
+    NSDictionary * dic = [noti userInfo];
+    QuestionEntity * entity = [dic objectForKey:@"act"];
+    [viewAllAct.actArray insertObject:entity atIndex:0];
+    [viewAllAct reloadTable];
 }
 
 - ( void ) addRightButton
@@ -93,11 +103,13 @@
     if( nowIndex == 0 )
     {
         AddQuestionViewController * controller = [AddQuestionViewController new];
+        controller.type = 0;
         [self.navigationController pushViewController:controller animated:YES];
     }
     else
     {
-        
+        AddActViewController * controller = [AddActViewController new];
+        [self.navigationController pushViewController:controller animated:YES];
     }
 }
 

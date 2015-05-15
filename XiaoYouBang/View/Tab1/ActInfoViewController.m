@@ -47,7 +47,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addAnswer:) name:AddNewAnswer object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addQuestionComment:) name:AddNewActComment object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editQuestionSuccess:) name:EditQuestionSuccess object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editActSuccess:) name:EditActSuccess object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inviteUser:) name:ActInviteSuccess object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addActJoin:) name:AddNewActJoin object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editActJoin:) name:EditActJoin object:nil];
@@ -97,7 +97,7 @@
     [infoView updateHeader];
 }
 
-- ( void ) editQuestionSuccess : ( NSNotification * ) noti
+- ( void ) editActSuccess : ( NSNotification * ) noti
 {
     NSDictionary * dic = [noti userInfo];
     self.entity.questionTitle = [dic objectForKey:@"title"];
@@ -132,7 +132,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AddNewAnswer object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AddNewActComment object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:EditQuestionSuccess object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:EditActSuccess object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:ActInviteSuccess object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AddNewActJoin object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:EditActJoin object:nil];
@@ -197,6 +197,7 @@
     controller.questionTitle = self.entity.questionTitle;
     controller.info = self.entity.info;
     controller.isEdit = YES;
+    controller.type = 1;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -270,7 +271,14 @@
 
 - ( void ) clickJoin
 {
-    
+    CommentTableViewController * controller = [CommentTableViewController new];
+    controller.questionTitle = self.entity.questionTitle;
+    controller.questionId = self.entity.questionId;
+    controller.type = 2;
+    controller.commentArray = [NSMutableArray arrayWithArray:self.entity.joinArray];
+    controller.commentCount = ( int )self.entity.joinCount;
+    controller.isFromQuestionInfo = YES;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - ( void ) clickUser

@@ -26,7 +26,6 @@
     
     self.tabBarController.tabBar.hidden = YES;
     self.view.backgroundColor = Color_With_Rgb( 255, 255, 255, 1 );
-    [self setupTitle:@"添加提问"];
     [self setupNextButtonTitle:@"发布"];
     
     GCPlaceholderTextView * temp = [[GCPlaceholderTextView alloc] initWithFrame:CGRectZero];
@@ -34,7 +33,6 @@
     
     inputTitle = [[GCPlaceholderTextView alloc] initWithFrame:CGRectMake( 0, 74, Screen_Width, 60 )];
     inputTitle.font = [UIFont systemFontOfSize:Text_Size_Big];
-    inputTitle.placeholder = @"请简要描述你的问题，至少包含一个问号";
     [self.view addSubview:inputTitle];
     
     UIView * view = [[UIView alloc] initWithFrame:CGRectMake( 0, 144, 20, 1 )];
@@ -43,12 +41,28 @@
     
     inputInfo = [[GCPlaceholderTextView alloc] initWithFrame:CGRectMake( 0, 155, Screen_Width, Screen_Height - 175 )];
     inputInfo.font = [UIFont systemFontOfSize:Text_Size_Small];
-    inputInfo.placeholder = @"请补充描述相关的背景、想法、要求等...";
     [self.view addSubview:inputInfo];
-    
-    if( self.isEdit )
+
+    if( self.type == 0 )
     {
-        [self setupTitle:@"编辑问题"];
+        inputTitle.placeholder = @"请简要描述你的问题，至少包含一个问号";
+        inputInfo.placeholder = @"请补充描述相关的背景、想法、要求等...";
+        if( self.isEdit )
+        {
+            [self setupTitle:@"编辑问题"];
+            inputTitle.text = self.questionTitle;
+            inputInfo.text = self.info;
+        }
+        else
+        {
+            [self setupTitle:@"添加提问"];
+        }
+    }
+    else if( self.type == 1 )
+    {
+        inputTitle.placeholder = @"请输入活动的标题，限30字...";
+        inputInfo.placeholder = @"请描述活动的详细内容，包括发起初心、场地魅力、活动计划、交通提示、初步报名情况等...";
+        [self setupTitle:@"编辑活动"];
         inputTitle.text = self.questionTitle;
         inputInfo.text = self.info;
     }
@@ -70,15 +84,26 @@
 - ( void ) doNext
 {
     self.questionTitle = inputTitle.text;
-    if( self.questionTitle.length < 1 || self.questionTitle.length > 36 )
+    if( self.type == 0 )
     {
-        [SVProgressHUD showErrorWithStatus:@"标题最多36个字"];
-        return;
+        if( self.questionTitle.length < 1 || self.questionTitle.length > 36 )
+        {
+            [SVProgressHUD showErrorWithStatus:@"标题最多36个字"];
+            return;
+        }
+        if( [self.questionTitle rangeOfString:@"?"].length == 0 && [self.questionTitle rangeOfString:@""].length == 0 )
+        {
+            [SVProgressHUD showErrorWithStatus:@"标题至少包含一个问号"];
+            return;
+        }
     }
-    if( [self.questionTitle rangeOfString:@"?"].length == 0 && [self.questionTitle rangeOfString:@""].length == 0 )
+    else
     {
-        [SVProgressHUD showErrorWithStatus:@"标题至少包含一个问号"];
-        return;
+        if( self.questionTitle.length < 1 || self.questionTitle.length > 30 )
+        {
+            [SVProgressHUD showErrorWithStatus:@"标题最多30个字"];
+            return;
+        }
     }
     self.info = inputInfo.text;
     if( self.info.length < 1 || self.info.length > 2000 )
@@ -197,7 +222,14 @@
 - ( void ) editQuestionSuccess : ( NSString * ) time
 {
     NSDictionary * userInfo = @{ @"title" : self.questionTitle, @"info" : self.info, @"time" : time };
-    [[NSNotificationCenter defaultCenter] postNotificationName:EditQuestionSuccess object:nil userInfo:userInfo];
+    if( self.type == 0 )
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:EditQuestionSuccess object:nil userInfo:userInfo];
+    }
+    else
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:EditActSuccess object:nil userInfo:userInfo];
+    }
     [SVProgressHUD dismiss];
     [self.navigationController popViewControllerAnimated:YES];
 }

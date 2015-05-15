@@ -17,12 +17,13 @@
 #import "MyDatabaseHelper.h"
 #import "UserInfoViewController.h"
 #import "UserEntity.h"
+#import "MLTableAlert.h"
 
-@interface AnswerInfoViewController ()<AnswerInfoViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface AnswerInfoViewController ()<AnswerInfoViewDelegate, UIAlertViewDelegate>
 {
     AnswerInfoView * infoView;
-    UIActionSheet * sheetClickComment;
     int clickIndex;
+    MLTableAlert * alertClickComment;
 }
 @end
 
@@ -152,8 +153,52 @@
 - ( void ) clickCommentAtIndex:(int)index
 {
     clickIndex = index;
-    sheetClickComment = [[UIActionSheet alloc] initWithTitle:@"选择操作" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"回复" otherButtonTitles:@"复制", nil];
-    [sheetClickComment showInView:self.view];
+    CommentEntity * temp1 = [self.entity.commentArray objectAtIndex:clickIndex];
+    alertClickComment = [MLTableAlert tableAlertWithTitle:temp1.info cancelButtonTitle:@"取消" numberOfRows:^NSInteger(NSInteger section)
+                         {
+                             return 2;
+                         }
+                                                 andCells:^UITableViewCell* (MLTableAlert *anAlert, NSIndexPath *indexPath)
+                         {
+                             static NSString *CellIdentifier = @"CellIdentifier";
+                             NSArray * lickComment = @[ @"回复", @"复制" ];
+                             UITableViewCell *cell = [anAlert.table dequeueReusableCellWithIdentifier:CellIdentifier];
+                             if( cell == nil )
+                             {
+                                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+                             }
+                             cell.textLabel.text = [lickComment objectAtIndex:indexPath.row];
+                             cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                             
+                             return cell;
+                         }];
+    
+    alertClickComment.height = 200;
+    
+    [alertClickComment configureSelectionBlock:^(NSIndexPath *selectedIndex)
+     {
+         if( selectedIndex.row == 0 )
+         {
+             CommentEntity * temp = [self.entity.commentArray objectAtIndex:clickIndex];
+             AddCommentViewController * controller = [AddCommentViewController new];
+             controller.isEdit = NO;
+             controller.answerId = self.entity.answerId;
+             controller.type = 1;
+             controller.replyId = temp.userId;
+             controller.replyName = temp.userName;
+             [self.navigationController pushViewController:controller animated:YES];
+         }
+         else if( selectedIndex.row == 1 )
+         {
+             CommentEntity * temp = [self.entity.commentArray objectAtIndex:clickIndex];
+             UIPasteboard * pasteboard = [UIPasteboard generalPasteboard];
+             pasteboard.string = temp.info;
+             [SVProgressHUD showSuccessWithStatus:@"文字已复制"];
+         }
+     }
+     andCompletionBlock:^{}];
+    
+    [alertClickComment show];
 }
 
 - ( void ) clickUser
@@ -343,31 +388,4 @@
         [self cancleSave];
     }
 }
-
-#pragma mark - UIActionSheetDelegate
-- ( void ) actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if( actionSheet == sheetClickComment )
-    {
-        if( buttonIndex == sheetClickComment.destructiveButtonIndex )
-        {
-            CommentEntity * temp = [self.entity.commentArray objectAtIndex:clickIndex];
-            AddCommentViewController * controller = [AddCommentViewController new];
-            controller.isEdit = NO;
-            controller.answerId = self.entity.answerId;
-            controller.type = 1;
-            controller.replyId = temp.userId;
-            controller.replyName = temp.userName;
-            [self.navigationController pushViewController:controller animated:YES];
-        }
-        else if( buttonIndex == sheetClickComment.firstOtherButtonIndex )
-        {
-            CommentEntity * temp = [self.entity.commentArray objectAtIndex:clickIndex];
-            UIPasteboard * pasteboard = [UIPasteboard generalPasteboard];
-            pasteboard.string = temp.info;
-            [SVProgressHUD showSuccessWithStatus:@"文字已复制"];
-        }
-    }
-}
-
 @end

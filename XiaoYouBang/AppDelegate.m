@@ -13,6 +13,8 @@
 #import "Tab3ViewController.h"
 #import "Tool.h"
 #import "MyDatabase.h"
+#import "IQKeyboardManager.h"
+#import "IQSegmentedNextPrevious.h"
 
 @interface AppDelegate ()
 {
@@ -26,6 +28,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[MyDatabase shareInstance] openDatabase];
+    
+    [[IQKeyboardManager sharedManager] setCanAdjustTextView:YES];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
