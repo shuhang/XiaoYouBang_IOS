@@ -15,10 +15,12 @@
 #import "QuestionTableViewController.h"
 #import "AnswerTableViewController.h"
 #import "LeavewordViewController.h"
+#import "UIImageView+WebCache.h"
 
 @interface UserInfoViewController () <UserInfoViewDelegate>
 {
     UserInfoView * infoView;
+    UIView * mainView;
 }
 @end
 
@@ -155,10 +157,33 @@
     [self.navigationController pushViewController:controller animated:YES];
 }
 
+- ( void ) hidePicture : (UITapGestureRecognizer *)tap
+{
+    if( [mainView isDescendantOfView:[UIApplication sharedApplication].keyWindow] )
+    {
+        [mainView removeFromSuperview];
+    }
+}
+
 #pragma mark UserInfoViewDelegate
 - ( void ) clickHeadImage
 {
+    mainView = [[UIView alloc] init];
+    mainView.backgroundColor = [UIColor blackColor];
+    mainView.frame = [UIScreen mainScreen].bounds;
     
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.userInteractionEnabled = YES;
+    imageView.frame = CGRectMake( 0, ( Screen_Height - Screen_Width ) / 2, Screen_Width, Screen_Width );
+    [imageView sd_setImageWithURL:[NSURL URLWithString:self.entity.headUrl] placeholderImage:[UIImage imageNamed:@"picture"]];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    imageView.userInteractionEnabled = YES;
+    [mainView addSubview:imageView];
+    UITapGestureRecognizer * gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hidePicture:)];
+    [imageView addGestureRecognizer:gesture];
+    
+    mainView.clipsToBounds = YES;
+    [[UIApplication sharedApplication].keyWindow addSubview:mainView];
 }
 
 - ( void ) clickIntro

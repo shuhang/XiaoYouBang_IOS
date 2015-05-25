@@ -16,6 +16,9 @@
 #import "CommentTableViewController.h"
 #import "NetWork.h"
 #import "Tool.h"
+#import "MyDatabaseHelper.h"
+#import "UserInfoViewController.h"
+#import "LeavewordViewController.h"
 
 #define viewHeight 106
 
@@ -290,21 +293,102 @@
         }
         case 3 :
         {
+            [self showUser:entity.userId];
             break;
         }
         case 4 :
         {
+            NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+            LeavewordViewController * controller = [LeavewordViewController new];
+            controller.userId = [userDefaults objectForKey:@"userId"];
+            controller.userName = [userDefaults objectForKey:@"name"];
+            controller.headUrl = [userDefaults objectForKey:@"headUrl"];
+            [self.navigationController pushViewController:controller animated:YES];
             break;
         }
         case 5 :
         {
+            LeavewordViewController * controller = [LeavewordViewController new];
+            controller.userId = entity.userId;
+            controller.userName = entity.titleUserName;
+            controller.headUrl = entity.hostHeadUrl;
+            [self.navigationController pushViewController:controller animated:YES];
             break;
         }
         case 6 :
         {
+            CommentTableViewController * controller = [CommentTableViewController new];
+            controller.type = 1;
+            controller.questionId = entity.questionId;
+            controller.questionTitle = entity.question;
+            controller.shouldRefresh = YES;
+            [self.navigationController pushViewController:controller animated:YES];
             break;
         }
     }
+}
+
+- ( void ) showUser : ( NSString * ) userId
+{
+    if( [Tool judgeIsMe:userId] )
+    {
+        [self showMe];
+    }
+    else
+    {
+        MyDatabaseHelper * helper = [MyDatabaseHelper new];
+        UserEntity * user = [helper getUserById:userId];
+        if( user != nil )
+        {
+            UserInfoViewController * controller = [UserInfoViewController new];
+            controller.entity = user;
+            controller.shouldRefresh = YES;
+            [self.navigationController pushViewController:controller animated:YES];
+        }
+        else
+        {
+            [self loadUserInfo:userId];
+        }
+    }
+}
+
+- ( void ) loadUserInfo : ( NSString * ) userId
+{
+    [SVProgressHUD showWithStatus:@"正在加载个人资料" maskType:SVProgressHUDMaskTypeGradient];
+    
+    NSMutableDictionary * request = [NSMutableDictionary dictionary];
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
+    NSString * url = [NSString stringWithFormat:@"api/user/%@", userId];
+    [[NetWork shareInstance] httpRequestWithGet:url params:request success:^(NSDictionary * result)
+     {
+         UserEntity * user = [UserEntity new];
+         [Tool loadUserInfoEntity:user item:result];
+         user.answerMe = [result[ @"answerMeCount" ] intValue];
+         user.myAnswer = [result[ @"myAnswerCount" ] intValue];
+         
+         MyDatabaseHelper * helper = [MyDatabaseHelper new];
+         [helper insertOrUpdateUsers:[NSArray arrayWithObjects:user, nil] updateTime:@"" symbol:NO];
+         
+         [SVProgressHUD dismiss];
+         
+         UserInfoViewController * controller = [UserInfoViewController new];
+         controller.entity = user;
+         controller.shouldRefresh = NO;
+         [self.navigationController pushViewController:controller animated:YES];
+     }
+     error:^(NSError * error)
+     {
+         NSLog( @"%@", error );
+         [SVProgressHUD showErrorWithStatus:@"加载失败"];
+     }];
+}
+
+- ( void ) showMe
+{
+    UserInfoViewController * controller = [UserInfoViewController new];
+    controller.entity = [Tool getMyEntity];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 @end

@@ -10,7 +10,10 @@
 
 @interface AddActViewController : BaseViewController
 
-@property( nonatomic, strong ) NSString * title;
+@property( nonatomic, strong ) NSString * actTitle;
 @property( nonatomic, strong ) NSString * info;
+
+@property( nonatomic, strong ) NSMutableArray * arrayPictures;
+@property( nonatomic, strong ) NSMutableArray * imageArray;
 
 @end

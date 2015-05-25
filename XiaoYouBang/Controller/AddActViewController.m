@@ -10,6 +10,9 @@
 #import "GCPlaceholderTextView.h"
 #import "NetWork.h"
 #import "QuestionEntity.h"
+#import "ChoosePictureViewController.h"
+#import "Tool.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @interface AddActViewController ()<UITextViewDelegate>
 {
@@ -18,6 +21,8 @@
     UITextField * fieldTime;
     UITextField * fieldPlace;
     UITextField * fieldMoney;
+    
+    UIButton * buttonPicture;
 }
 @end
 
@@ -31,6 +36,9 @@
     [self setupNextButtonTitle:@"发布"];
     self.tabBarController.tabBar.hidden = YES;
     self.view.backgroundColor = Color_With_Rgb( 255, 255, 255, 1 );
+    
+    self.arrayPictures = [NSMutableArray array];
+    self.imageArray = [NSMutableArray array];
     
     GCPlaceholderTextView * temp = [[GCPlaceholderTextView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:temp];
@@ -92,12 +100,34 @@
     inputInfo.placeholder = @"请描述活动的详细内容，包括发起初心、场地魅力、活动计划、交通提示、初步报名情况等...";
     inputInfo.delegate = self;
     [self.view addSubview:inputInfo];
+    
+    buttonPicture = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonPicture.frame = CGRectMake( Screen_Width - 60, Screen_Height - 60, 55, 55 );
+    [buttonPicture setBackgroundImage:[UIImage imageNamed:@"picture"] forState:UIControlStateNormal];
+    [buttonPicture addTarget:self action:@selector(choosePicture) forControlEvents:UIControlEventTouchUpInside];
+    buttonPicture.titleEdgeInsets = UIEdgeInsetsMake( 26, 0, 0, 0 );
+    buttonPicture.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Micro];
+    [buttonPicture setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.view addSubview:buttonPicture];
+}
+
+- ( void ) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [buttonPicture setTitle:[NSString stringWithFormat:@"%lu", (unsigned long)self.arrayPictures.count] forState:UIControlStateNormal];
+}
+
+- ( void ) choosePicture
+{
+    ChoosePictureViewController * controller = [ChoosePictureViewController new];
+    controller.arrayPictures = self.arrayPictures;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - ( void ) doNext
 {
-    self.title = inputTitle.text;
-    if( self.title.length == 0 || self.title.length > 30 )
+    self.actTitle = inputTitle.text;
+    if( self.actTitle.length == 0 || self.actTitle.length > 30 )
     {
         [SVProgressHUD showErrorWithStatus:@"标题1~30字"];
         return;
@@ -128,22 +158,82 @@
     }
     self.info = [NSString stringWithFormat:@"时间：%@\n地点：%@\n费用：%@\n\n【活动详情】\n%@", time, place, money, info];
     
-    [self addAct];
+    [self startAddAct];
+}
+
+- ( void ) startAddAct
+{
+    FORCE_CLOSE_KEYBOARD;
+    if( self.arrayPictures.count > 0 )
+    {
+        [self addPictureAtIndex:0];
+    }
+    else
+    {
+        [self addAct];
+    }
+}
+
+- ( void ) addPictureAtIndex : ( int ) index
+{
+    [SVProgressHUD showWithStatus:[NSString stringWithFormat:@"正在上传第%d张照片", ( index + 1 )] maskType:SVProgressHUDMaskTypeGradient];
+    __block AddActViewController * temp = self;
+    dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ^
+                   {
+                       NSData * data = nil;
+                       if( [[temp.arrayPictures objectAtIndex:index] isKindOfClass:[ALAsset class]] )
+                       {
+                           data = [Tool getThumbImageData:[UIImage imageWithCGImage:[[[self.arrayPictures objectAtIndex:index] defaultRepresentation] fullScreenImage]]];
+                       }
+                       else
+                       {
+                           data = [Tool getThumbImageData:[temp.arrayPictures objectAtIndex:index]];
+                       }
+                       NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+                       NSDictionary * result = [[NetWork shareInstance] uploadHeadImage:[NSString stringWithFormat:@"api/image?token=%@", [userDefaults objectForKey:@"token"]] fileName:@"head.jpg" fileData:data mimeType:@"image/jpeg"];
+                       if( result == nil || [result[ @"result" ] intValue] != 9000 )
+                       {
+                           dispatch_async
+                           (
+                            dispatch_get_main_queue(), ^
+                            {
+                                [SVProgressHUD showErrorWithStatus:@"上传照片失败"];
+                            }
+                            );
+                       }
+                       else
+                       {
+                           dispatch_async
+                           (
+                            dispatch_get_main_queue(), ^
+                            {
+                                [temp.imageArray addObject:result[ @"url" ]];
+                                if( index == ( int ) temp.arrayPictures.count - 1 )
+                                {
+                                    [temp addAct];
+                                }
+                                else
+                                {
+                                    [temp addPictureAtIndex:index + 1];
+                                }
+                            }
+                            );
+                       }
+                   });
 }
 
 - ( void ) addAct
 {
-    FORCE_CLOSE_KEYBOARD;
     [SVProgressHUD showWithStatus:@"正在发布" maskType:SVProgressHUDMaskTypeGradient];
     
     NSMutableDictionary * request = [NSMutableDictionary dictionary];
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
     [request setValue:[NSNumber numberWithInt:1] forKey:@"questionType"];
-    [request setValue:self.title forKey:@"title"];
+    [request setValue:self.actTitle forKey:@"title"];
     [request setValue:self.info forKey:@"info"];
     [request setValue:[NSNumber numberWithBool:NO] forKey:@"invisible"];
-    [request setValue:@[] forKey:@"images"];
+    [request setValue:self.imageArray forKey:@"images"];
     
     [[NetWork shareInstance] httpRequestWithPostPut:@"api/question" params:request method:@"POST" success:^(NSDictionary * result)
      {
@@ -170,7 +260,7 @@
 {
     QuestionEntity * entity = [QuestionEntity new];
     entity.questionId = questionId;
-    entity.questionTitle = self.title;
+    entity.questionTitle = self.actTitle;
     entity.info = self.info;
     entity.createTime = time;
     entity.modifyTime = time;
@@ -182,7 +272,10 @@
     entity.joinCount = 0;
     entity.questionCommentCount = 0;
     entity.praiseCount = 0;
-    entity.hasImage = false;
+    if( self.imageArray.count > 0 )
+        entity.hasImage = YES;
+    else
+        entity.hasImage = NO;
     entity.myInviteArray = [NSMutableArray array];
     entity.inviteMeArray = [NSMutableArray array];
     

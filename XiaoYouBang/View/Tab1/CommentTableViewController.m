@@ -31,6 +31,7 @@
 {
     [super viewDidLoad];
     
+    self.tabBarController.tabBar.hidden = YES;
     [self hideNextButton];
     
     tableView = [[CommentTableView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, Screen_Height + 10)];
@@ -416,7 +417,7 @@
     if( self.type == 0 || self.type == 1 )
     {
         clickIndex = index;
-        CommentEntity * temp1 = [self.commentArray objectAtIndex:clickIndex];
+        CommentEntity * temp1 = [tableView.commentArray objectAtIndex:clickIndex];
         alertClickComment = [MLTableAlert tableAlertWithTitle:temp1.info cancelButtonTitle:@"取消" numberOfRows:^NSInteger(NSInteger section)
         {
             return 2;
@@ -442,7 +443,7 @@
          {
              if( selectedIndex.row == 0 )
              {
-                 CommentEntity * temp = [self.commentArray objectAtIndex:clickIndex];
+                 CommentEntity * temp = [tableView.commentArray objectAtIndex:clickIndex];
                  AddCommentViewController * controller = [AddCommentViewController new];
                  controller.isEdit = NO;
                  controller.questionId = self.questionId;
@@ -460,7 +461,7 @@
              }
              else if( selectedIndex.row == 1 )
              {
-                 CommentEntity * temp = [self.commentArray objectAtIndex:clickIndex];
+                 CommentEntity * temp = [tableView.commentArray objectAtIndex:clickIndex];
                  UIPasteboard * pasteboard = [UIPasteboard generalPasteboard];
                  pasteboard.string = temp.info;
                  [SVProgressHUD showSuccessWithStatus:@"文字已复制"];

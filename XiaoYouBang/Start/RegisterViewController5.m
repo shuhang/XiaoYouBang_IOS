@@ -9,11 +9,13 @@
 #import "RegisterViewController5.h"
 #import "NetWork.h"
 #import "Tool.h"
+#import "GCPlaceholderTextView.h"
 
-@interface RegisterViewController5 () <UITextViewDelegate>
+@interface RegisterViewController5 ()
 {
     UILabel * textLabel;
-    UITextView * fieldInput;
+    //UITextView * fieldInput;
+    GCPlaceholderTextView * fieldInput;
 }
 @end
 
@@ -34,12 +36,11 @@
     textLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
     [self.view addSubview:textLabel];
     
-    fieldInput = [[UITextView alloc] initWithFrame:CGRectMake( 20, 124, Screen_Width - 40, 200 )];
+    fieldInput = [[GCPlaceholderTextView alloc] initWithFrame:CGRectMake( 20, 124, Screen_Width - 40, 200 )];
     fieldInput.layer.cornerRadius = 6;
     fieldInput.layer.masksToBounds = YES;
     fieldInput.layer.borderColor = Color_Gray.CGColor;
     fieldInput.layer.borderWidth = 0.5f;
-    fieldInput.delegate = self;
     fieldInput.font = [UIFont systemFontOfSize:Text_Size_Small];
     [self.view addSubview:fieldInput];
 }
@@ -116,7 +117,7 @@
              [userDefaults setObject:[NSString stringWithFormat:@"%@", [result objectForKey:@"token"]] forKey:@"token"];
              [userDefaults setObject:self.name forKey:@"name"];
              [userDefaults setObject:[NSNumber numberWithInt:self.sex] forKey:@"sex"];
-             [userDefaults setObject:[NSString stringWithFormat:@"%@%@", Server_Url, self.headUrl] forKey:@"headUrl"];
+             [userDefaults setObject:[NSString stringWithFormat:@"%@%@", Image_Server_Url, self.headUrl] forKey:@"headUrl"];
              [userDefaults setObject:[Tool getPkuShortByLong:self.pku] forKey:@"pku"];
              [userDefaults setObject:self.nowHome forKey:@"base"];
              [userDefaults setObject:self.oldHome forKey:@"hometown"];
@@ -157,11 +158,6 @@
     BaseViewController * controller = [self.navigationController.viewControllers objectAtIndex:0];
     controller.hasRefreshed = NO;
     [self.navigationController popToViewController:controller animated:YES];
-}
-
-- ( void ) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [fieldInput resignFirstResponder];
 }
 
 @end

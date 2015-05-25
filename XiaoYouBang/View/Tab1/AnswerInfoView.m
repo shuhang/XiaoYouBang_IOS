@@ -11,8 +11,9 @@
 #import "MJRefresh.h"
 #import "Tool.h"
 #import "CommentTableViewCell.h"
-#import <UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "SVProgressHUD.h"
+#import "UIButton+WebCache.h"
 
 @implementation AnswerInfoView
 {
@@ -40,8 +41,7 @@
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self addSubview:tableView];
         
-        NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-        if( [self.entity.userId isEqualToString:[userDefaults objectForKey:@"userId"]] )
+        if( [Tool judgeIsMe:self.entity.userId] )
         {
             bottomView2 = [[UIView alloc] initWithFrame:CGRectMake( 0, frame.size.height - 90, Screen_Width, 40 )];
             bottomView2.backgroundColor = Color_Heavy_Gray;
@@ -115,6 +115,11 @@
             {
                 buttonPraise.backgroundColor = Bg_Red;
             }
+            if( self.entity.isHasSaved )
+            {
+                [buttonSave setTitle:@"已收藏" forState:UIControlStateNormal];
+                buttonSave.backgroundColor = Bg_Red;
+            }
         }
     }
     return self;
@@ -123,6 +128,9 @@
 - ( void ) initHeadView
 {
     headerView = [[UIView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, 0 )];
+    
+    photoView = [[UIView alloc] initWithFrame:CGRectZero];
+    [headerView addSubview:photoView];
     
     questionTitleView = [[UIView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, 0 )];
     questionTitleView.backgroundColor = Color_Light_Gray;
@@ -167,7 +175,7 @@
     timeLabel.textColor = Color_Heavy_Gray;
     [userView addSubview:timeLabel];
     
-    infoLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    infoLabel = [[MyCopyLabel alloc] initWithFrame:CGRectZero];
     infoLabel.font = [UIFont systemFontOfSize:Text_Size_Big];
     infoLabel.numberOfLines = 0;
     infoLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -192,6 +200,8 @@
     praiseUserLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     praiseUserLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
     praiseUserLabel.textColor = Color_Heavy_Gray;
+    praiseUserLabel.numberOfLines = 0;
+    praiseUserLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [headerView addSubview:praiseUserLabel];
     
     commentCountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -298,6 +308,35 @@
     [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
     [infoLabel sizeToFit];
     
+    if( self.entity.imageArray.count > 0 )
+    {
+        int count = ( int ) self.entity.imageArray.count;
+        int width = ( Screen_Width - 40 ) / 3;
+        for( int i = 0; i < count; i ++ )
+        {
+            int row = i / 3;
+            int index = i % 3;
+            
+            UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.frame = CGRectMake( 15 + index * ( 5 + width ), row * ( 5 + width ), width, width );
+            button.imageView.contentMode = UIViewContentModeScaleAspectFill;
+            [button setTag:i];
+            [photoView addSubview:button];
+            
+            [button addTarget:self action:@selector(clickButton:) forControlEvents:UIControlEventTouchUpInside];
+            NSString * url = [NSString stringWithFormat:@"%@%@", Image_Server_Url, [self.entity.imageArray objectAtIndex:i]];
+            [button sd_setBackgroundImageWithURL:[NSURL URLWithString:url] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"picture"]];
+        }
+        
+        int rowCount = ( count + 3 ) / 3;
+        if( count % 3 == 0 ) rowCount --;
+        photoView.frame = CGRectMake( 0, [Tool getBottom:infoLabel] + 10, Screen_Width, rowCount * width + ( rowCount - 1 ) * 5 );
+    }
+    else
+    {
+        photoView.frame = CGRectMake( 0, [Tool getBottom:infoLabel], 0, 0 );
+    }
+
     NSMutableString * inviters = [NSMutableString string];
     int sum = 0;
     for( NSString * value in self.entity.inviteArray )
@@ -316,7 +355,7 @@
         {
             inviteLabel.text = [NSString stringWithFormat:@"应 %@ 邀请参加", inviters];
         }
-        inviteLabel.frame = CGRectMake( 10, [Tool getBottom:infoLabel] + 20, Screen_Width - 20, 0 );
+        inviteLabel.frame = CGRectMake( 10, [Tool getBottom:photoView] + 20, Screen_Width - 20, 0 );
         [inviteLabel sizeToFit];
         
         if( self.entity.editTime == nil || [self.entity.editTime isEqualToString:@""] )
@@ -341,11 +380,11 @@
         inviteLabel.hidden = YES;
         if( self.entity.editTime == nil || [self.entity.editTime isEqualToString:@""] )
         {
-            editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:infoLabel], 0, 0 );
+            editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:photoView], 0, 0 );
         }
         else
         {
-            editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:infoLabel] + 20, 150, 15 );
+            editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:photoView] + 20, 150, 15 );
             if( self.entity.type == 0 )
             {
                 editLabel.text = [NSString stringWithFormat:@"此回答编辑于 %@", [Tool getShowTime:self.entity.editTime]];
@@ -388,6 +427,20 @@
     commentCountLabel.text = [NSString stringWithFormat:@"评论 %lu", (unsigned long)self.entity.commentArray.count];
     
     headerView.frame = CGRectMake( 0, 0, Screen_Width, [Tool getBottom:commentCountLabel] );
+    
+    if( ![Tool judgeIsMe:self.entity.userId] )
+    {
+        [self updateSaveButton];
+    }
+}
+
+- ( void ) clickButton : ( id ) sender
+{
+    UIButton * button = ( UIButton * ) sender;
+    if( [self.delegate respondsToSelector:@selector(clickPictureAtIndex:)] )
+    {
+        [self.delegate clickPictureAtIndex:( int )button.tag];
+    }
 }
 
 - ( void ) updatePraiseButton
@@ -400,10 +453,12 @@
     if( self.entity.isHasSaved )
     {
         [buttonSave setTitle:@"已收藏" forState:UIControlStateNormal];
+        buttonSave.backgroundColor = Bg_Red;
     }
     else
     {
         [buttonSave setTitle:@"收藏" forState:UIControlStateNormal];
+        buttonSave.backgroundColor = Color_Gray;
     }
 }
 

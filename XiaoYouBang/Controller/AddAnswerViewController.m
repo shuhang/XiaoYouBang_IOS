@@ -11,10 +11,13 @@
 #import "NetWork.h"
 #import "AnswerEntity.h"
 #import "Tool.h"
+#import "ChoosePictureViewController.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @interface AddAnswerViewController ()<UIAlertViewDelegate>
 {
     GCPlaceholderTextView * inputInfo;
+    UIButton * buttonPicture;
 }
 @end
 
@@ -25,6 +28,18 @@
     [super viewDidLoad];
     self.view.backgroundColor = Color_With_Rgb( 255, 255, 255, 1 );
     [self setupNextButtonTitle:@"发布"];
+    
+    self.arrayPictures = [NSMutableArray array];
+    self.imageArray = [NSMutableArray array];
+    
+    if( self.isEdit )
+    {
+        for( NSString * item in self.oldImageArray )
+        {
+            [self.arrayPictures addObject:item];
+            [self.imageArray addObject:item];
+        }
+    }
     
     UIView * tempView = [UIView new];
     tempView.backgroundColor = Color_Light_Gray;
@@ -67,7 +82,30 @@
             inputInfo.text = self.info;
         }
     }
+    
+    buttonPicture = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonPicture.frame = CGRectMake( Screen_Width - 60, Screen_Height - 60, 55, 55 );
+    [buttonPicture setBackgroundImage:[UIImage imageNamed:@"picture"] forState:UIControlStateNormal];
+    [buttonPicture addTarget:self action:@selector(choosePicture) forControlEvents:UIControlEventTouchUpInside];
+    buttonPicture.titleEdgeInsets = UIEdgeInsetsMake( 26, 0, 0, 0 );
+    buttonPicture.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Micro];
+    [buttonPicture setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.view addSubview:buttonPicture];
 }
+
+- ( void ) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [buttonPicture setTitle:[NSString stringWithFormat:@"%lu", (unsigned long)self.arrayPictures.count] forState:UIControlStateNormal];
+}
+
+- ( void ) choosePicture
+{
+    ChoosePictureViewController * controller = [ChoosePictureViewController new];
+    controller.arrayPictures = self.arrayPictures;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 - ( void ) doNext
 {
     self.info = inputInfo.text;
@@ -79,7 +117,33 @@
     
     if( self.isEdit )
     {
+        [self startEditAnswer];
+    }
+    else
+    {
+        [self startAddAnswer];
+    }
+}
+
+- ( void ) startEditAnswer
+{
+    FORCE_CLOSE_KEYBOARD;
+    if( self.arrayPictures.count > 0 )
+    {
+        [self addPictureAtIndex:0];
+    }
+    else
+    {
         [self editAnswer];
+    }
+}
+
+- ( void ) startAddAnswer
+{
+    FORCE_CLOSE_KEYBOARD;
+    if( self.arrayPictures.count > 0 )
+    {
+        [self addPictureAtIndex:0];
     }
     else
     {
@@ -96,7 +160,7 @@
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     [request setValue:[userDefaults objectForKey:@"token"] forKey:@"token"];
     [request setValue:self.info forKey:@"content"];
-    [request setValue:@[] forKey:@"images"];
+    [request setValue:self.imageArray forKey:@"images"];
     
     NSString * url = [NSString stringWithFormat:@"api/answer/%@", self.answerId];
     [[NetWork shareInstance] httpRequestWithPostPut:url params:request method:@"PUT" success:^(NSDictionary * result)
@@ -119,9 +183,82 @@
      }];
 }
 
+- ( void ) addPictureAtIndex : ( int ) index
+{
+    if( [[self.arrayPictures objectAtIndex:index] isKindOfClass:[NSString class]] )
+    {
+        if( index == ( int ) self.arrayPictures.count - 1 )
+        {
+            if( self.isEdit )
+            {
+                [self editAnswer];
+            }
+            else
+            {
+                [self addAnswer];
+            }
+        }
+        else
+        {
+            [self addPictureAtIndex:index + 1];
+        }
+        return ;
+    }
+    [SVProgressHUD showWithStatus:[NSString stringWithFormat:@"正在上传第%d张照片", ( index + 1 )] maskType:SVProgressHUDMaskTypeGradient];
+    __block AddAnswerViewController * temp = self;
+    dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ^
+                   {
+                       NSData * data = nil;
+                       if( [[temp.arrayPictures objectAtIndex:index] isKindOfClass:[ALAsset class]] )
+                       {
+                           data = [Tool getThumbImageData:[UIImage imageWithCGImage:[[[self.arrayPictures objectAtIndex:index] defaultRepresentation] fullScreenImage]]];
+                       }
+                       else
+                       {
+                           data = [Tool getThumbImageData:[temp.arrayPictures objectAtIndex:index]];
+                       }
+                       NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+                       NSDictionary * result = [[NetWork shareInstance] uploadHeadImage:[NSString stringWithFormat:@"api/image?token=%@", [userDefaults objectForKey:@"token"]] fileName:@"head.jpg" fileData:data mimeType:@"image/jpeg"];
+                       if( result == nil || [result[ @"result" ] intValue] != 9000 )
+                       {
+                           dispatch_async
+                           (
+                            dispatch_get_main_queue(), ^
+                            {
+                                [SVProgressHUD showErrorWithStatus:@"上传照片失败"];
+                            }
+                            );
+                       }
+                       else
+                       {
+                           dispatch_async
+                           (
+                            dispatch_get_main_queue(), ^
+                            {
+                                [temp.imageArray addObject:result[ @"url" ]];
+                                if( index == ( int ) temp.arrayPictures.count - 1 )
+                                {
+                                    if( self.isEdit )
+                                    {
+                                        [self editAnswer];
+                                    }
+                                    else
+                                    {
+                                        [self addAnswer];
+                                    }
+                                }
+                                else
+                                {
+                                    [temp addPictureAtIndex:index + 1];
+                                }
+                            }
+                            );
+                       }
+                   });
+}
+
 - ( void ) addAnswer
 {
-    FORCE_CLOSE_KEYBOARD;
     [SVProgressHUD showWithStatus:@"正在发布" maskType:SVProgressHUDMaskTypeGradient];
     
     NSMutableDictionary * request = [NSMutableDictionary dictionary];
@@ -131,7 +268,7 @@
     [request setValue:self.questionId forKey:@"questionId"];
     [request setValue:self.info forKey:@"answer"];
     [request setValue:[NSNumber numberWithBool:NO] forKey:@"invisible"];
-    [request setValue:@[] forKey:@"images"];
+    [request setValue:self.imageArray forKey:@"images"];
     
     [[NetWork shareInstance] httpRequestWithPostPut:@"api/answer" params:request method:@"POST" success:^(NSDictionary * result)
      {
@@ -169,8 +306,11 @@
     entity.commentCount = 0;
     entity.praiseCount = 0;
     entity.praiseArray = [NSMutableArray array];
-    entity.hasImage = false;
-    entity.imageArray = [NSMutableArray array];
+    if( self.imageArray.count > 0 )
+        entity.hasImage = YES;
+    else
+        entity.hasImage = NO;
+    entity.imageArray = self.imageArray;
     entity.inviteArray = [NSMutableArray array];
     
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
@@ -190,7 +330,7 @@
 
 - ( void ) editAnswerSuccess : ( NSString * ) time
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"EditAnswerSuccess" object:nil userInfo:@{ @"info" : self.info, @"time" : time }];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"EditAnswerSuccess" object:nil userInfo:@{ @"info" : self.info, @"time" : time, @"imageArray" : self.imageArray}];
     [SVProgressHUD dismiss];
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -199,6 +339,7 @@
 {
     if( inputInfo.text.length == 0 )
     {
+        [self.arrayPictures removeAllObjects];
         [super doBack];
     }
     else

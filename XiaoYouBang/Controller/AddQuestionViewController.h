@@ -16,6 +16,10 @@
 @property( nonatomic, strong ) NSString * questionId;
 @property( nonatomic, assign ) BOOL isEdit;
 
+@property( nonatomic, strong ) NSMutableArray * arrayPictures;
+@property( nonatomic, strong ) NSMutableArray * imageArray;
+
+@property( nonatomic, strong ) NSMutableArray * oldImageArray;
 /**
   0 : question
   1 : act

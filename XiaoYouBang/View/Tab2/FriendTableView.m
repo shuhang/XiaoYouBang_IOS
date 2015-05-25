@@ -12,7 +12,7 @@
 #import "Tool.h"
 #import "FriendTableViewCell.h"
 #import "SVProgressHUD.h"
-#import <UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "MyDatabaseHelper.h"
 
 @interface FriendTableView()
@@ -131,6 +131,14 @@
     [headerView addGestureRecognizer:recognizer];
 }
 
+- ( void ) updateMyInfo
+{
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [myHeadImageView sd_setImageWithURL:[NSURL URLWithString:[userDefaults objectForKey:@"headUrl"]] placeholderImage:[UIImage imageNamed:@"head_default"]];
+    myPraiseCountLabel.text = [NSString stringWithFormat:@"赞 %d", [[userDefaults objectForKey:@"praisedCount"] intValue]];
+    myJobLabel.text = [NSString stringWithFormat:@"%@ %@ %@", [userDefaults objectForKey:@"company"], [userDefaults objectForKey:@"department"], [userDefaults objectForKey:@"job"]];
+}
+
 - ( void ) clickUser
 {
     if( [self.delegate respondsToSelector:@selector(clickMe)] )
@@ -216,6 +224,7 @@
     [tableView reloadData];
     [tableView headerEndRefreshing];
     
+    [self updateMyInfo];
     friendCountLabel.text = [NSString stringWithFormat:@"共%lu人", (unsigned long)self.userArray.count];
 }
 

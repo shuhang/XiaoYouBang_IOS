@@ -10,9 +10,10 @@
 #import "LeavewordView.h"
 #import "Tool.h"
 #import "AddCommentViewController.h"
-#import <UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
+#import "MLTableAlert.h"
 
-@interface LeavewordViewController ()<LeavewordViewDelegate, UIActionSheetDelegate>
+@interface LeavewordViewController ()<LeavewordViewDelegate>
 {
     LeavewordView * tableView;
     UIView * headerView;
@@ -21,9 +22,9 @@
     UIButton * buttonEdit;
     UIView * line;
     UILabel * labelCount;
-    
-    UIActionSheet * sheetClickComment;
+
     int clickIndex;
+    MLTableAlert * alertClickComment;
 }
 @end
 
@@ -34,6 +35,7 @@
     [super viewDidLoad];
     
     self.leaveWord = @"";
+    self.tabBarController.tabBar.hidden = YES;
     [self setupTitle:[NSString stringWithFormat:@"%@的留言板", self.userName]];
     [self hideNextButton];
 
@@ -268,34 +270,52 @@
 - ( void ) clickCommentAtIndex:(int)index
 {
     clickIndex = index;
-    sheetClickComment = [[UIActionSheet alloc] initWithTitle:@"选择操作" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"回复" otherButtonTitles:@"复制", nil];
-    [sheetClickComment showInView:self.view];
-}
-
-#pragma mark - UIActionSheetDelegate
-- ( void ) actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if( actionSheet == sheetClickComment )
-    {
-        if( buttonIndex == sheetClickComment.destructiveButtonIndex )
-        {
-            CommentEntity * temp = [tableView.commentArray objectAtIndex:clickIndex];
-            AddCommentViewController * controller = [AddCommentViewController new];
-            controller.isEdit = NO;
-            controller.type = 3;
-            controller.replyId = temp.userId;
-            controller.replyName = temp.userName;
-            controller.userId = self.userId;
-            [self.navigationController pushViewController:controller animated:YES];
-        }
-        else if( buttonIndex == sheetClickComment.firstOtherButtonIndex )
-        {
-            CommentEntity * temp = [tableView.commentArray objectAtIndex:clickIndex];
-            UIPasteboard * pasteboard = [UIPasteboard generalPasteboard];
-            pasteboard.string = temp.info;
-            [SVProgressHUD showSuccessWithStatus:@"文字已复制"];
-        }
-    }
+    CommentEntity * temp1 = [tableView.commentArray objectAtIndex:clickIndex];
+    alertClickComment = [MLTableAlert tableAlertWithTitle:temp1.info cancelButtonTitle:@"取消" numberOfRows:^NSInteger(NSInteger section)
+                         {
+                             return 2;
+                         }
+                                                 andCells:^UITableViewCell* (MLTableAlert *anAlert, NSIndexPath *indexPath)
+                         {
+                             static NSString *CellIdentifier = @"CellIdentifier";
+                             NSArray * lickComment = @[ @"回复", @"复制" ];
+                             UITableViewCell *cell = [anAlert.table dequeueReusableCellWithIdentifier:CellIdentifier];
+                             if( cell == nil )
+                             {
+                                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+                             }
+                             cell.textLabel.text = [lickComment objectAtIndex:indexPath.row];
+                             cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                             
+                             return cell;
+                         }];
+    
+    alertClickComment.height = 200;
+    
+    [alertClickComment configureSelectionBlock:^(NSIndexPath *selectedIndex)
+     {
+         if( selectedIndex.row == 0 )
+         {
+             CommentEntity * temp = [tableView.commentArray objectAtIndex:clickIndex];
+             AddCommentViewController * controller = [AddCommentViewController new];
+             controller.isEdit = NO;
+             controller.type = 3;
+             controller.replyId = temp.userId;
+             controller.replyName = temp.userName;
+             controller.userId = self.userId;
+             [self.navigationController pushViewController:controller animated:YES];
+         }
+         else if( selectedIndex.row == 1 )
+         {
+             CommentEntity * temp = [tableView.commentArray objectAtIndex:clickIndex];
+             UIPasteboard * pasteboard = [UIPasteboard generalPasteboard];
+             pasteboard.string = temp.info;
+             [SVProgressHUD showSuccessWithStatus:@"文字已复制"];
+         }
+     }
+     andCompletionBlock:^{}];
+    
+    [alertClickComment show];
 }
 
 @end

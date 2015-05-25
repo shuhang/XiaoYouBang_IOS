@@ -11,8 +11,9 @@
 #import "MJRefresh.h"
 #import "AnswerTableViewCell.h"
 #import "Tool.h"
-#import <UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "SVProgressHUD.h"
+#import "UIButton+WebCache.h"
 
 @interface ActInfoView()
 {
@@ -51,6 +52,9 @@
 - ( void ) initHeadView
 {
     headerView = [[UIView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, 0 )];
+    
+    photoView = [[UIView alloc] initWithFrame:CGRectZero];
+    [headerView addSubview:photoView];
     
     userView = [[UIView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, 65 )];
     [headerView addSubview:userView];
@@ -98,7 +102,7 @@
     titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [headerView addSubview:titleLabel];
     
-    infoLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    infoLabel = [[MyCopyLabel alloc] initWithFrame:CGRectZero];
     infoLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
     infoLabel.numberOfLines = 0;
     infoLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -434,25 +438,54 @@
     [infoLabel setAttributedText:[Tool getModifyString:self.entity.info]];
     [infoLabel sizeToFit];
     
+    if( self.entity.hasImage )
+    {
+        int count = ( int ) self.entity.imageArray.count;
+        int width = ( Screen_Width - 40 ) / 3;
+        for( int i = 0; i < count; i ++ )
+        {
+            int row = i / 3;
+            int index = i % 3;
+            
+            UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.frame = CGRectMake( 15 + index * ( 5 + width ), row * ( 5 + width ), width, width );
+            button.imageView.contentMode = UIViewContentModeScaleAspectFill;
+            [button setTag:i];
+            [photoView addSubview:button];
+            
+            [button addTarget:self action:@selector(clickButton:) forControlEvents:UIControlEventTouchUpInside];
+            NSString * url = [NSString stringWithFormat:@"%@%@", Image_Server_Url, [self.entity.imageArray objectAtIndex:i]];
+            [button sd_setBackgroundImageWithURL:[NSURL URLWithString:url] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"picture"]];
+        }
+        
+        int rowCount = ( count + 3 ) / 3;
+        if( count % 3 == 0 ) rowCount --;
+        photoView.frame = CGRectMake( 0, [Tool getBottom:infoLabel] + 10, Screen_Width, rowCount * width + ( rowCount - 1 ) * 5 );
+    }
+    else
+    {
+        photoView.frame = CGRectMake( 0, [Tool getBottom:infoLabel], 0, 0 );
+    }
+    
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     if( [self.entity.editTime isEqualToString:@""] )
     {
         if( [self.entity.userId isEqualToString:[userDefaults objectForKey:@"userId"]] )
         {
-            editImageView.frame = CGRectMake( Screen_Width - 83, [Tool getBottom:infoLabel] + 18, 12, 12 );
-            buttonEdit.frame = CGRectMake( Screen_Width - 90, [Tool getBottom:infoLabel] + 10, 100, 30 );
+            editImageView.frame = CGRectMake( Screen_Width - 83, [Tool getBottom:photoView] + 18, 12, 12 );
+            buttonEdit.frame = CGRectMake( Screen_Width - 90, [Tool getBottom:photoView] + 10, 100, 30 );
             line1.frame = CGRectMake( 0, [Tool getBottom:buttonEdit] + 10, Screen_Width, 10 );
         }
         else
         {
             buttonEdit.hidden = YES;
             editImageView.hidden = YES;
-            line1.frame = CGRectMake( 0, [Tool getBottom:infoLabel] + 20, Screen_Width, 10 );
+            line1.frame = CGRectMake( 0, [Tool getBottom:photoView] + 20, Screen_Width, 10 );
         }
     }
     else
     {
-        editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:infoLabel] + 20, 150, 15 );
+        editLabel.frame = CGRectMake( infoLabel.frame.origin.x, [Tool getBottom:photoView] + 20, 150, 15 );
         editLabel.text = [NSString stringWithFormat:@"此活动编辑于 %@", [Tool getShowTime:self.entity.editTime]];
         
         if( [self.entity.userId isEqualToString:[userDefaults objectForKey:@"userId"]] )
@@ -779,6 +812,15 @@
 
     headerView.frame = CGRectMake( 0, 0, Screen_Width, [Tool getBottom:line7] + 10 );
     tableView.tableHeaderView = headerView;
+}
+
+- ( void ) clickButton : ( id ) sender
+{
+    UIButton * button = ( UIButton * ) sender;
+    if( [self.delegate respondsToSelector:@selector(clickPictureAtIndex:)] )
+    {
+        [self.delegate clickPictureAtIndex:( int )button.tag];
+    }
 }
 
 - ( void ) updateTable

@@ -20,6 +20,7 @@
 #import "UserInfoViewController.h"
 #import "Tool.h"
 #import "InviteViewController.h"
+#import "PhotoBroswerVC.h"
 
 @interface ActInfoViewController ()<ActInfoViewDelegate>
 {
@@ -279,6 +280,29 @@
     controller.commentCount = ( int )self.entity.joinCount;
     controller.isFromQuestionInfo = YES;
     [self.navigationController pushViewController:controller animated:YES];
+}
+
+- ( void ) clickPictureAtIndex:(int)index
+{
+    [PhotoBroswerVC show:self index:index photoModelBlock:^NSArray *
+     {
+         int count = ( int ) self.entity.imageArray.count;
+         NSMutableArray * modelsM = [NSMutableArray arrayWithCapacity:count];
+         for (NSUInteger i = 0; i < count; i ++)
+         {
+             PhotoModel * pbModel = [[PhotoModel alloc] init];
+             pbModel.mid = i + 1;
+             pbModel.title = @"";
+             pbModel.desc = @"";
+             NSString * url = [self.entity.imageArray objectAtIndex:i];
+             url = [url stringByReplacingOccurrencesOfString:@"_small" withString:@""];
+             url = [NSString stringWithFormat:@"%@%@", Image_Server_Url, url];
+             pbModel.image_HD_U = url;
+             
+             [modelsM addObject:pbModel];
+         }
+         return modelsM;
+     }];
 }
 
 - ( void ) clickUser

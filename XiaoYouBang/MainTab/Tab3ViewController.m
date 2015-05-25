@@ -11,6 +11,8 @@
 #import "UserInfoViewController.h"
 #import "MyDatabaseHelper.h"
 #import "Tool.h"
+#import "EditInfoViewController.h"
+#import "ChangePasswordViewController.h"
 
 @interface Tab3ViewController () <FriendTableViewDelegate>
 {
@@ -31,7 +33,6 @@
     MyDatabaseHelper * helper = [MyDatabaseHelper new];
     NSMutableArray * array = [helper getUserList];
     self.userArray = ( NSMutableArray * )[array sortedArrayUsingFunction:sortByName1 context:NULL];
-
     
     friendView = [[FriendTableView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, Screen_Height) userArray:self.userArray];
     friendView.delegate = self;
@@ -62,8 +63,8 @@ NSInteger sortByName1( id u1, id u2, void *context )
 
 - ( void ) clickMe
 {
-    UserInfoViewController * controller = [UserInfoViewController new];
-    controller.entity = [Tool getMyEntity];
+    //UserInfoViewController * controller = [UserInfoViewController new];
+    ChangePasswordViewController * controller = [ChangePasswordViewController new];
     [self.navigationController pushViewController:controller animated:YES];
 }
 

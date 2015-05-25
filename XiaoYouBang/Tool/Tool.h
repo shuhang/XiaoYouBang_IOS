@@ -18,6 +18,8 @@
 
 @interface Tool : NSObject
 
++ ( int ) fileSizeAtPath : ( NSString * ) filePath;
+
 + ( CGFloat ) getHeightByString : ( NSString * ) value
                           width : ( NSInteger ) width
                          height : ( NSInteger ) height
@@ -26,7 +28,10 @@
 + ( NSString * ) getShowByTime : ( NSString * ) time;
 + ( NSMutableAttributedString * ) getModifyString : ( NSString * ) value;
 
++ ( NSData * ) getThumbImageData : ( UIImage * ) image;
 + (UIImage *)scaleImage:(UIImage *)scaledImage toScale:(CGSize)reSize;
++ ( UIImage * )compressImageToSize : ( UIImage * ) imgSrc size : ( CGSize ) size;
+
 + ( UserEntity * ) getMyEntity;
 
 + ( void ) loadQuestionTableEntity : ( QuestionEntity * ) entity

@@ -7,42 +7,32 @@
 		<key>Pods-AFNetworking.xcscheme</key>
 		<dict>
 			<key>isShown</key>
-			<true/>
+			<false/>
 		</dict>
 		<key>Pods-FMDB.xcscheme</key>
 		<dict>
 			<key>isShown</key>
-			<true/>
-		</dict>
-		<key>Pods-SDWebImage.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<true/>
+			<false/>
 		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
-			<true/>
+			<false/>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>171D99B683B38024CBA2B703</key>
+		<key>040C49C52ABDB141B3D1E7A9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4CBBA127CFA07C8B86EBA4BA</key>
+		<key>62B6530CE757FE1EF864C8E3</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9602E1F3C8B32DEB4478BB6E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>ADE680CC06A18562213CF6E4</key>
+		<key>D0DB345CAE37BCD6B016A8EC</key>
 		<dict>
 			<key>primary</key>
 			<true/>

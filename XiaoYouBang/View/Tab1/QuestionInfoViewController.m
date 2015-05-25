@@ -21,6 +21,8 @@
 #import "UserInfoViewController.h"
 #import "Tool.h"
 #import "InviteViewController.h"
+#import "UIImageView+WebCache.h"
+#import "PhotoBroswerVC.h"
 
 @interface QuestionInfoViewController ()<QuestionInfoViewDelegate>
 {
@@ -77,6 +79,7 @@
     self.entity.questionTitle = [dic objectForKey:@"title"];
     self.entity.info = [dic objectForKey:@"info"];
     self.entity.editTime = [dic objectForKey:@"time"];
+    self.entity.imageArray = [dic objectForKey:@"imageArray"];
     [infoView updateHeader];
 }
 
@@ -149,6 +152,7 @@
     controller.info = self.entity.info;
     controller.isEdit = YES;
     controller.type = 0;
+    controller.oldImageArray = self.entity.imageArray;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -290,4 +294,26 @@
     [self.navigationController pushViewController:controller animated:YES];
 }
 
+- ( void ) clickPictureAtIndex:(int)index
+{
+    [PhotoBroswerVC show:self index:index photoModelBlock:^NSArray *
+    {
+        int count = ( int ) self.entity.imageArray.count;
+        NSMutableArray * modelsM = [NSMutableArray arrayWithCapacity:count];
+        for (NSUInteger i = 0; i < count; i ++)
+        {
+            PhotoModel * pbModel = [[PhotoModel alloc] init];
+            pbModel.mid = i + 1;
+            pbModel.title = @"";
+            pbModel.desc = @"";
+            NSString * url = [self.entity.imageArray objectAtIndex:i];
+            url = [url stringByReplacingOccurrencesOfString:@"_small" withString:@""];
+            url = [NSString stringWithFormat:@"%@%@", Image_Server_Url, url];
+            pbModel.image_HD_U = url;
+            
+            [modelsM addObject:pbModel];
+        }
+        return modelsM;
+    }];
+}
 @end

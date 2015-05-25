@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "QuestionEntity.h"
+#import "MyCopyLabel.h"
 
 @protocol QuestionInfoViewDelegate <NSObject>
 
@@ -19,6 +20,7 @@
 - ( void ) clickComment;
 - ( void ) editQuestion;
 - ( void ) clickAnswerAtIndex : ( int ) index;
+- ( void ) clickPictureAtIndex : ( int ) index;
 
 @end
 
@@ -38,7 +40,7 @@
     UILabel * companyJobLabel;
     UILabel * jobLabel;
     UILabel * titleLabel;
-    UILabel * infoLabel;
+    MyCopyLabel * infoLabel;
     UILabel * myInviteLabel;
     UILabel * inviteMeLabel;
     UILabel * praiseCountLabel;
@@ -69,10 +71,12 @@
     
     UIView * userView;
     UIView * commentView;
+    UIView * photoView;
 }
 
 @property( nonatomic, strong ) QuestionEntity * entity;
 @property( nonatomic, weak ) id< QuestionInfoViewDelegate > delegate;
+@property( nonatomic, assign ) int nowIndex;
 
 - ( void ) updateHeader;
 - ( void ) updateTable;

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AnswerEntity.h"
+#import "MyCopyLabel.h"
 
 @protocol AnswerInfoViewDelegate <NSObject>
 
@@ -18,6 +19,7 @@
 - ( void ) clickUser;
 - ( void ) clickCommentAtIndex : ( int ) index;
 - ( void ) clickQuestion;
+- ( void ) clickPictureAtIndex : ( int ) index;
 
 @end
 
@@ -32,7 +34,7 @@
     UILabel * companyJobLabel;
     UILabel * questionTitleLabel;
     UIView * questionTitleView;
-    UILabel * infoLabel;
+    MyCopyLabel * infoLabel;
     UILabel * inviteLabel;
     UILabel * editLabel;
     UIView * praiseView;
@@ -49,6 +51,8 @@
     //
     UIButton * buttonEdit;
     UIButton * buttonComment2;
+    
+    UIView * photoView;
 }
 
 @property( nonatomic, strong ) AnswerEntity * entity;

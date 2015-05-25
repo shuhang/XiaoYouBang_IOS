@@ -7,7 +7,7 @@
 //
 
 #import "UserInfoView.h"
-#import <UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "Tool.h"
 
 @interface UserInfoView()
@@ -56,6 +56,7 @@
         headImageView = [[UIImageView alloc] initWithFrame:CGRectMake( 15, 15, 80, 80 )];
         [headImageView sd_setImageWithURL:[NSURL URLWithString:self.entity.headUrl] placeholderImage:[UIImage imageNamed:@"head_default"]];
         [scrollView addSubview:headImageView];
+        headImageView.userInteractionEnabled = YES;
         UITapGestureRecognizer * gesture1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHead_)];
         [headImageView addGestureRecognizer:gesture1];
         

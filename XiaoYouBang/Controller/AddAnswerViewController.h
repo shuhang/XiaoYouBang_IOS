@@ -15,6 +15,11 @@
 @property( nonatomic, strong ) NSString * info;
 @property( nonatomic, strong ) NSString * questionId;
 @property( nonatomic, strong ) NSString * answerId;
+
+@property( nonatomic, strong ) NSMutableArray * arrayPictures;
+@property( nonatomic, strong ) NSMutableArray * imageArray;
+
+@property( nonatomic, strong ) NSMutableArray * oldImageArray;
 /**
  *  0 : question
     1 : act

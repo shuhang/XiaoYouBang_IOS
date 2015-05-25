@@ -7,7 +7,7 @@
 //
 
 #import "QuestionTableViewCell.h"
-#import <UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "Tool.h"
 #import "InviteEntity.h"
 #import "MyDatabaseHelper.h"
@@ -24,7 +24,7 @@
         [self.contentView addSubview:headImageView];
         
         pictureSymbolImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"picture"]];
-        pictureSymbolImageView.frame = CGRectMake( 140, 20, 15, 10 );
+        pictureSymbolImageView.frame = CGRectMake( 140, 19, 15, 10 );
         [self.contentView addSubview:pictureSymbolImageView];
         
         pointImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"point"]];

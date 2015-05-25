@@ -1442,7 +1442,7 @@ void _IQShowLog(NSString *logString);
 /**	Get all UITextField/UITextView siblings of textFieldView. */
 -(NSArray*)responderViews
 {
-    UIView *superConsideredView;
+    UIView *superConsideredView = nil;
     
     //If find any consider responderView in it's upper hierarchy then will get deepResponderView.
     for (Class consideredClass in _toolbarPreviousNextConsideredClass)

@@ -7,7 +7,7 @@
 //
 
 #import "MessageTableViewCell.h"
-#import <UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "Tool.h"
 
 @implementation MessageTableViewCell
@@ -192,7 +192,7 @@
             titleLabel1.frame = CGRectZero;
             
             titleLabel2.text = [NSString stringWithFormat:@"%@的留言板", self.entity.titleUserName];
-            titleLabel2.frame = CGRectMake( 10, 10, 80, 20 );
+            titleLabel2.frame = CGRectMake( 10, 10, 120, 20 );
             
             timeLabel.text = [Tool getShowTime:self.entity.time];
             

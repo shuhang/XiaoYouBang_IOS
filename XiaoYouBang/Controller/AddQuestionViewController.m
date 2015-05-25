@@ -10,11 +10,15 @@
 #import "GCPlaceholderTextView.h"
 #import "NetWork.h"
 #import "QuestionEntity.h"
+#import "ChoosePictureViewController.h"
+#import "Tool.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @interface AddQuestionViewController ()<UIAlertViewDelegate>
 {
     GCPlaceholderTextView * inputTitle;
     GCPlaceholderTextView * inputInfo;
+    UIButton * buttonPicture;
 }
 @end
 
@@ -27,6 +31,18 @@
     self.tabBarController.tabBar.hidden = YES;
     self.view.backgroundColor = Color_With_Rgb( 255, 255, 255, 1 );
     [self setupNextButtonTitle:@"发布"];
+    
+    self.arrayPictures = [NSMutableArray array];
+    self.imageArray = [NSMutableArray array];
+    
+    if( self.isEdit )
+    {
+        for( NSString * item in self.oldImageArray )
+        {
+            [self.arrayPictures addObject:item];
+            [self.imageArray addObject:item];
+        }
+    }
     
     GCPlaceholderTextView * temp = [[GCPlaceholderTextView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:temp];
@@ -42,7 +58,16 @@
     inputInfo = [[GCPlaceholderTextView alloc] initWithFrame:CGRectMake( 0, 155, Screen_Width, Screen_Height - 175 )];
     inputInfo.font = [UIFont systemFontOfSize:Text_Size_Small];
     [self.view addSubview:inputInfo];
-
+    
+    buttonPicture = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonPicture.frame = CGRectMake( Screen_Width - 60, Screen_Height - 60, 55, 55 );
+    [buttonPicture setBackgroundImage:[UIImage imageNamed:@"picture"] forState:UIControlStateNormal];
+    [buttonPicture addTarget:self action:@selector(choosePicture) forControlEvents:UIControlEventTouchUpInside];
+    buttonPicture.titleEdgeInsets = UIEdgeInsetsMake( 26, 0, 0, 0 );
+    buttonPicture.titleLabel.font = [UIFont systemFontOfSize:Text_Size_Micro];
+    [buttonPicture setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.view addSubview:buttonPicture];
+    
     if( self.type == 0 )
     {
         inputTitle.placeholder = @"请简要描述你的问题，至少包含一个问号";
@@ -68,10 +93,24 @@
     }
 }
 
+- ( void ) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [buttonPicture setTitle:[NSString stringWithFormat:@"%lu", (unsigned long)self.arrayPictures.count] forState:UIControlStateNormal];
+}
+
+- ( void ) choosePicture
+{
+    ChoosePictureViewController * controller = [ChoosePictureViewController new];
+    controller.arrayPictures = self.arrayPictures;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 - ( void ) doBack
 {
     if( inputTitle.text.length == 0 && inputInfo.text.length == 0 )
     {
+        [self.arrayPictures removeAllObjects];
         [super doBack];
     }
     else
@@ -91,7 +130,7 @@
             [SVProgressHUD showErrorWithStatus:@"标题最多36个字"];
             return;
         }
-        if( [self.questionTitle rangeOfString:@"?"].length == 0 && [self.questionTitle rangeOfString:@""].length == 0 )
+        if( [self.questionTitle rangeOfString:@"?"].length == 0 && [self.questionTitle rangeOfString:@"？"].length == 0 )
         {
             [SVProgressHUD showErrorWithStatus:@"标题至少包含一个问号"];
             return;
@@ -114,11 +153,11 @@
     
     if( self.isEdit )
     {
-        [self editQuestion];
+        [self startEditQuestion];
     }
     else
     {
-        [self addQuestion];
+        [self startAddQuestion];
     }
 }
 
@@ -156,9 +195,34 @@
      }];
 }
 
-- ( void ) addQuestion
+- ( void ) startEditQuestion
 {
     FORCE_CLOSE_KEYBOARD;
+    if( self.arrayPictures.count > 0 )
+    {
+        [self addPictureAtIndex:0];
+    }
+    else
+    {
+        [self editQuestion];
+    }
+}
+
+- ( void ) startAddQuestion
+{
+    FORCE_CLOSE_KEYBOARD;
+    if( self.arrayPictures.count > 0 )
+    {
+        [self addPictureAtIndex:0];
+    }
+    else
+    {
+        [self addQuestion];
+    }
+}
+
+- ( void ) addQuestion
+{
     [SVProgressHUD showWithStatus:@"正在发布" maskType:SVProgressHUDMaskTypeGradient];
     
     NSMutableDictionary * request = [NSMutableDictionary dictionary];
@@ -168,7 +232,7 @@
     [request setValue:self.questionTitle forKey:@"title"];
     [request setValue:self.info forKey:@"info"];
     [request setValue:[NSNumber numberWithBool:NO] forKey:@"invisible"];
-    [request setValue:@[] forKey:@"images"];
+    [request setValue:self.imageArray forKey:@"images"];
     
     [[NetWork shareInstance] httpRequestWithPostPut:@"api/question" params:request method:@"POST" success:^(NSDictionary * result)
      {
@@ -191,6 +255,80 @@
      }];
 }
 
+- ( void ) addPictureAtIndex : ( int ) index
+{
+    if( [[self.arrayPictures objectAtIndex:index] isKindOfClass:[NSString class]] )
+    {
+        if( index == ( int ) self.arrayPictures.count - 1 )
+        {
+            if( self.isEdit )
+            {
+                [self editQuestion];
+            }
+            else
+            {
+                [self addQuestion];
+            }
+        }
+        else
+        {
+             [self addPictureAtIndex:index + 1];
+        }
+        return ;
+    }
+    [SVProgressHUD showWithStatus:[NSString stringWithFormat:@"正在上传第%d张照片", ( index + 1 )] maskType:SVProgressHUDMaskTypeGradient];
+    __block AddQuestionViewController * temp = self;
+    dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ^
+    {
+        NSData * data = nil;
+        if( [[temp.arrayPictures objectAtIndex:index] isKindOfClass:[ALAsset class]] )
+        {
+            data = [Tool getThumbImageData:[UIImage imageWithCGImage:[[[self.arrayPictures objectAtIndex:index] defaultRepresentation] fullScreenImage]]];
+        }
+        else
+        {
+            data = [Tool getThumbImageData:[temp.arrayPictures objectAtIndex:index]];
+        }
+        NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+        NSDictionary * result = [[NetWork shareInstance] uploadHeadImage:[NSString stringWithFormat:@"api/image?token=%@", [userDefaults objectForKey:@"token"]] fileName:@"head.jpg" fileData:data mimeType:@"image/jpeg"];
+        if( result == nil || [result[ @"result" ] intValue] != 9000 )
+        {
+            dispatch_async
+            (
+                dispatch_get_main_queue(), ^
+                {
+                    [SVProgressHUD showErrorWithStatus:@"上传照片失败"];
+                }
+            );
+        }
+        else
+        {
+            dispatch_async
+            (
+                dispatch_get_main_queue(), ^
+                {
+                    [temp.imageArray addObject:result[ @"url" ]];
+                    if( index == ( int ) temp.arrayPictures.count - 1 )
+                    {
+                        if( temp.isEdit )
+                        {
+                            [temp editQuestion];
+                        }
+                        else
+                        {
+                            [temp addQuestion];
+                        }
+                    }
+                    else
+                    {
+                        [temp addPictureAtIndex:index + 1];
+                    }
+                }
+            );
+        }
+     });
+}
+
 - ( void ) addQuestionSuccess : ( NSString * ) questionId time : ( NSString * ) time
 {
     QuestionEntity * entity = [QuestionEntity new];
@@ -206,13 +344,18 @@
     entity.allCommentCount = 0;
     entity.questionCommentCount = 0;
     entity.praiseCount = 0;
-    entity.hasImage = false;
+    if( self.imageArray.count > 0 )
+        entity.hasImage = YES;
+    else
+        entity.hasImage = NO;
     entity.myInviteArray = [NSMutableArray array];
     entity.inviteMeArray = [NSMutableArray array];
     
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     entity.userHeadUrl = [userDefaults objectForKey:@"headUrl"];
     entity.userName = [userDefaults objectForKey:@"name"];
+    
+    [self.arrayPictures removeAllObjects];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:AddNewQuestion object:nil userInfo:@{ @"question" : entity }];
     [SVProgressHUD dismiss];
@@ -221,7 +364,7 @@
 
 - ( void ) editQuestionSuccess : ( NSString * ) time
 {
-    NSDictionary * userInfo = @{ @"title" : self.questionTitle, @"info" : self.info, @"time" : time };
+    NSDictionary * userInfo = @{ @"title" : self.questionTitle, @"info" : self.info, @"time" : time, @"imageArray" : self.imageArray };
     if( self.type == 0 )
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:EditQuestionSuccess object:nil userInfo:userInfo];

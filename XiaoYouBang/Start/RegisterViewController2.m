@@ -183,10 +183,7 @@ UIPickerViewDataSource>
 
 - ( void ) finishChoosePku
 {
-    if( [tempView isDescendantOfView:[UIApplication sharedApplication].keyWindow] )
-    {
-        [tempView removeFromSuperview];
-    }
+    [tempView removeFromSuperview];
     
     pkuIndex = ( int )[pickerView selectedRowInComponent:0];
     self.pku = [[Tool getPkyArrayLong] objectAtIndex:pkuIndex];

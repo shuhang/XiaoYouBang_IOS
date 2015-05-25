@@ -12,6 +12,7 @@
 @interface AnswerTableViewCell : UITableViewCell
 {
     UIImageView * headImageView;
+    UIImageView * pictureSymbolImageView;
     UILabel * nameLabel;
     UILabel * commentCountLabel;
     UILabel * praiseCountLabel;

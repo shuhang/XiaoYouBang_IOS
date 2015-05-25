@@ -11,6 +11,16 @@
 
 @implementation Tool
 
++ ( int ) fileSizeAtPath : ( NSString * ) filePath
+{
+    NSFileManager * manager = [NSFileManager defaultManager];
+    if( [manager fileExistsAtPath:filePath] )
+    {
+        return ( int )[[manager attributesOfItemAtPath:filePath error:nil] fileSize] / 1000;
+    }
+    return 0;
+}
+
 + ( CGFloat ) getHeightByString:(NSString *)value width:(NSInteger)width height:(NSInteger)height textSize:(NSInteger)textSize
 {
     if( OSVersionIsAtLast7 )
@@ -92,10 +102,12 @@
     
     CGSize size_new = scaledImage.size;
     
-    if (size_new.width > reSize.width) {
+    if (size_new.width > reSize.width)
+    {
         drawW = (size_new.width - reSize.width)/2.0;
     }
-    if (size_new.height > reSize.height) {
+    if (size_new.height > reSize.height)
+    {
         drawH = (size_new.height - reSize.height)/2.0;
     }
 
@@ -111,6 +123,55 @@
     UIImage* smallImage = [UIImage imageWithCGImage:subImageRef];
     UIGraphicsEndImageContext();
     return smallImage;
+}
+
++ ( UIImage * ) compressImageToSize : ( UIImage * ) imgSrc size : ( CGSize ) size
+{
+    UIGraphicsBeginImageContext( size );
+    CGRect rect = { { 0, 0 }, size };
+    [imgSrc drawInRect:rect];
+    UIImage * compressedImg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return compressedImg;
+}
+
++ ( NSData * ) getThumbImageData : ( UIImage * ) image
+{
+    CGFloat width = image.size.width;
+    CGFloat height = image.size.height;
+    CGFloat min = width;
+    CGFloat max = height;
+    if( width > height )
+    {
+        min = height;
+        max = width;
+    }
+    if( min > 400 && max > 1600 )
+    {
+        if( 16 * min / max > 4 )
+        {
+            if( width > height )
+            {
+                image = [self compressImageToSize:image size:CGSizeMake( 1600, height / 1600 * width )];
+            }
+            else
+            {
+                image = [self compressImageToSize:image size:CGSizeMake( width / 1600 * height, 1600 )];
+            }
+        }
+        else
+        {
+            if( width > height )
+            {
+                image = [self compressImageToSize:image size:CGSizeMake( width / 400 * height, 400 )];
+            }
+            else
+            {
+                image = [self compressImageToSize:image size:CGSizeMake( 400, height / 400 * width )];
+            }
+        }
+    }
+    return UIImageJPEGRepresentation( image, 0.3f );
 }
 
 + ( UserEntity * ) getMyEntity
@@ -150,7 +211,7 @@
     entity.modifyTime = [NSString stringWithFormat:@"%@", item[ @"modifyTime" ]];
     entity.userId = [NSString stringWithFormat:@"%@", item[ @"userid" ]];
     entity.userName = [NSString stringWithFormat:@"%@", item[ @"name" ]];
-    entity.userHeadUrl = [NSString stringWithFormat:@"%@%@", Server_Url, item[ @"headUrl" ]];
+    entity.userHeadUrl = [NSString stringWithFormat:@"%@%@", Image_Server_Url, item[ @"headUrl" ]];
     entity.praiseCount = [item[ @"praiseCount" ] intValue];
     entity.answerCount = [item[ @"answerCount" ] intValue];
     entity.isInvisible = [item[ @"invisible"] boolValue];
@@ -203,7 +264,7 @@
     entity.modifyTime = [NSString stringWithFormat:@"%@", item[ @"modifyTime" ]];
     entity.userId = [NSString stringWithFormat:@"%@", item[ @"userid" ]];
     entity.userName = [NSString stringWithFormat:@"%@", item[ @"name" ]];
-    entity.userHeadUrl = [NSString stringWithFormat:@"%@%@", Server_Url, item[ @"headUrl" ]];
+    entity.userHeadUrl = [NSString stringWithFormat:@"%@%@", Image_Server_Url, item[ @"headUrl" ]];
     entity.praiseCount = [item[ @"praiseCount" ] intValue];
     entity.answerCount = [item[ @"answerCount" ] intValue];
     entity.isInvisible = [item[ @"invisible"] boolValue];
@@ -324,7 +385,7 @@
         answerEntity.part = [userDefaults objectForKey:@"department"];
         answerEntity.pku = [userDefaults objectForKey:@"company"];
         answerEntity.name = [userDefaults objectForKey:@"name"];
-        answerEntity.userHeadUrl = [NSString stringWithFormat:@"%@%@", Server_Url, [userDefaults objectForKey:@"headUrl"]];
+        answerEntity.userHeadUrl = [NSString stringWithFormat:@"%@%@", Image_Server_Url, [userDefaults objectForKey:@"headUrl"]];
         answerEntity.userId = [userDefaults objectForKey:@"userId"];
         answerEntity.sex = [[userDefaults objectForKey:@"sex"] intValue];
         
@@ -340,6 +401,7 @@
     entity.info = [NSString stringWithFormat:@"%@", item[ @"content" ]];
     entity.isInvisible = [item[ @"invisible" ] boolValue];
     entity.hasPraised = [item[ @"praised" ] boolValue];
+    entity.isHasSaved = [item[ @"saved" ] boolValue];
     entity.praiseCount = [item[ @"praiseCount" ] intValue];
     entity.questionTitle = [NSString stringWithFormat:@"%@", item[ @"questionTitle" ]];
     entity.questionerName = [NSString stringWithFormat:@"%@", item[ @"questionerName" ]];
@@ -353,7 +415,6 @@
     }
     entity.type = [item[ @"answerType" ] intValue];
     entity.imageArray = item[ @"images" ];
-    entity.hasImage = [item[ @"hasImage" ] boolValue];
     entity.inviteArray = item[ @"inviteList" ];
     entity.commentCount = [item[ @"commentCount" ] intValue];
     entity.commentArray = [NSMutableArray array];
@@ -365,7 +426,7 @@
     }
     entity.userId = [NSString stringWithFormat:@"%@", item[ @"userid" ]];
     entity.questionId = [NSString stringWithFormat:@"%@", item[ @"questionId" ]];
-    entity.userHeadUrl = [NSString stringWithFormat:@"%@%@", Server_Url, item[ @"headUrl" ]];
+    entity.userHeadUrl = [NSString stringWithFormat:@"%@%@", Image_Server_Url, item[ @"headUrl" ]];
     entity.name = [NSString stringWithFormat:@"%@", item[ @"name" ]];
     entity.company = [NSString stringWithFormat:@"%@", item[ @"company" ]];
     entity.job = [NSString stringWithFormat:@"%@", item[ @"job" ]];
@@ -381,7 +442,7 @@
     entity.time = [NSString stringWithFormat:@"%@", item[ @"time" ]];
     entity.userId = [NSString stringWithFormat:@"%@", item[ @"userId" ]];
     entity.userName = [NSString stringWithFormat:@"%@", item[ @"name" ]];
-    entity.userHeadUrl = [NSString stringWithFormat:@"%@%@", Server_Url, item[ @"headUrl" ]];
+    entity.userHeadUrl = [NSString stringWithFormat:@"%@%@", Image_Server_Url, item[ @"headUrl" ]];
     if( item[ @"replyId" ] != nil )
     {
         entity.replyId = [NSString stringWithFormat:@"%@", item[ @"replyId" ]];
@@ -412,7 +473,7 @@
 + ( void ) loadInviteInfoEntity:(InviteEntity *)entity item:(NSDictionary *)item
 {
     entity.inviteUserId = [NSString stringWithFormat:@"%@", item[ @"userId" ]];
-    entity.headUrl = [NSString stringWithFormat:@"%@%@", Server_Url, item[ @"headUrl" ]];
+    entity.headUrl = [NSString stringWithFormat:@"%@%@", Image_Server_Url, item[ @"headUrl" ]];
     entity.name = [NSString stringWithFormat:@"%@", item[ @"name" ]];
     entity.info = [NSString stringWithFormat:@"%@", item[ @"words" ]];
     entity.time = [NSString stringWithFormat:@"%@", item[ @"time" ]];
@@ -423,7 +484,7 @@
 {
     entity.userId = [NSString stringWithFormat:@"%@", item[ @"id" ]];
     entity.name = [NSString stringWithFormat:@"%@", item[ @"name" ]];
-    entity.headUrl = [NSString stringWithFormat:@"%@%@", Server_Url, item[ @"headUrl" ]];
+    entity.headUrl = [NSString stringWithFormat:@"%@%@", Image_Server_Url, item[ @"headUrl" ]];
     entity.sex = [item[ @"sex" ] intValue];
     entity.birthday = [NSString stringWithFormat:@"%@", item[ @"birthyear" ]];
     entity.pku = [NSString stringWithFormat:@"%@", item[ @"pku" ]];
@@ -444,7 +505,7 @@
         NSDictionary * invite = item[ @"invitedBy" ];
         entity.inviteUserId = [NSString stringWithFormat:@"%@", invite[ @"id" ]];
         entity.inviteName = [NSString stringWithFormat:@"%@", invite[ @"name" ]];
-        entity.inviteHeadUrl = [NSString stringWithFormat:@"%@%@", Server_Url, invite[ @"headUrl" ]];
+        entity.inviteHeadUrl = [NSString stringWithFormat:@"%@%@", Image_Server_Url, invite[ @"headUrl" ]];
     }
     else
     {
@@ -491,7 +552,7 @@
     {
         MessageEntity * entity = [MessageEntity new];
         
-        entity.headUrl = [NSString stringWithFormat:@"%@%@", Server_Url, item[ @"srcUserHeadUrl" ] ];
+        entity.headUrl = [NSString stringWithFormat:@"%@%@", Image_Server_Url, item[ @"srcUserHeadUrl" ] ];
         entity.time = [NSString stringWithFormat:@"%@", item[ @"createTime" ]];
         NSDictionary * message = item[ @"msg" ];
         
@@ -531,6 +592,7 @@
                 entity.type = 3;
                 entity.middleUserName = [NSString stringWithFormat:@"%@", item[ @"srcUserName" ]];
                 entity.info = [NSString stringWithFormat:@"%@", message[ @"message" ]];
+                entity.userId = [NSString stringWithFormat:@"%@", item[ @"srcUser" ]];
                 break;
             }
             case 4 :
@@ -563,9 +625,9 @@
                 entity.type = 5;
                 entity.info = [NSString stringWithFormat:@"%@", message[ @"content" ]];
                 entity.titleUserName = [NSString stringWithFormat:@"%@", message[ @"from" ]];
-                entity.hostHeadUrl = [NSString stringWithFormat:@"%@", message[ @"fromHeadUrl" ]];
+                entity.hostHeadUrl = [NSString stringWithFormat:@"%@%@", Image_Server_Url, message[ @"fromHeadUrl" ]];
                 entity.middleUserName = [NSString stringWithFormat:@"%@", item[ @"srcUserName" ]];
-                entity.userId = [NSString stringWithFormat:@"%@", item[ @"user" ]];
+                entity.userId = [NSString stringWithFormat:@"%@", message[ @"user" ]];
                 break;
             }
         }

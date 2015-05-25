@@ -132,7 +132,7 @@
         [userDefaults setObject:[NSString stringWithFormat:@"%@", result[ @"name" ]] forKey:@"name"];
         [userDefaults setObject:[NSString stringWithFormat:@"%@", result[ @"birthyear" ]] forKey:@"birthyear"];
         [userDefaults setObject:[NSNumber numberWithInt:[result[ @"sex" ] intValue]] forKey:@"sex"];
-        [userDefaults setObject:[NSString stringWithFormat:@"%@%@", Server_Url, result[ @"headUrl" ]] forKey:@"headUrl"];
+        [userDefaults setObject:[NSString stringWithFormat:@"%@%@", Image_Server_Url, result[ @"headUrl" ]] forKey:@"headUrl"];
         [userDefaults setObject:[NSString stringWithFormat:@"%@", result[ @"pku" ]] forKey:@"pku"];
         [userDefaults setObject:[NSString stringWithFormat:@"%@", result[ @"base" ]] forKey:@"base"];
         [userDefaults setObject:[NSString stringWithFormat:@"%@", result[ @"hometown" ]] forKey:@"hometown"];
@@ -150,7 +150,7 @@
         {
             NSDictionary * invitedBy = result[ @"invitedBy" ];
             [userDefaults setObject:[NSString stringWithFormat:@"%@", invitedBy[ @"name" ]] forKey:@"inviteUserName"];
-            [userDefaults setObject:[NSString stringWithFormat:@"%@%@", Server_Url, invitedBy[ @"headUrl" ]] forKey:@"inviteUserHeadUrl"];
+            [userDefaults setObject:[NSString stringWithFormat:@"%@%@", Image_Server_Url, invitedBy[ @"headUrl" ]] forKey:@"inviteUserHeadUrl"];
             [userDefaults setObject:[NSString stringWithFormat:@"%@", invitedBy[ @"id" ]] forKey:@"inviteUserId"];
         }
         else

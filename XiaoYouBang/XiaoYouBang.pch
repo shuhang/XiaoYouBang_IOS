@@ -53,6 +53,7 @@ return instance;\
 #define Text_Size_Super_Micro 9
 //
 #define Server_Url @"http://118.186.214.42:4000/"
+#define Image_Server_Url @"http://118.186.214.42:4000"
 
 //Noti Name
 #define AddNewQuestionComment @"AddNewQuestionComment"

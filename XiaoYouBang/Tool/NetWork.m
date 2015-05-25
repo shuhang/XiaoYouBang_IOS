@@ -141,7 +141,6 @@ createSingleton( NetWork )
     NSHTTPURLResponse * response = nil;
     NSError * error = [[NSError alloc] init];
     NSData * resultData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-//    NSString * result= [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
     NSDictionary * dic = [NSJSONSerialization JSONObjectWithData:resultData options:NSJSONReadingAllowFragments error:nil];
     if( [response statusCode] == 200 )
     {

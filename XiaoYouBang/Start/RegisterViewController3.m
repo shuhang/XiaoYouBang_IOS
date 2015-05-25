@@ -77,9 +77,9 @@
     }
     
     self.job = fieldJob.text;
-    if( self.job.length < 1 || self.job.length > 20 )
+    if( self.job.length < 1 || self.job.length > 10 )
     {
-        [SVProgressHUD showErrorWithStatus:@"职位10个字以内"];
+        [SVProgressHUD showErrorWithStatus:@"职位20个字以内"];
         return;
     }
     

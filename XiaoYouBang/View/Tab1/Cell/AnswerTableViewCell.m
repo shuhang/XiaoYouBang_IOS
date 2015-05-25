@@ -7,7 +7,7 @@
 //
 
 #import "AnswerTableViewCell.h"
-#import <UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "Tool.h"
 
 @implementation AnswerTableViewCell
@@ -20,6 +20,10 @@
         
         headImageView = [[UIImageView alloc] initWithFrame:CGRectMake( 10, 15, 30, 30 )];
         [self.contentView addSubview:headImageView];
+        
+        pictureSymbolImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"picture"]];
+        pictureSymbolImageView.frame = CGRectMake( 140, 18, 15, 10 );
+        [self.contentView addSubview:pictureSymbolImageView];
         
         nameLabel = [[UILabel alloc] initWithFrame:CGRectMake( 60, 15, 70, 20 )];
         nameLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
@@ -68,6 +72,15 @@
     [infoLabel sizeToFit];
     
     line.frame = CGRectMake( 10, [Tool getBottom:infoLabel] + 10, Screen_Width - 20, 0.5 );
+    
+    if( self.entity.imageArray.count > 0 )
+    {
+        pictureSymbolImageView.hidden = NO;
+    }
+    else
+    {
+        pictureSymbolImageView.hidden = YES;
+    }
 }
 
 @end
