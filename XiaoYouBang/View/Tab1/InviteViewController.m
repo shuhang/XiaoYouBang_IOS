@@ -85,6 +85,7 @@
         self.canInvite = YES;
         [headImageView sd_setImageWithURL:[NSURL URLWithString:entity.headUrl] placeholderImage:[UIImage imageNamed:@"head_default"]];
         symbolImageView.image = [UIImage imageNamed:@"yes"];
+        self.userId = entity.userId;
     }
     else
     {

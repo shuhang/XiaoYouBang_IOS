@@ -29,6 +29,8 @@
     AllQuestionView * viewAllQuestion;
     AllActView * viewAllAct;
     GoodAnswerView * viewGoodAnswer;
+    
+    UISegmentedControl * segmentedControl;
 }
 @end
 
@@ -60,7 +62,7 @@
     [mainView addSubview:viewAllQuestion];
     
     NSArray * array = [[NSArray alloc] initWithObjects:@"问题", @"活动", @"优答", nil];
-    UISegmentedControl * segmentedControl = [[UISegmentedControl alloc] initWithItems:array];
+    segmentedControl = [[UISegmentedControl alloc] initWithItems:array];
     segmentedControl.frame = CGRectMake( 20, 70, Screen_Width - 40, 30 );
     segmentedControl.selectedSegmentIndex = 0;
     segmentedControl.tintColor = Bg_Red;
@@ -182,9 +184,20 @@
     [super viewWillAppear:animated];
     self.tabBarController.tabBar.hidden = NO;
     
-    if( viewAllQuestion != nil && viewAllQuestion.selectedEntity != nil )
+    if( nowIndex == 0 && viewAllQuestion != nil && viewAllQuestion.selectedEntity != nil )
     {
         [viewAllQuestion updateSelectCell];
+        viewAllQuestion.selectedEntity = nil;
+    }
+    else if( nowIndex == 1 && viewAllAct != nil && viewAllAct.selectedEntity != nil )
+    {
+        [viewAllAct updateSelectCell];
+        viewAllAct.selectedEntity = nil;
+    }
+    else if( nowIndex == 2 && viewGoodAnswer != nil && viewGoodAnswer.selectedEntity != nil )
+    {
+        [viewGoodAnswer updateSelectCell];
+        viewGoodAnswer.selectedEntity = nil;
     }
 }
 

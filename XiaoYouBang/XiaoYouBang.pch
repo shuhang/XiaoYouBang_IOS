@@ -22,6 +22,7 @@ return instance;\
 #define FORCE_CLOSE_KEYBOARD [[UIApplication sharedApplication].keyWindow endEditing:YES]
 #define DOCMENT_PATH [NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES) lastObject]
 #define OSVersionIsAtLast7 ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+#define OSVersionIsAtLast8 ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0)
 
 #define Screen_Width     ([UIScreen mainScreen].bounds.size.width)
 #define Screen_Height    ([UIScreen mainScreen].bounds.size.height)
@@ -36,6 +37,7 @@ return instance;\
 #define Bg_Red           Color_With_Rgb( 154, 1, 2, 1 )
 #define Color_Gray       Color_With_Rgb( 166, 166, 166, 1 )
 #define Color_Light_Gray Color_With_Rgb( 230, 230, 230, 1 )
+#define Color_Super_Light_Gray Color_With_Rgb( 236, 236, 236, 1 )
 #define Color_Heavy_Gray Color_With_Rgb( 128, 128, 128, 1 )
 #define Blue_Stone Color_With_Rgb( 98, 195, 208, 1 )
 #define Blue_Stoen_Loght Color_With_Rgb( 219, 238, 244, 1 )
@@ -74,5 +76,7 @@ return instance;\
 #define AddUserComment @"AddUserComment"
 #define EditLeaveWord @"EditLeaveWord"
 #define LeaveWordBack @"LeaveWordBack"
+#define EditInfoSuccess @"EditInfoSuccess"
+#define ChangeAccountSuccess @"ChangeAccountSuccess"
 
 #endif

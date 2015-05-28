@@ -161,6 +161,7 @@ UIPickerViewDataSource>
 {
     tempView = [[UIView alloc] initWithFrame:CGRectMake( 0, Screen_Height - 256, Screen_Width, 256)];
     tempView.backgroundColor = Color_Gray;
+    tempView.hidden = NO;
     
     UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.frame = CGRectMake( Screen_Width - 70, 5, 60, 30 );
@@ -184,6 +185,10 @@ UIPickerViewDataSource>
 - ( void ) finishChoosePku
 {
     [tempView removeFromSuperview];
+    if( tempView )
+    {
+        tempView.hidden = YES;
+    }
     
     pkuIndex = ( int )[pickerView selectedRowInComponent:0];
     self.pku = [[Tool getPkyArrayLong] objectAtIndex:pkuIndex];

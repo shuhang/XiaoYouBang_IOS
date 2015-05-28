@@ -23,6 +23,9 @@
     UILabel * myJobLabel;
     UIImageView * myHeadImageView;
     UILabel * friendCountLabel;
+    UILabel * nameLabel;
+    UIImageView * sexImageView;
+    UILabel * pkuLabel;
 }
 @end
 
@@ -70,7 +73,7 @@
     [headerView addSubview:myHeadImageView];
     
     NSString * name = [userDefaults objectForKey:@"name"];
-    UILabel * nameLabel = [[UILabel alloc] initWithFrame:CGRectMake( 80, 45, name.length * 16, 25 )];
+    nameLabel = [[UILabel alloc] initWithFrame:CGRectMake( 80, 45, name.length * 16, 25 )];
     nameLabel.font = [UIFont systemFontOfSize:Text_Size_Big];
     nameLabel.text = name;
     [headerView addSubview:nameLabel];
@@ -82,7 +85,7 @@
     myPraiseCountLabel.text = [NSString stringWithFormat:@"赞 %d", [[userDefaults objectForKey:@"praisedCount"] intValue]];
     [headerView addSubview:myPraiseCountLabel];
     
-    UIImageView * sexImageView = [[UIImageView alloc] initWithFrame:CGRectMake( [Tool getRight:nameLabel] + 20, 52, 13, 13 )];
+    sexImageView = [[UIImageView alloc] initWithFrame:CGRectMake( [Tool getRight:nameLabel] + 20, 52, 13, 13 )];
     if( [[userDefaults objectForKey:@"sex"] intValue] == 0 )
     {
         [sexImageView setImage:[UIImage imageNamed:@"female_color"]];
@@ -93,7 +96,7 @@
     }
     [headerView addSubview:sexImageView];
     
-    UILabel * pkuLabel = [[UILabel alloc] initWithFrame:CGRectMake( 80, 85, Screen_Width - 80, 20 )];
+    pkuLabel = [[UILabel alloc] initWithFrame:CGRectMake( 80, 85, Screen_Width - 80, 20 )];
     pkuLabel.font = [UIFont systemFontOfSize:Text_Size_Small];
     pkuLabel.textColor = Color_Gray;
     pkuLabel.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -137,6 +140,30 @@
     [myHeadImageView sd_setImageWithURL:[NSURL URLWithString:[userDefaults objectForKey:@"headUrl"]] placeholderImage:[UIImage imageNamed:@"head_default"]];
     myPraiseCountLabel.text = [NSString stringWithFormat:@"赞 %d", [[userDefaults objectForKey:@"praisedCount"] intValue]];
     myJobLabel.text = [NSString stringWithFormat:@"%@ %@ %@", [userDefaults objectForKey:@"company"], [userDefaults objectForKey:@"department"], [userDefaults objectForKey:@"job"]];
+    
+    NSString * name = [userDefaults objectForKey:@"name"];
+    nameLabel.frame = CGRectMake( 80, 45, name.length * 16, 25 );
+    nameLabel.text = name;
+    
+    if( [[userDefaults objectForKey:@"sex"] intValue] == 0 )
+    {
+        [sexImageView setImage:[UIImage imageNamed:@"female_color"]];
+    }
+    else
+    {
+        [sexImageView setImage:[UIImage imageNamed:@"male_color"]];
+    }
+    
+    pkuLabel.text = [NSString stringWithFormat:@"北京大学 %@", [Tool getPkuLongByShort:[userDefaults objectForKey:@"pku"]]];
+}
+
+- ( void ) reloadAll
+{
+    [self updateMyInfo];
+    MyDatabaseHelper * helper = [MyDatabaseHelper new];
+    NSMutableArray * array = [helper getUserList];
+    self.userArray = ( NSMutableArray * )[array sortedArrayUsingFunction:sortByName2 context:NULL];
+    [tableView reloadData];
 }
 
 - ( void ) clickUser

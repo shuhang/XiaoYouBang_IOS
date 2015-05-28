@@ -109,6 +109,7 @@
 		A57B60171AF9C1C7007A9994 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A57B60161AF9C1C7007A9994 /* Default-568h@2x.png */; };
 		A57B601C1AF9FCB5007A9994 /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A57B601B1AF9FCB5007A9994 /* MessageTableViewCell.m */; };
 		A57B601F1AF9FCDC007A9994 /* MessageEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = A57B601E1AF9FCDC007A9994 /* MessageEntity.m */; };
+		A57D07441B16B29F00B71584 /* Tab4ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A57D07431B16B29F00B71584 /* Tab4ViewController.m */; };
 		A5808B321AF1DFD4002E61A8 /* AddCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5808B311AF1DFD4002E61A8 /* AddCommentViewController.m */; };
 		A5808B351AF20674002E61A8 /* CommentTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A5808B341AF20674002E61A8 /* CommentTableView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A5808B381AF207BC002E61A8 /* CommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A5808B371AF207BC002E61A8 /* CommentTableViewCell.m */; };
@@ -146,6 +147,7 @@
 		A5A5599E1AE6379800994705 /* yuan.png in Resources */ = {isa = PBXBuildFile; fileRef = A5A5598D1AE6379800994705 /* yuan.png */; };
 		A5A5599F1AE6379800994705 /* yuan1.png in Resources */ = {isa = PBXBuildFile; fileRef = A5A5598E1AE6379800994705 /* yuan1.png */; };
 		A5A559A21AE641F300994705 /* Tool.m in Sources */ = {isa = PBXBuildFile; fileRef = A5A559A11AE641F300994705 /* Tool.m */; };
+		A5AA75B61B14586C00D46594 /* libUMessage_Sdk_1.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A5AA75B41B14586C00D46594 /* libUMessage_Sdk_1.1.0.a */; };
 		A5BC3D291AFB544700E836E3 /* MyDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = A5BC3D281AFB544700E836E3 /* MyDatabase.m */; };
 		A5BC3D2C1AFB57B200E836E3 /* MyDatabaseHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A5BC3D2B1AFB57B200E836E3 /* MyDatabaseHelper.m */; };
 		A5CDCD971B03241200D6B356 /* LeavewordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5CDCD961B03241200D6B356 /* LeavewordViewController.m */; };
@@ -412,6 +414,8 @@
 		A57B601B1AF9FCB5007A9994 /* MessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableViewCell.m; sourceTree = "<group>"; };
 		A57B601D1AF9FCDC007A9994 /* MessageEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageEntity.h; sourceTree = "<group>"; };
 		A57B601E1AF9FCDC007A9994 /* MessageEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageEntity.m; sourceTree = "<group>"; };
+		A57D07421B16B29F00B71584 /* Tab4ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab4ViewController.h; sourceTree = "<group>"; };
+		A57D07431B16B29F00B71584 /* Tab4ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab4ViewController.m; sourceTree = "<group>"; };
 		A5808B301AF1DFD4002E61A8 /* AddCommentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddCommentViewController.h; sourceTree = "<group>"; };
 		A5808B311AF1DFD4002E61A8 /* AddCommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddCommentViewController.m; sourceTree = "<group>"; };
 		A5808B331AF20674002E61A8 /* CommentTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentTableView.h; sourceTree = "<group>"; };
@@ -470,6 +474,8 @@
 		A5A5598E1AE6379800994705 /* yuan1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yuan1.png; sourceTree = "<group>"; };
 		A5A559A01AE641F300994705 /* Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tool.h; sourceTree = "<group>"; };
 		A5A559A11AE641F300994705 /* Tool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tool.m; sourceTree = "<group>"; };
+		A5AA75B41B14586C00D46594 /* libUMessage_Sdk_1.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libUMessage_Sdk_1.1.0.a; sourceTree = "<group>"; };
+		A5AA75B51B14586C00D46594 /* UMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMessage.h; sourceTree = "<group>"; };
 		A5BC3D271AFB544700E836E3 /* MyDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDatabase.h; sourceTree = "<group>"; };
 		A5BC3D281AFB544700E836E3 /* MyDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDatabase.m; sourceTree = "<group>"; };
 		A5BC3D2A1AFB57B200E836E3 /* MyDatabaseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDatabaseHelper.h; sourceTree = "<group>"; };
@@ -584,6 +590,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E03622F64271D45260402C44 /* libPods.a in Frameworks */,
+				A5AA75B61B14586C00D46594 /* libUMessage_Sdk_1.1.0.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -907,6 +914,8 @@
 				A553580A1AEF1B4C00F3E97D /* Tab2ViewController.m */,
 				A553580B1AEF1B4C00F3E97D /* Tab3ViewController.h */,
 				A553580C1AEF1B4C00F3E97D /* Tab3ViewController.m */,
+				A57D07421B16B29F00B71584 /* Tab4ViewController.h */,
+				A57D07431B16B29F00B71584 /* Tab4ViewController.m */,
 			);
 			path = MainTab;
 			sourceTree = "<group>";
@@ -1099,8 +1108,8 @@
 			children = (
 				A5A5595D1AE5E9BB00994705 /* NetWork.h */,
 				A5A5595E1AE5E9BB00994705 /* NetWork.m */,
-				A5A559A01AE641F300994705 /* Tool.h */,
 				A5A559A11AE641F300994705 /* Tool.m */,
+				A5A559A01AE641F300994705 /* Tool.h */,
 				A5BC3D271AFB544700E836E3 /* MyDatabase.h */,
 				A5BC3D281AFB544700E836E3 /* MyDatabase.m */,
 				A5BC3D2A1AFB57B200E836E3 /* MyDatabaseHelper.h */,
@@ -1169,9 +1178,19 @@
 			path = Image;
 			sourceTree = "<group>";
 		};
+		A5AA75B31B14586C00D46594 /* UMessage_Sdk_1.1.0 */ = {
+			isa = PBXGroup;
+			children = (
+				A5AA75B41B14586C00D46594 /* libUMessage_Sdk_1.1.0.a */,
+				A5AA75B51B14586C00D46594 /* UMessage.h */,
+			);
+			path = UMessage_Sdk_1.1.0;
+			sourceTree = "<group>";
+		};
 		A5DAA10D1AE500F100DB585F /* ThirdPart */ = {
 			isa = PBXGroup;
 			children = (
+				A5AA75B31B14586C00D46594 /* UMessage_Sdk_1.1.0 */,
 				A5EA23BE1B0B4C9B00CAB90E /* CorePhotoBroswerVC */,
 				A5EA231B1B0B4C6500CAB90E /* CorePhotoLib */,
 				A54362BE1B0B148E00ECF2A7 /* QBImagePickerController */,
@@ -1799,6 +1818,7 @@
 				A53A96BF1B01DE5200E30CBD /* InviteViewController.m in Sources */,
 				A558E9261B049C4E00A8F3CD /* AddActViewController.m in Sources */,
 				A57454E11AE7B9CD0066BCEA /* RegisterViewController3.m in Sources */,
+				A57D07441B16B29F00B71584 /* Tab4ViewController.m in Sources */,
 				A54947E51B0C26AA0018709C /* UIImage+ReMake.m in Sources */,
 				A57454DB1AE7B9AC0066BCEA /* RegisterViewController1.m in Sources */,
 				A5EA239B1B0B4C6500CAB90E /* UIFont+Extend.m in Sources */,
@@ -1915,7 +1935,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "b1b4ff06-68d1-4068-8934-5d8647a9affb";
+				PROVISIONING_PROFILE = "9b1d3ebc-9954-4f74-a90c-23d2d56a9623";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1953,7 +1973,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "b1b4ff06-68d1-4068-8934-5d8647a9affb";
+				PROVISIONING_PROFILE = "9b1d3ebc-9954-4f74-a90c-23d2d56a9623";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1974,9 +1994,13 @@
 				INFOPLIST_FILE = XiaoYouBang/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/XiaoYouBang/ThirdPart/UMessage_Sdk_1.1.0",
+				);
 				New_Setting = "";
 				PRODUCT_NAME = "校友邦";
-				PROVISIONING_PROFILE = "b1b4ff06-68d1-4068-8934-5d8647a9affb";
+				PROVISIONING_PROFILE = "9b1d3ebc-9954-4f74-a90c-23d2d56a9623";
 			};
 			name = Debug;
 		};
@@ -1995,9 +2019,13 @@
 				INFOPLIST_FILE = XiaoYouBang/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/XiaoYouBang/ThirdPart/UMessage_Sdk_1.1.0",
+				);
 				New_Setting = "";
 				PRODUCT_NAME = "校友邦";
-				PROVISIONING_PROFILE = "b1b4ff06-68d1-4068-8934-5d8647a9affb";
+				PROVISIONING_PROFILE = "9b1d3ebc-9954-4f74-a90c-23d2d56a9623";
 			};
 			name = Release;
 		};

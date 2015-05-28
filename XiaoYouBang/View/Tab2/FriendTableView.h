@@ -26,6 +26,7 @@
 - ( void ) startRefresh;
 - ( void ) reloadTable;
 - ( void ) updateSelectCell;
+- ( void ) reloadAll;
 - ( id ) initWithFrame:(CGRect)frame userArray : ( NSMutableArray * ) array;
 
 @end

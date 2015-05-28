@@ -55,6 +55,7 @@
     [self.view addSubview:mainView];
     
     questionView = [[MyQuestionView alloc] initWithFrame:CGRectMake( 0, -64, Screen_Width, Screen_Height - viewHeight + 64 )];
+    questionView.delegate = self;
     [mainView addSubview:questionView];
     
     NSArray * array = [[NSArray alloc] initWithObjects:@"问过", @"答过", @"消息", @"收藏", nil];
@@ -113,6 +114,7 @@
                 if( questionView == nil )
                 {
                     questionView = [[MyQuestionView alloc] initWithFrame:CGRectMake( 0, -64, Screen_Width, Screen_Height - viewHeight + 64 )];
+                    questionView.delegate = self;
                 }
                 [mainView addSubview:questionView];
             }

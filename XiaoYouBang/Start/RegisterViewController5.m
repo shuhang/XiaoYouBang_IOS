@@ -10,6 +10,7 @@
 #import "NetWork.h"
 #import "Tool.h"
 #import "GCPlaceholderTextView.h"
+#import "MyDatabaseHelper.h"
 
 @interface RegisterViewController5 ()
 {
@@ -153,6 +154,45 @@
 
 - ( void ) registerSuccess
 {
+    dispatch_async
+    (
+     dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ^
+     {
+         __block NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+         NSString * token = [userDefaults objectForKey:@"token"];
+         if( [userDefaults objectForKey:@"device"] )
+         {
+             NSString * url = [NSString stringWithFormat:@"api/user/%@/device", [userDefaults objectForKey:@"userId"]];
+             NSMutableDictionary * request = [NSMutableDictionary dictionary];
+             [request setValue:token forKey:@"token"];
+             [request setValue:[userDefaults objectForKey:@"device"] forKey:@"device"];
+             [[NetWork shareInstance] httpRequestWithGet:url params:request success:^(NSDictionary * result)
+              {
+                  NSNumber * code = [result objectForKey:@"result"];
+                  if( [code intValue] == 1000 )
+                  {
+                      [userDefaults setBool:YES forKey:@"has_upload_device"];
+                      [userDefaults synchronize];
+                      
+                      NSLog( @"upload device success" );
+                  }
+              }
+              error:^(NSError * error)
+              {
+                  NSLog( @"%@", error );
+              }];
+         }
+     }
+     );
+    
+    MyDatabaseHelper * helper = [MyDatabaseHelper new];
+    [helper insertOrUpdateUsers:[NSArray arrayWithObjects:[Tool getMyEntity], nil] updateTime:@"" symbol:NO];
+    
+    if( [Tool getChangeAccountSymbol] )
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:ChangeAccountSuccess object:nil userInfo:@{}];
+    }
+    
     [SVProgressHUD dismiss];
     self.tabBarController.tabBar.hidden = NO;
     BaseViewController * controller = [self.navigationController.viewControllers objectAtIndex:0];

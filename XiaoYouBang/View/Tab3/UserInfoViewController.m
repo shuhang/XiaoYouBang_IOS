@@ -16,6 +16,7 @@
 #import "AnswerTableViewController.h"
 #import "LeavewordViewController.h"
 #import "UIImageView+WebCache.h"
+#import "EditInfoViewController.h"
 
 @interface UserInfoViewController () <UserInfoViewDelegate>
 {
@@ -34,12 +35,13 @@
     if( [Tool judgeIsMe:self.entity.userId] )
     {
         [self setupTitle:@"我的资料"];
+        [self setupNextButtonTitle:@"编辑"];
     }
     else
     {
         [self setupTitle:@"校友资料"];
+        [self hideNextButton];
     }
-    [self hideNextButton];
     
     infoView = [[UserInfoView alloc] initWithFrame:CGRectMake( 0, 0, Screen_Width, Screen_Height) entity:self.entity];
     infoView.delegate = self;
@@ -54,6 +56,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editIntro:) name:EditIntroSuccess object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(leavewordBack:) name:LeaveWordBack object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editInfo:) name:EditInfoSuccess object:nil];
 }
 
 - ( void ) leavewordBack : ( NSNotification * ) noti
@@ -72,9 +75,26 @@
     [userDefaults synchronize];
 }
 
+- ( void ) editInfo : ( NSNotification * ) noti
+{
+    NSDictionary * dic = [noti userInfo];
+    self.entity = [dic objectForKey:@"entity"];
+    infoView.entity = self.entity;
+    [infoView updateInfo];
+}
+
+- ( void ) doNext
+{
+    EditInfoViewController * controller = [EditInfoViewController new];
+    controller.entity = [Tool getMyEntity];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 - ( void ) doBack
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:EditIntroSuccess object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:LeaveWordBack object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:EditInfoSuccess object:nil];
     [super doBack];
 }
 
@@ -154,6 +174,7 @@
 {
     UserInfoViewController * controller = [UserInfoViewController new];
     controller.entity = [Tool getMyEntity];
+    controller.shouldRefresh = YES;
     [self.navigationController pushViewController:controller animated:YES];
 }
 

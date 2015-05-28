@@ -443,6 +443,8 @@ UINavigationControllerDelegate>
     [userDefaults setObject:self.entity.tagArray forKey:@"tags"];
     [userDefaults synchronize];
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:EditInfoSuccess object:nil userInfo:@{ @"entity" : self.entity }];
+    
     [SVProgressHUD showSuccessWithStatus:@"更新成功"];
     [self.navigationController popViewControllerAnimated:YES];
 }

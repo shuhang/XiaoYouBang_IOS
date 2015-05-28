@@ -18,6 +18,9 @@
 
 @interface Tool : NSObject
 
++ ( BOOL ) getChangeAccountSymbol;
++ ( void ) setChangeAccountSymbol : ( BOOL ) value;
+
 + ( int ) fileSizeAtPath : ( NSString * ) filePath;
 
 + ( CGFloat ) getHeightByString : ( NSString * ) value

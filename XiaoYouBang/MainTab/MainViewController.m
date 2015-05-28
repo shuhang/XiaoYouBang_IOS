@@ -19,6 +19,13 @@
     [super viewDidLoad];
     
     [[MyDatabase shareInstance] createAllTable];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeAccount:) name:ChangeAccountSuccess object:nil];
+}
+
+- ( void ) changeAccount : ( NSNotification * ) noti
+{
+    [self.controller setSelectedIndex:0];
 }
 
 - ( void ) setupTabbarItem
@@ -33,19 +40,25 @@
              case 0:
              {
                  item = [[UITabBarItem alloc] initWithTitle:@"广场" image:nil tag:1];
-                 [item setTitlePositionAdjustment:UIOffsetMake( 0, -10 )];
+                 [item setTitlePositionAdjustment:UIOffsetMake( 0, -12 )];
                  break;
              }
              case 1:
              {
                  item = [[UITabBarItem alloc] initWithTitle:@"相关" image:nil tag:1];
-                 [item setTitlePositionAdjustment:UIOffsetMake( 0, -10 )];
+                 [item setTitlePositionAdjustment:UIOffsetMake( 0, -12 )];
                  break;
              }
              case 2:
              {
                  item = [[UITabBarItem alloc] initWithTitle:@"校友录" image:nil tag:1];
-                 [item setTitlePositionAdjustment:UIOffsetMake( 0, -10 )];
+                 [item setTitlePositionAdjustment:UIOffsetMake( 0, -12 )];
+                 break;
+             }
+             case 3:
+             {
+                 item = [[UITabBarItem alloc] initWithTitle:@"设置" image:nil tag:1];
+                 [item setTitlePositionAdjustment:UIOffsetMake( 0, -12 )];
                  break;
              }
          }

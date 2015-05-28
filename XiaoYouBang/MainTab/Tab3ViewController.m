@@ -50,6 +50,12 @@ NSInteger sortByName1( id u1, id u2, void *context )
 {
     [super viewWillAppear:animated];
     self.tabBarController.tabBar.hidden = NO;
+    
+    if( [Tool getChangeAccountSymbol] )
+    {
+        [Tool setChangeAccountSymbol:NO];
+        [friendView reloadAll];
+    }
 }
 
 #pragma mark FriendTableViewDelegate
@@ -63,8 +69,8 @@ NSInteger sortByName1( id u1, id u2, void *context )
 
 - ( void ) clickMe
 {
-    //UserInfoViewController * controller = [UserInfoViewController new];
-    ChangePasswordViewController * controller = [ChangePasswordViewController new];
+    UserInfoViewController * controller = [UserInfoViewController new];
+    controller.shouldRefresh = YES;
     [self.navigationController pushViewController:controller animated:YES];
 }
 

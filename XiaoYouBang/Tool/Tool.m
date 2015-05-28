@@ -9,7 +9,19 @@
 #import "Tool.h"
 #import "JSONKit.h"
 
+static BOOL ChangeAccountSymvol = NO;
+
 @implementation Tool
+
++ ( BOOL ) getChangeAccountSymbol
+{
+    return ChangeAccountSymvol;
+}
+
++ ( void ) setChangeAccountSymbol:(BOOL)value
+{
+    ChangeAccountSymvol = value;
+}
 
 + ( int ) fileSizeAtPath : ( NSString * ) filePath
 {

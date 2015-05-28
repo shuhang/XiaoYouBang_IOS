@@ -8,6 +8,7 @@
 
 #import "MyDatabaseHelper.h"
 #import "MyDatabase.h"
+#import "Tool.h"
 
 @implementation MyDatabaseHelper
 
@@ -105,8 +106,12 @@
     FMResultSet * result = [database executeQuery:query];
     while( [result next] )
     {
+        if( [Tool judgeIsMe:[result stringForColumn:@"userId"]] )
+        {
+            continue;
+        }
         UserEntity * entity = [UserEntity new];
-        entity.userId = [result stringForColumn:@"userId"];;
+        entity.userId = [result stringForColumn:@"userId"];
         entity.name = [result stringForColumn:@"name"];
         entity.headUrl = [result stringForColumn:@"headUrl"];
         entity.userVersion = [result intForColumn:@"version"];
